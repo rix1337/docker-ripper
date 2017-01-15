@@ -7,7 +7,8 @@ fi
 
 # copy default settings
 if [[ ! -f /config/settings.conf ]] && [[  ! -f /config/enter-your-key-then-rename-to.settings.conf ]]; then
- cp /ripper/settings.conf /config/enter-your-key-then-rename-to.settings.conf
+ cp -f /ripper/settings.conf /config/
+ mv /config/settings.conf /config/enter-your-key-then-rename-to.settings.conf 
 fi
 
 # fetching MakeMKV beta key
@@ -16,10 +17,10 @@ KEY=$(curl --silent 'http://www.makemkv.com/forum2/viewtopic.php?f=5&t=1053'| gr
 # move settings.conf, if found
 if [[ -f  /config/settings.conf ]]; then
  echo "Found settings.conf. Replacing beta key file."
- cp /config/settings.conf /root/.MakeMKV/settings.conf
+ cp -f  /config/settings.conf /root/.MakeMKV/
 elif ! [ "$KEY" = '' ]; then
  echo "Using MakeMKV beta key: $KEY"
- cp /ripper/settings.conf /root/.MakeMKV/settings.conf
+ cp /ripper/settings.conf /root/.MakeMKV/
  echo app_Key = "\"$KEY"\" > /root/.MakeMKV/settings.conf
 fi
 
