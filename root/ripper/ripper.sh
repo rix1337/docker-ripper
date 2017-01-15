@@ -43,7 +43,7 @@ if [ "$BD" = 'DRV:0,2,999,12,"' ]; then
  DISKLABEL=`echo $INFO | grep -o -P '(?<=",").*(?=",")'`
  BDPATH="$STORAGE_BD"/"$DISKLABEL"
  BLURAYNUM=`echo $INFO | grep $DRIVE | cut -c5`
- mkdir -p $BDPATH
+ mkdir -p "$BDPATH"
  makemkvcon -r --decrypt --minlength=600 mkv disc:"$BLURAYNUM" all "$BDPATH" >> $LOGFILE 2>&1
  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
  eject $DRIVE >> $LOGFILE 2>&1
@@ -56,7 +56,7 @@ if [ "$DVD" = 'DRV:0,2,999,1,"' ]; then
  DISKLABEL=`echo $INFO | grep -o -P '(?<=",").*(?=",")'` 
  DVDPATH="$STORAGE_DVD"/"$DISKLABEL"
  DVDNUM=`echo $INFO | grep $DRIVE | cut -c5`
- mkdir -p $DVDPATH
+ mkdir -p "$DVDPATH"
  makemkvcon -r --decrypt --minlength=600 mkv disc:"$DVDNUM" all "$DVDPATH" >> $LOGFILE 2>&1
  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
  eject $DRIVE >> $LOGFILE 2>&1
