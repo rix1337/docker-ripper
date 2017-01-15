@@ -16,10 +16,10 @@ KEY=$(curl --silent 'http://www.makemkv.com/forum2/viewtopic.php?f=5&t=1053'| gr
 # move settings.conf, if found
 if [[ -f  /config/settings.conf ]]; then
  echo "Found settings.conf. Replacing beta key file."
- cp -rf /config/settings.conf /root/.MakeMKV/settings.conf
+ cp /config/settings.conf /root/.MakeMKV/settings.conf
 elif ! [ "$KEY" = '' ]; then
  echo "Using MakeMKV beta key: $KEY"
- cp -rf /ripper/settings.conf /root/.MakeMKV/settings.conf
+ cp /ripper/settings.conf /root/.MakeMKV/settings.conf
  echo app_Key = "\"$KEY"\" > /root/.MakeMKV/settings.conf
 fi
 
