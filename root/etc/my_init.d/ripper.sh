@@ -19,7 +19,7 @@ if [[ -f  /config/settings.conf ]]; then
  cp -rf /config/settings.conf /root/.MakeMKV/settings.conf
 elif ! [ "$KEY" = '' ]; then
  echo "Using MakeMKV beta key: $KEY"
- cp -rf /ripper/settings.conf cp /root/.MakeMKV/settings.conf
+ cp -rf /ripper/settings.conf /root/.MakeMKV/settings.conf
  echo app_Key = "\"$KEY"\" > /root/.MakeMKV/settings.conf
 fi
 
