@@ -67,7 +67,7 @@ fi
 if [ "$CD1" = 'DRV:0,2,999,0,"' ] &&  [ "$CD2" = '","","/dev/sr0"' ]; then
  echo "$(date "+%d.%m.%Y %T") : CD detected: Saving MP3 and FLAC"
  # MP3 & FLAC
- /usr/bin/ripit -d "$DRIVE" -c 0,2 -W -o "$STORAGE_MP3" -b 320 --comment cddbid --playlist 0 -D '"$artist\_\_$album"'  --infolog "/log/autorip_"$LOGFILE"" -Z 2 -O y --uppercasefirst --nointeraction >> $LOGFILE 2>&1
+ /usr/bin/ripit -d "$DRIVE" -c 0,2 -W -o "$STORAGE_MP3" -b 320 --comment cddbid --playlist 0 -D '"$suffix/$artist/$album"'  --infolog "/log/autorip_"$LOGFILE"" -Z 2 -O y --uppercasefirst --nointeraction >> $LOGFILE 2>&1
  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
  eject $DRIVE >> $LOGFILE 2>&1
  # permissions
