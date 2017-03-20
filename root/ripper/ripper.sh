@@ -21,7 +21,8 @@ INFO=$"`makemkvcon -r --cache=1 info disc:9999 | grep DRV:0`"
 EMPTY=`echo $INFO | grep -o 'DRV:0,0,999,0,"'`
 OPEN=`echo $INFO | grep -o 'DRV:0,1,999,0,"'`
 LOADING=`echo $INFO | grep -o 'DRV:0,3,999,0,"'`
-BD=`echo $INFO | grep -o 'DRV:0,2,999,12,"'`
+BD1=`echo $INFO | grep -o 'DRV:0,2,999,12,"'`
+BD2=`echo $INFO | grep -o 'DRV:0,2,999,28,"'`
 DVD=`echo $INFO | grep -o 'DRV:0,2,999,1,"'`
 CD1=`echo $INFO | grep -o 'DRV:0,2,999,0,"'`
 CD2=`echo $INFO | grep -o '","","/dev/sr0"'`
@@ -37,7 +38,20 @@ if [ "$LOADING" = 'DRV:0,3,999,0,"' ]; then
  echo "$(date "+%d.%m.%Y %T") : Disc still loading"
 fi
 
-if [ "$BD" = 'DRV:0,2,999,12,"' ]; then
+if [ "$BD1" = 'DRV:0,2,999,12,"' ]; then
+ echo "$(date "+%d.%m.%Y %T") : BluRay detected: Saving MKV"
+ DISKLABEL=`echo $INFO | grep -o -P '(?<=",").*(?=",")'`
+ BDPATH="$STORAGE_BD"/"$DISKLABEL"
+ BLURAYNUM=`echo $INFO | grep $DRIVE | cut -c5`
+ mkdir -p "$BDPATH"
+ makemkvcon -r --decrypt --minlength=600 mkv disc:"$BLURAYNUM" all "$BDPATH" >> $LOGFILE 2>&1
+ echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
+ eject $DRIVE >> $LOGFILE 2>&1
+ # permissions
+ chown -R nobody:users /out && chmod -R g+rw /out
+fi
+
+if [ "$BD2" = 'DRV:0,2,999,28,"' ]; then
  echo "$(date "+%d.%m.%Y %T") : BluRay detected: Saving MKV"
  DISKLABEL=`echo $INFO | grep -o -P '(?<=",").*(?=",")'`
  BDPATH="$STORAGE_BD"/"$DISKLABEL"
