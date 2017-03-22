@@ -11,8 +11,8 @@ apt-get update -qq
 apt-get install -qy --allow-unauthenticated build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev libqt4-dev wget
 
 #####################################
-#	Download sources and extract	#
-#									#
+#	Download sources and extract    	#
+#	Auto-grab latest version    			#
 #####################################
 VERSION=$(curl --silent 'http://www.makemkv.com/forum2/viewtopic.php?f=3&t=224' | grep MakeMKV.*for.Linux.is | head -n 1 | sed -e 's/.*MakeMKV //g' -e 's/ .*//g')
 
