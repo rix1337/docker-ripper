@@ -1,4 +1,6 @@
 # docker-ripper
+
+[![Join the chat at https://gitter.im/docker-ripper/Lobby](https://badges.gitter.im/docker-ripper/Lobby.svg)](https://gitter.im/docker-ripper/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 This container will detect optical disks by their type and rip them automatically.
 
 # Output
