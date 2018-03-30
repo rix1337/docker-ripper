@@ -44,7 +44,7 @@ if [ "$BD1" = 'DRV:0,2,999,12,"' ]; then
  BDPATH="$STORAGE_BD"/"$DISKLABEL"
  BLURAYNUM=`echo $INFO | grep $DRIVE | cut -c5`
  mkdir -p "$BDPATH"
- makemkvcon -r --decrypt --minlength=600 mkv disc:"$BLURAYNUM" all "$BDPATH" >> $LOGFILE 2>&1
+ makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$BLURAYNUM" all "$BDPATH" >> $LOGFILE 2>&1
  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
  eject $DRIVE >> $LOGFILE 2>&1
  # permissions
@@ -57,7 +57,7 @@ if [ "$BD2" = 'DRV:0,2,999,28,"' ]; then
  BDPATH="$STORAGE_BD"/"$DISKLABEL"
  BLURAYNUM=`echo $INFO | grep $DRIVE | cut -c5`
  mkdir -p "$BDPATH"
- makemkvcon -r --decrypt --minlength=600 mkv disc:"$BLURAYNUM" all "$BDPATH" >> $LOGFILE 2>&1
+ makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$BLURAYNUM" all "$BDPATH" >> $LOGFILE 2>&1
  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
  eject $DRIVE >> $LOGFILE 2>&1
  # permissions
@@ -70,7 +70,7 @@ if [ "$DVD" = 'DRV:0,2,999,1,"' ]; then
  DVDPATH="$STORAGE_DVD"/"$DISKLABEL"
  DVDNUM=`echo $INFO | grep $DRIVE | cut -c5`
  mkdir -p "$DVDPATH"
- makemkvcon -r --decrypt --minlength=600 mkv disc:"$DVDNUM" all "$DVDPATH" >> $LOGFILE 2>&1
+ makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$DVDNUM" all "$DVDPATH" >> $LOGFILE 2>&1
  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
  eject $DRIVE >> $LOGFILE 2>&1
  # permissions
