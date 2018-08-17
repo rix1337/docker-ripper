@@ -14,7 +14,7 @@ apt-get install -qy --allow-unauthenticated build-essential pkg-config libc6-dev
 #	Download sources and extract    	#
 #	Auto-grab latest version    			#
 #####################################
-VERSION=$(curl --silent 'http://www.makemkv.com/forum2/viewtopic.php?f=3&t=224' | grep MakeMKV.*for.Linux.is | head -n 1 | sed -e 's/.*MakeMKV //g' -e 's/ .*//g')
+VERSION=$(curl --silent 'https://www.makemkv.com/forum/viewtopic.php?f=3&t=224' | grep MakeMKV.*for.Linux.is | head -n 1 | sed -e 's/.*MakeMKV //g' -e 's/ .*//g')
 
 mkdir -p /tmp/sources
 wget -O /tmp/sources/makemkv-bin-$VERSION.tar.gz http://www.makemkv.com/download/makemkv-bin-$VERSION.tar.gz
