@@ -5,6 +5,11 @@ LOGFILE="/config/Ripper.log"
 # Startup Info
 echo "$(date "+%d.%m.%Y %T") : Starting Ripper. Optical Discs will be detected and ripped within 60 seconds."
 
+# Separate Raw Rip and Finished Rip Folders for DVDs and BluRays
+# Raw Rips go in the usual folder structure
+# Finished Rips are moved to a "finished" folder in it's respective STORAGE folder
+SEPARATERAWFINISH="true"
+
 # Paths
 STORAGE_CD="/out/Ripper/CD"
 STORAGE_DATA="/out/Ripper/DATA"
@@ -12,10 +17,10 @@ STORAGE_DVD="/out/Ripper/DVD"
 STORAGE_BD="/out/Ripper/BluRay"
 DRIVE="/dev/sr0"
 
-# True is always true, thus loop indefinately
+# True is always true, thus loop indefinitely
 while true
 do
-# get disk info through makemkv and assing output to INFO
+# get disk info through makemkv and pass output to INFO
 INFO=$"`makemkvcon -r --cache=1 info disc:9999 | grep DRV:0`"
 # check INFO for optical disk
 EMPTY=`echo $INFO | grep -o 'DRV:0,0,999,0,"'`
@@ -45,6 +50,10 @@ if [ "$BD1" = 'DRV:0,2,999,12,"' ]; then
  BLURAYNUM=`echo $INFO | grep $DRIVE | cut -c5`
  mkdir -p "$BDPATH"
  makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$BLURAYNUM" all "$BDPATH" >> $LOGFILE 2>&1
+ if [ "$SEPARATERAWFINISH" = 'true' ]; then
+    BDFINISH="$STORAGE_BD"/finished/
+    mv -v "$BDPATH" "$BDFINISH"
+ fi
  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
  eject $DRIVE >> $LOGFILE 2>&1
  # permissions
@@ -58,6 +67,10 @@ if [ "$BD2" = 'DRV:0,2,999,28,"' ]; then
  BLURAYNUM=`echo $INFO | grep $DRIVE | cut -c5`
  mkdir -p "$BDPATH"
  makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$BLURAYNUM" all "$BDPATH" >> $LOGFILE 2>&1
+ if [ "$SEPARATERAWFINISH" = 'true' ]; then
+    BDFINISH="$STORAGE_BD"/finished/
+    mv -v "$BDPATH" "$BDFINISH"
+ fi
  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
  eject $DRIVE >> $LOGFILE 2>&1
  # permissions
@@ -71,6 +84,10 @@ if [ "$DVD" = 'DRV:0,2,999,1,"' ]; then
  DVDNUM=`echo $INFO | grep $DRIVE | cut -c5`
  mkdir -p "$DVDPATH"
  makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$DVDNUM" all "$DVDPATH" >> $LOGFILE 2>&1
+ if [ "$SEPARATERAWFINISH" = 'true' ]; then
+    DVDFINISH="$STORAGE_DVD"/finished/
+    mv -v "$DVDPATH" "$DVDFINISH" 
+ fi
  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
  eject $DRIVE >> $LOGFILE 2>&1
  # permissions
