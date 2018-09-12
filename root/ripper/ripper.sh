@@ -107,7 +107,7 @@ fi
 if [ "$DATA" = 'DRV:0,2,999,0,"' ] &&  ! [ "$CD2" = '","","/dev/sr0"' ]; then
  echo "$(date "+%d.%m.%Y %T") : Data-Disk detected: Saving ISO"
  DISKLABEL=`echo $INFO | grep /dev/sr0 | grep -o -P '(?<=",").*(?=",")'`  
- ISOPATH="$STORAGE_DATA"/"$DISKLABEL/$DISKLABEL".iso
+ ISOPATH="$STORAGE_DATA"/"$DISKLABEL"/"$DISKLABEL".iso
  # ISO
  mkdir -p "$STORAGE_DATA"/"$DISKLABEL"
  ddrescue $DRIVE $ISOPATH >> $LOGFILE 2>&1
