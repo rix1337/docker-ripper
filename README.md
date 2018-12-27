@@ -15,6 +15,17 @@ MakeMKV is free while in Beta, but requires a valid license key. Ripper tries to
 
 To add your purchased license key to MakeMKV/Ripper add it to the `enter-your-key-then-rename-to.settings.conf` at `app_Key = "`**[ENTER KEY HERE]**`"` and rename the file to settings.conf.
 
+# Docker run
+
+```
+docker run -d \
+  --name="Ripper" \
+  -v /path/to/config/:/config:rw \
+  -v /path/to/rips/:/out:rw \
+  --device=/dev/sr0:/dev/sr0 \
+  rix1337/docker-ripper
+  ```
+
 # FAQ
 
 ### How do I set ripper do do something else?
@@ -35,7 +46,7 @@ _Yes - I suggest a donation that reflects the amount of saved work hours in your
 
 ### Do you offer support?
 
-_If plausible open an issue on this github repo. I am not responsible if anything breaks. For more information see [LICENSE.md](https://github.com/rix1337/docker-ripper/LICENSE.md)_
+_If plausible [open a new issue](https://github.com/rix1337/docker-ripper/issues/new). I am not responsible if anything breaks. For more information see [LICENSE.md](https://github.com/rix1337/docker-ripper/blob/master/LICENSE.md)_
 
 # Credits
 - [Idea based on Discbox by kingeek](http://kinggeek.co.uk/projects/item/61-discbox-linux-bash-script-to-automatically-rip-cds-dvds-and-blue-ray-with-multiple-optical-drives-and-no-user-intervention)
@@ -45,12 +56,3 @@ _If plausible open an issue on this github repo. I am not responsible if anythin
 - [MakeMKV Setup by tobbenb](https://github.com/tobbenb/docker-containers)
 
 - [MakeMKV key/version fetcher by metalight](http://blog.metalight.dk/2016/03/makemkv-wrapper-with-auto-updater.html)
-
-```
-docker run -d \
-  --name="Ripper" \
-  -v /path/to/config/:/config:rw \
-  -v /path/to/rips/:/out:rw \
-  --device=/dev/sr0:/dev/sr0 \
-  rix1337/docker-ripper
-  ```
