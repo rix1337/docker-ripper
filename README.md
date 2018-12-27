@@ -34,7 +34,7 @@ _Ripper will place a bash-file ([ripper.sh](https://github.com/rix1337/docker-ri
 
 ### I want another output format that requires another piece of software!
 
-_You need to fork this image and build it yourself on docker hub. A good starting point is the [Dockerfile](https://github.com/rix1337/docker-ripper/blob/master/Dockerfile#L30) that includes setup instructions for the used ripping software.
+_You need to fork this image and build it yourself on docker hub. A good starting point is the [Dockerfile](https://github.com/rix1337/docker-ripper/blob/master/Dockerfile#L30) that includes setup instructions for the used ripping software._
 
 ### MakeMKV needs an update!
 
