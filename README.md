@@ -15,6 +15,20 @@ MakeMKV is free while in Beta, but requires a valid license key. Ripper tries to
 
 To add your purchased license key to MakeMKV/Ripper add it to the `enter-your-key-then-rename-to.settings.conf` at `app_Key = "`**[ENTER KEY HERE]**`"` and rename the file to settings.conf.
 
+# FAQ
+
+_How do I set ripper do do something else?_
+
+Ripper will place a bash-file ([ripper.sh](https://github.com/cclarke591/docker-ripper/blob/master/root/ripper/ripper.sh)) automatically at /config that is responsible for detecting and ripping disks. You are completely free to modify it on your local docker host. No modifications to this main image are required for minor edits to that file.
+
+_I want another output format that requires another piece of software!_
+
+You need to fork this image and build it yourself on docker hub. A good starting point is the [Dockerfile](https://github.com/cclarke591/docker-ripper/blob/master/Dockerfile#L30) that includes setup instructions for the used ripping software.
+
+_I want to use this in a commercial setting._
+
+Please consider a donation that reflects the amount of saved work hours in your organization. Just send me a PM on [gitter](https://gitter.im/rix1337).
+
 # Credits
 - [Idea based on Discbox by kingeek](http://kinggeek.co.uk/projects/item/61-discbox-linux-bash-script-to-automatically-rip-cds-dvds-and-blue-ray-with-multiple-optical-drives-and-no-user-intervention)
 
