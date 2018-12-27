@@ -17,25 +17,25 @@ To add your purchased license key to MakeMKV/Ripper add it to the `enter-your-ke
 
 # FAQ
 
-*How do I set ripper do do something else?*
+### How do I set ripper do do something else?
 
 _Ripper will place a bash-file ([ripper.sh](https://github.com/rix1337/docker-ripper/blob/master/root/ripper/ripper.sh)) automatically at /config that is responsible for detecting and ripping disks. You are completely free to modify it on your local docker host. No modifications to this main image are required for minor edits to that file._
 
-*I want another output format that requires another piece of software!*
+### I want another output format that requires another piece of software!
 
 _You need to fork this image and build it yourself on docker hub. A good starting point is the [Dockerfile](https://github.com/rix1337/docker-ripper/blob/master/Dockerfile#L30) that includes setup instructions for the used ripping software.
 
-*MakeMKV needs an update!*
+### MakeMKV needs an update!
 
-_Make sure you have pulled the latest image. The image should be updated automatically as soon as MakeMKV is updated. This has not worked reliably in the past. Just [open a new issue](https://github.com/rix1337/docker-ripper/issues/new) and I will trigger the build.
+_Make sure you have pulled the latest image. The image should be updated automatically as soon as MakeMKV is updated. This has not worked reliably in the past. Just [open a new issue](https://github.com/rix1337/docker-ripper/issues/new) and I will trigger the build._
 
-*Am I allowed to use this in a commercial setting?*
+### Am I allowed to use this in a commercial setting?
 
 _Yes - I suggest a donation that reflects the amount of saved work hours in your organization. Just send me a PM on [gitter](https://gitter.im/rix1337)._
 
-*Do you offer support?
+### Do you offer support?
 
-_If you feel the need, open an issue on this github repo. I am not responsible if anything breaks. For more information see [LICENSE.md](https://github.com/rix1337/docker-ripper/LICENSE.md)
+_If plausible open an issue on this github repo. I am not responsible if anything breaks. For more information see [LICENSE.md](https://github.com/rix1337/docker-ripper/LICENSE.md)_
 
 # Credits
 - [Idea based on Discbox by kingeek](http://kinggeek.co.uk/projects/item/61-discbox-linux-bash-script-to-automatically-rip-cds-dvds-and-blue-ray-with-multiple-optical-drives-and-no-user-intervention)
