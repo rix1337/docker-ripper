@@ -17,6 +17,9 @@ STORAGE_DVD="/out/Ripper/DVD"
 STORAGE_BD="/out/Ripper/BluRay"
 DRIVE="/dev/sr0"
 
+BAD_THRESHOLD=5
+let BAD_RESPONSE=0
+
 # True is always true, thus loop indefinitely
 while true
 do
@@ -32,6 +35,22 @@ DVD=`echo $INFO | grep -o 'DRV:0,2,999,1,"'`
 CD1=`echo $INFO | grep -o 'DRV:0,2,999,0,"'`
 CD2=`echo $INFO | grep -o '","","/dev/sr0"'`
 DATA=`echo $INFO | grep -o 'DRV:0,2,999,0,"'`
+
+# Check for trouble and respond if found
+EXPECTED="${EMPTY}${OPEN}${LOADING}${BD1}${BD2}${DVD}${CD1}${CD2}${DATA}"
+if [ "x$EXPECTED" == 'x' ]; then
+ echo "$(date "+%d.%m.%Y %T") : Unexpected makemkvcon output: $INFO"
+ let BAD_RESPONSE++
+else
+ let BAD_RESPONSE=0
+fi
+if (( $BAD_RESPONSE >= $BAD_THRESHOLD )); then
+ echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disk and aborting"
+ # Run makemkvcon once more with full output, to potentiall aid in debugging
+ makemkvcon -r --cache=1 info disc:9999
+ eject $DRIVE >> $LOGFILE 2>&1
+ exit 1
+fi
 
 # if [ $EMPTY = 'DRV:0,0,999,0,"' ]; then
 #  echo "$(date "+%d.%m.%Y %T") : No Disc"; &>/dev/null
