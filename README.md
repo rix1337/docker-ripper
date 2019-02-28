@@ -28,9 +28,20 @@ docker run -d \
 
 # FAQ
 
-### How do I set ripper do do something else?
+### How do I set ripper to do something else?
 
 _Ripper will place a bash-file ([ripper.sh](https://github.com/rix1337/docker-ripper/blob/master/root/ripper/ripper.sh)) automatically at /config that is responsible for detecting and ripping disks. You are completely free to modify it on your local docker host. No modifications to this main image are required for minor edits to that file._
+
+_Additionally, you have the option of creating medium-specific override scripts in that same directory location:_
+
+Medium | Script Name | Purpose
+--- | --- | ---
+BluRay | `BLURAYrip.sh` | Overrides BluRay ripping commands in `ripper.sh` with script operation
+DVD | `DVDrip.sh` | Overrides DVD ripping commands in `ripper.sh` with script operation
+Audio CD | `CDrip.sh` | Overrides audio CD ripping commands in `ripper.sh` with script operation
+Data-Disk | `DATArip.sh` | Overrides data disk ripping commands in `ripper.sh` with script operation
+
+_Note that these optional scripts must be of the specified name, have executable permissions set, and be in the same directory as `ripper.sh` to be executed._
 
 ### I want another output format that requires another piece of software!
 
