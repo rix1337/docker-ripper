@@ -1,4 +1,7 @@
 # docker-ripper
+
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/J3J4Y2R6)
+
 This container will detect optical disks by their type and rip them automatically.
 
 # Output
@@ -55,7 +58,7 @@ _Make sure you have pulled the latest image. The image should be updated automat
 ### Am I allowed to use this in a commercial setting?
 
 _Yes, see [LICENSE.md](https://github.com/rix1337/docker-ripper/blob/master/LICENSE.md).
-If this project is helpful to your organization please send over a donation. Just send me a PM on [gitter](https://gitter.im/rix1337)._
+If this project is helpful to your organization please send over a donation on [ko-fi](https://ko-fi.com/J3J4Y2R6).
 
 ### Do you offer support?
 
