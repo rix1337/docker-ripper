@@ -1,6 +1,6 @@
 # docker-ripper
 
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/J3J4Y2R6)
+[![ko-fi](https://img.shields.io/badge/Support-me-red.svg)](https://ko-fi.com/J3J4Y2R6)
 
 This container will detect optical disks by their type and rip them automatically.
 
