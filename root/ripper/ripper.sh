@@ -25,7 +25,10 @@ let BAD_RESPONSE=0
 while true
 do
 # delete MakeMKV temp files
-find /tmp/ -name "*.tmp" -type f -delete
+cwd=$(pwd)
+cd /tmp
+rm -r *.tmp
+cd $
 
 # get disk info through makemkv and pass output to INFO
 INFO=$"`makemkvcon -r --cache=1 info disc:9999 | grep DRV:0`"
