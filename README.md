@@ -58,7 +58,7 @@ _Make sure you have pulled the latest image. The image should be updated automat
 ### Am I allowed to use this in a commercial setting?
 
 _Yes, see [LICENSE.md](https://github.com/rix1337/docker-ripper/blob/master/LICENSE.md).
-If this project is helpful to your organization please send over a donation on [ko-fi](https://ko-fi.com/J3J4Y2R6).
+**If this project is helpful to your organization please sponsor me on [Github Sponsors](https://github.com/sponsors/rix1337)!**
 
 ### Do you offer support?
 
