@@ -28,7 +28,7 @@ do
 cwd=$(pwd)
 cd /tmp
 rm -r *.tmp
-cd $
+cd $cwd
 
 # get disk info through makemkv and pass output to INFO
 INFO=$"`makemkvcon -r --cache=1 info disc:9999 | grep DRV:0`"
