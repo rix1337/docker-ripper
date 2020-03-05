@@ -8,7 +8,7 @@
 #####################################
 
 apt-get update -qq
-apt-get install -qy --allow-unauthenticated build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev libqt4-dev wget
+apt-get install -qy --allow-unauthenticated build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qt5-default wget
 
 #####################################
 #	Download sources and extract    	#
@@ -55,7 +55,7 @@ popd
 #									#
 #####################################
 
-apt-get remove -qy build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev libqt4-dev
+apt-get remove -qy build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qt5-default
 apt-get clean && rm -rf /var/lib/apt/lists/* /var/tmp/*
 
 exit
