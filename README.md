@@ -28,12 +28,11 @@ docker run -d \
  --device=/dev/sr0:/dev/sr0 \ 
  --privileged \ 
  rix1337/docker-ripper
-```
-cd into the config directory and make any changes such as adding your MAKEmkv key if you purchased it.
-```
+ 
+#this step will cd into the config directory
 cd config
 ```
-Insert the disk into the optical drive then run
+# Insert the disk into the optical drive then run
 ```
 ./ripper.sh
   ```
