@@ -28,9 +28,6 @@ docker run -d \
  --device=/dev/sr0:/dev/sr0 \ 
  --privileged \ 
  rix1337/docker-ripper
- 
-#this step will cd into the config directory
-cd config
 ```
 ## Insert the disk into the optical drive then run
 ```
