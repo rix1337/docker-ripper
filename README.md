@@ -29,7 +29,7 @@ docker run -d \
  --privileged \ 
  rix1337/docker-ripper
 ```
-## Insert the disk into the optical drive then run
+### Insert the disk into the optical drive then run
 ```
 ./ripper.sh
   ```
