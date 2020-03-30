@@ -32,7 +32,7 @@ docker run -d \
 #this step will cd into the config directory
 cd config
 ```
-# Insert the disk into the optical drive then run
+## Insert the disk into the optical drive then run
 ```
 ./ripper.sh
   ```
