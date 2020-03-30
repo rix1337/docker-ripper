@@ -23,10 +23,20 @@ To add your purchased license key to MakeMKV/Ripper add it to the `enter-your-ke
 ```
 docker run -d \
   --name="Ripper" \
-  -v /path/to/config/:/config:rw \
-  -v /path/to/rips/:/out:rw \
-  --device=/dev/sr0:/dev/sr0 \
-  rix1337/docker-ripper
+ -v `pwd`/config:/config:rw \ 
+ -v `pwd`/rips:/out:rw \ 
+ --device=/dev/sr0:/dev/sr0 \ 
+ --privileged \ 
+ rix1337/docker-ripper
+```
+#cd into the config directory and make any changes such as adding your MAKEmkv key if you purchased it.
+```cd config
+```
+```
+#insert the disk into the optical drive then run
+```
+```
+./ripper.sh
   ```
 
 # FAQ
