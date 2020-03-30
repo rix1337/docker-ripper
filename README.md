@@ -30,6 +30,7 @@ docker run -d \
  rix1337/docker-ripper
 ```
 #cd into the config directory and make any changes such as adding your MAKEmkv key if you purchased it.
+
 ```cd config
 ```
 
