@@ -46,6 +46,13 @@ Data-Disk | `DATArip.sh` | Overrides data disk ripping commands in `ripper.sh` w
 
 _Note that these optional scripts must be of the specified name, have executable permissions set, and be in the same directory as `ripper.sh` to be executed._
 
+### How do I output AAC audio for CDs rather than FLAC and MP3?
+
+In the ripper.sh file, search for the line that calls `ripit`. Replace `-c 0,2` with:
+```
+-c 7 --ffmpegsuffix m4a --ffmpegopt "-c:a libfdk_aac -b:a 256k"
+```
+
 ### I want another output format that requires another piece of software!
 
 _You need to fork this image and build it yourself on docker hub. A good starting point is the [Dockerfile](https://github.com/rix1337/docker-ripper/blob/master/Dockerfile#L30) that includes setup instructions for the used ripping software.
