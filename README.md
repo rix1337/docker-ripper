@@ -29,6 +29,12 @@ docker run -d \
   rix1337/docker-ripper
   ```
 
+# Docker compose
+
+Check your device mount point before you run the container!
+
+`docker-compose up -d`
+
 # FAQ
 
 ### How do I set ripper to do something else?
