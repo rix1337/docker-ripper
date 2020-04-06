@@ -4,7 +4,7 @@ services:
         image: rix1337/docker-ripper:latest
         container_name: ripper
         volumes: 
-            - ./root/ripper/:/config/
+            - ./ripper/:/config/
             - ./rips/:/out/
         devices: 
             - /dev/sr0:/dev/sr0
