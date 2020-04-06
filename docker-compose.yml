@@ -1,0 +1,11 @@
+version: "3"
+services: 
+    ripper:
+        image: rix1337/docker-ripper:latest
+        container_name: ripper
+        volumes: 
+            - ./ripper/:/config/
+            - ./rips/:/out/
+        devices: 
+            - /dev/sr0:/dev/sr0
+        restart: always
