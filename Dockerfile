@@ -27,7 +27,7 @@ RUN chmod +x /etc/my_init.d/*.sh
 
 # Install software
 RUN apt-get update \
- && apt-get -y --allow-unauthenticated install gddrescue ripit wget eject lame faac curl
+ && apt-get -y --allow-unauthenticated install gddrescue ripit wget eject lame curl
  
 # MakeMKV/FFMPEG setup by github.com/tobbenb
 RUN chmod +x /tmp/install/install.sh && sleep 1 && /tmp/install/install.sh && rm -r /tmp/install
