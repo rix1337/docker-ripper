@@ -26,7 +26,7 @@ For example, /dev/sr0 and /dev/sg0 are the two files that refer to a single opti
 ![lsscsi -g](https://github.com/emmakat/docker-ripper/blob/emmakat-patch-1/screenshots/lsscsi%20-g.png)
 
 ## Docker run
-In the command below, the paths refer to wherever you created the config and rips directories. If you created /home/yourusername/config and /home/yourusername/rips then those are your paths. Your optical drive should be empty before you begin.  
+In the command below, the paths refer to wherever you created the config and rips directories. If you created /home/yourusername/config and /home/yourusername/rips then those are your paths.  
 ```
 docker run -d \
   --name="Ripper" \
