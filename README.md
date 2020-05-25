@@ -22,11 +22,11 @@ mkdir config rips
 ```
 lsscsi -g
 ```
-For example, /dev/sr0 and /dev/sg0 are the two files that refer to a single optical drive. These names will be needed for the docker run command.  
+In this example, /dev/sr0 and /dev/sg0 are the two files that refer to the optical drive. These names will be needed for the docker run command.  
 ![lsscsi -g](screenshots/lsscsi.png)
 
 ## Docker run
-In the command below, the paths refer to wherever you created the config and rips directories. If you created /home/yourusername/config and /home/yourusername/rips then those are your paths.  
+In the command below, the paths refer to the output from your lsscsi-g command, along with your config and rips directories. If you created /home/yourusername/config and /home/yourusername/rips then those are your paths.  
 ```
 docker run -d \
   --name="Ripper" \
@@ -36,6 +36,7 @@ docker run -d \
   --device=/dev/sg0:/dev/sg0 \
   rix1337/docker-ripper
   ```
+Screenshot of Docker run command with the example provided  
   ![docker run](screenshots/dockerrun.png)
   
   **To properly detect optical disk types in a docker environment this script relies on makemkvcon output.**
