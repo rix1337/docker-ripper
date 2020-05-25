@@ -42,7 +42,8 @@ docker run -d \
 
 MakeMKV is free while in Beta, but requires a valid license key. Ripper tries to fetch the latest free beta key on launch. Without a purchased license key Ripper may stop running at any time.
 
-If you have purchased a license key to MakeMKV/Ripper, after starting the container, go into the config directory you created, edit the file called `enter-your-key-then-rename-to.settings.conf`, and add your key between the quotes `app_Key = "`**[ENTER KEY HERE]**`"` then save and rename the file to settings.conf (then you can safely delete the original file called enter-your-key-then-rename-to.settings.conf)  
+If you have purchased a license key to MakeMKV/Ripper, after starting the container, go into the config directory you created, edit the file called `enter-your-key-then-rename-to.settings.conf`, and add your key between the quotes `app_Key = "`**[ENTER KEY HERE]**`"` then save and rename the file to settings.conf  
+
 ![makemkv license](screenshots/makemkvkey.png)  
 
 Remove the remaining file `enter-your-key-then-rename-to.settings.conf`
