@@ -12,13 +12,13 @@ Data-Disk | Uncompressed .ISO | ddrescue
 DVD | MKV | MakeMKV
 BluRay | MKV | MakeMKV
 
-## Prerequistites
-### (1) Create the required directories, for example, in /home/yourusername. Do _not_ use sudo mkdir to achieve this. 
+### Prerequistites
+#### (1) Create the required directories, for example, in /home/yourusername. Do _not_ use sudo mkdir to achieve this. 
 
 ```
 mkdir config rips
 ```
-### (2) Find out the name(s) of the optical drive
+#### (2) Find out the name(s) of the optical drive
 ```
 lsscsi -g
 ```
@@ -42,14 +42,15 @@ docker run -d \
 
 MakeMKV is free while in Beta, but requires a valid license key. Ripper tries to fetch the latest free beta key on launch. Without a purchased license key Ripper may stop running at any time.
 
-If you have purchased a license key to MakeMKV/Ripper, after starting the container, go into the config directory you created, edit the file called `enter-your-key-then-rename-to.settings.conf`, and add your key between the quotes `app_Key = "`**[ENTER KEY HERE]**`"` then save and rename the file to settings.conf  
+#### If you have purchased a license key to MakeMKV/Ripper:  
+1) after starting the container, go into the config directory you created, edit the file called `enter-your-key-then-rename-to.settings.conf`, and add your key between the quotes `app_Key = "`**[ENTER KEY HERE]**`"` then save and rename the file to settings.conf  
 
 ![makemkv license](screenshots/makemkvkey.png)  
 
-Remove the remaining file `enter-your-key-then-rename-to.settings.conf`
+2) Remove the remaining file `enter-your-key-then-rename-to.settings.conf`
 ![sudo rm enter your key](screenshots/sudormenteryourkey.png)  
 
-At this point your config directory should look like this:  
+3) At this point your config directory should look like this:  
 ![config directory](screenshots/configdirectory.png)
 
 
