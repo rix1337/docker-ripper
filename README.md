@@ -12,22 +12,48 @@ Data-Disk | Uncompressed .ISO | ddrescue
 DVD | MKV | MakeMKV
 BluRay | MKV | MakeMKV
 
-**To properly detect optical disk types in a docker environment this script relies on makemkvcon output.**
+### Prerequistites
+#### (1) Create the required directories, for example, in /home/yourusername. Do _not_ use sudo mkdir to achieve this. 
 
-MakeMKV is free while in Beta, but requires a valid license key. Ripper tries to fetch the latest free beta key on launch. Without a purchased license key Ripper may stop running at any time.
+```
+mkdir config rips
+```
+#### (2) Find out the name(s) of the optical drive
+```
+lsscsi -g
+```
+In this example, /dev/sr0 and /dev/sg0 are the two files that refer to a single optical drive. These names will be needed for the docker run command.  
+![lsscsi -g](screenshots/lsscsi.png)
 
-To add your purchased license key to MakeMKV/Ripper add it to the `enter-your-key-then-rename-to.settings.conf` at `app_Key = "`**[ENTER KEY HERE]**`"` and rename the file to settings.conf.
-
-# Docker run
-
+## Docker run
+In the command below, the paths refer to the output from your lsscsi-g command, along with your config and rips directories. If you created /home/yourusername/config and /home/yourusername/rips then those are your paths.  
 ```
 docker run -d \
   --name="Ripper" \
   -v /path/to/config/:/config:rw \
   -v /path/to/rips/:/out:rw \
   --device=/dev/sr0:/dev/sr0 \
+  --device=/dev/sg0:/dev/sg0 \
   rix1337/docker-ripper
   ```
+Screenshot of Docker run command with the example provided  
+  ![docker run](screenshots/dockerrun.png)
+  
+  **To properly detect optical disk types in a docker environment this script relies on makemkvcon output.**
+
+MakeMKV is free while in Beta, but requires a valid license key. Ripper tries to fetch the latest free beta key on launch. Without a purchased license key Ripper may stop running at any time.
+
+#### If you have purchased a license key to MakeMKV/Ripper:  
+1) after starting the container, go into the config directory you created, edit the file called `enter-your-key-then-rename-to.settings.conf`, and add your key between the quotes `app_Key = "`**[ENTER KEY HERE]**`"` then save and rename the file to settings.conf  
+
+![makemkv license](screenshots/makemkvkey.png)  
+
+2) Remove the remaining file `enter-your-key-then-rename-to.settings.conf`
+![sudo rm enter your key](screenshots/sudormenteryourkey.png)  
+
+3) At this point your config directory should look like this:  
+![config directory](screenshots/configdirectory.png)
+
 
 # Docker compose
 
