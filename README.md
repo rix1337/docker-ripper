@@ -22,7 +22,7 @@ mkdir config rips
 ```
 lsscsi -g
 ```
-In this example, /dev/sr0 and /dev/sg0 are the two files that refer to the optical drive. These names will be needed for the docker run command.  
+In this example, /dev/sr0 and /dev/sg0 are the two files that refer to a single optical drive. These names will be needed for the docker run command.  
 ![lsscsi -g](screenshots/lsscsi.png)
 
 ## Docker run
