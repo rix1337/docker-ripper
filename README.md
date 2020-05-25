@@ -23,7 +23,7 @@ mkdir config rips
 lsscsi -g
 ```
 For example, /dev/sr0 and /dev/sg0 are the two files that refer to a single optical drive. These names will be needed for the docker run command.  
-![lsscsi -g](https://github.com/emmakat/docker-ripper/blob/emmakat-patch-1/screenshots/lsscsi%20-g.png)
+![lsscsi -g](screenshots/lsscsi.png)
 
 ## Docker run
 In the command below, the paths refer to wherever you created the config and rips directories. If you created /home/yourusername/config and /home/yourusername/rips then those are your paths.  
@@ -36,16 +36,20 @@ docker run -d \
   --device=/dev/sg0:/dev/sg0 \
   rix1337/docker-ripper
   ```
-  ![docker run](https://github.com/emmakat/docker-ripper/blob/emmakat-patch-1/screenshots/docker%20run.png)
+  ![docker run](screenshots/dockerrun.png)
   
   **To properly detect optical disk types in a docker environment this script relies on makemkvcon output.**
 
 MakeMKV is free while in Beta, but requires a valid license key. Ripper tries to fetch the latest free beta key on launch. Without a purchased license key Ripper may stop running at any time.
 
 If you have purchased a license key to MakeMKV/Ripper, after starting the container, go into the config directory you created, edit the file called `enter-your-key-then-rename-to.settings.conf`, and add your key between the quotes `app_Key = "`**[ENTER KEY HERE]**`"` then save and rename the file to settings.conf (then you can safely delete the original file called enter-your-key-then-rename-to.settings.conf)  
-![makemkv license](https://github.com/emmakat/docker-ripper/blob/emmakat-patch-1/screenshots/makemkvkey.png)
+![makemkv license](screenshots/makemkvkey.png)  
+
+Remove the remaining file `enter-your-key-then-rename-to.settings.conf`
+![sudo rm enter your key](screenshots/sudormenteryourkey.png)  
+
 At this point your config directory should look like this:  
-![config directory](https://github.com/emmakat/docker-ripper/blob/emmakat-patch-1/screenshots/config%20directory.png)
+![config directory](screenshots/configdirectory.png)
 
 
 # Docker compose
