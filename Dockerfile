@@ -27,7 +27,12 @@ RUN chmod +x /etc/my_init.d/*.sh
 
 # Install software
 RUN apt-get update \
- && apt-get -y --allow-unauthenticated install gddrescue ripit wget eject lame curl
+ && apt-get -y --allow-unauthenticated install gddrescue wget eject lame curl
+
+# Install ripit beta that uses gnudb instead of freedb (to detect disks)
+RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc20161009-1_all.deb -O /tmp/install/ripit_4.0.0~rc20161009-1_all.deb \
+ && apt install -y /tmp/install/ripit_4.0.0~rc20161009-1_all.deb
+
  
 # MakeMKV/FFMPEG setup by github.com/tobbenb
 RUN chmod +x /tmp/install/install.sh && sleep 1 && /tmp/install/install.sh && rm -r /tmp/install
