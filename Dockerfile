@@ -1,4 +1,4 @@
-FROM phusion/baseimage:latest-amd64
+FROM phusion/baseimage:master-amd64
 MAINTAINER rix1337
 
 # Set correct environment variables
