@@ -19,11 +19,11 @@ VERSION=$(curl --silent 'https://www.makemkv.com/forum/viewtopic.php?f=3&t=224' 
 mkdir -p /tmp/sources
 wget -O /tmp/sources/makemkv-bin-$VERSION.tar.gz http://www.makemkv.com/download/makemkv-bin-$VERSION.tar.gz
 wget -O /tmp/sources/makemkv-oss-$VERSION.tar.gz http://www.makemkv.com/download/makemkv-oss-$VERSION.tar.gz
-wget -O /tmp/sources/ffmpeg-4.0.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.0.tar.bz2
+wget -O /tmp/sources/ffmpeg-4.3.1.tar.bz2 https://ffmpeg.org/releases/ffmpeg-4.3.1.tar.bz2
 pushd /tmp/sources/
 tar xvzf /tmp/sources/makemkv-bin-$VERSION.tar.gz
 tar xvzf /tmp/sources/makemkv-oss-$VERSION.tar.gz
-tar xvjf /tmp/sources/ffmpeg-4.0.tar.bz2
+tar xvjf /tmp/sources/ffmpeg-4.3.1.tar.bz2
 popd
 
 #####################################
@@ -32,7 +32,7 @@ popd
 #####################################
 
 #FFmpeg
-pushd /tmp/sources/ffmpeg-4.0
+pushd /tmp/sources/ffmpeg-4.3.1
 ./configure --prefix=/tmp/ffmpeg --enable-static --disable-shared --enable-pic --disable-yasm --enable-libfdk-aac
 make install
 popd
