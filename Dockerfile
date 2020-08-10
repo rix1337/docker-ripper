@@ -31,7 +31,7 @@ RUN apt-get update \
 
 # Install ripit beta that uses gnudb instead of freedb (to detect disks)
 RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc20161009-1_all.deb -O /tmp/install/ripit_4.0.0~rc20161009-1_all.deb \
- && apt install -y /tmp/install/ripit_4.0.0~rc20161009-1_all.deb
+ && apt install -y --allow-unauthenticated /tmp/install/ripit_4.0.0~rc20161009-1_all.deb
 
  
 # MakeMKV/FFMPEG setup by github.com/tobbenb
