@@ -1,4 +1,4 @@
-FROM phusion/baseimage:0.11
+FROM phusion/baseimage:0.9.22
 MAINTAINER rix1337
 
 # Set correct environment variables
@@ -18,9 +18,6 @@ CMD ["/sbin/my_init"]
  usermod -d /home nobody && \
  chown -R nobody:users /home
 
-# Disable SSH
-RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
-
 # Move Files
 COPY root/ /
 RUN chmod +x /etc/my_init.d/*.sh
@@ -32,6 +29,9 @@ RUN apt-get update \
 # Install ripit beta that uses gnudb instead of freedb (to detect disks)
 RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc20161009-1_all.deb -O /tmp/install/ripit_4.0.0~rc20161009-1_all.deb \
  && apt install -y --allow-unauthenticated /tmp/install/ripit_4.0.0~rc20161009-1_all.deb
+ 
+ # Disable SSH
+RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 
  
 # MakeMKV/FFMPEG setup by github.com/tobbenb
