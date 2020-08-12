@@ -44,7 +44,7 @@ popd
 
 #Makemkv-oss
 pushd /tmp/sources/makemkv-oss-$VERSION
-PKG_CONFIG_PATH=/tmp/ffmpeg/lib/pkgconfig ./configure
+PKG_CONFIG_PATH=/tmp/ffmpeg/lib/pkgconfig CFLAGS="-std=gnu++11" ./configure
 make
 make install
 popd
