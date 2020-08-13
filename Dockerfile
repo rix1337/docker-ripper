@@ -33,6 +33,8 @@ RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc2016100
  # Disable SSH
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 
+# Skip cache for the following install script (output is random invalidating docker cache for the next steps)
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
  
 # MakeMKV/FFMPEG setup by github.com/tobbenb
 RUN chmod +x /tmp/install/install.sh && sleep 1 && /tmp/install/install.sh && rm -r /tmp/install
