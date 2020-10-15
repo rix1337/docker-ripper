@@ -24,7 +24,7 @@ RUN chmod +x /etc/my_init.d/*.sh
 
 # Install software
 RUN apt-get update \
- && apt-get -y --allow-unauthenticated install gddrescue wget eject lame curl default-jre unzip
+ && apt-get -y --allow-unauthenticated install gddrescue wget eject lame curl default-jre
 
 # Install ripit beta that uses gnudb instead of freedb (to detect disks)
 RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc20161009-1_all.deb -O /tmp/install/ripit_4.0.0~rc20161009-1_all.deb \
@@ -32,12 +32,8 @@ RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc2016100
  && rm /tmp/install/ripit_4.0.0~rc20161009-1_all.deb
  
 # Fix libmp3-tag-perl
-RUN wget https://cpan.metacpan.org/authors/id/I/IL/ILYAZ/modules/MP3-Tag-1.15.zip \
- && unzip MP3-Tag-1.15.zip \
- && cd MP3-Tag-1.15 \
- && cpan . \
- && cd .. \
- && rm -rf MP3-Tag-1.15 && rm MP3-Tag-1.15.zip
+RUN cpan App::cpanminus \
+ && cpanm MP3::Tag
  
  # Disable SSH
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
