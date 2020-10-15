@@ -24,7 +24,7 @@ RUN chmod +x /etc/my_init.d/*.sh
 
 # Install software
 RUN apt-get update \
- && apt-get -y --allow-unauthenticated install gddrescue wget eject lame curl default-jre
+ && apt-get -y --allow-unauthenticated install gddrescue wget eject lame curl default-jre make
 
 # Install ripit beta that uses gnudb instead of freedb (to detect disks)
 RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc20161009-1_all.deb -O /tmp/install/ripit_4.0.0~rc20161009-1_all.deb \
