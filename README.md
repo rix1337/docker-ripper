@@ -78,6 +78,10 @@ Data-Disk | `DATArip.sh` | Overrides data disk ripping commands in `ripper.sh` w
 
 _Note that these optional scripts must be of the specified name, have executable permissions set, and be in the same directory as `ripper.sh` to be executed._
 
+### How do I rip from multiple drives simultaneously?
+
+Simple: run multiple containers of this image, passing through each separate drive accordingly.
+
 ### How do I output AAC audio for CDs rather than FLAC and MP3?
 
 In the ripper.sh file, search for the line that calls `ripit`. Replace `-c 0,2` with:
