@@ -24,11 +24,16 @@ RUN chmod +x /etc/my_init.d/*.sh
 
 # Install software
 RUN apt-get update \
- && apt-get -y --allow-unauthenticated install gddrescue wget eject lame curl default-jre
+ && apt-get -y --allow-unauthenticated install gddrescue wget eject lame curl default-jre cpanminus make
 
 # Install ripit beta that uses gnudb instead of freedb (to detect disks)
 RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc20161009-1_all.deb -O /tmp/install/ripit_4.0.0~rc20161009-1_all.deb \
- && apt install -y --allow-unauthenticated /tmp/install/ripit_4.0.0~rc20161009-1_all.deb
+ && apt install -y --allow-unauthenticated /tmp/install/ripit_4.0.0~rc20161009-1_all.deb \
+ && rm /tmp/install/ripit_4.0.0~rc20161009-1_all.deb
+ 
+# Install & update perl modules
+RUN cpanm MP3::Tag \
+ && cpanm WebService::MusicBrainz
  
  # Disable SSH
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
