@@ -31,7 +31,7 @@ RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc2016100
  && apt install -y --allow-unauthenticated /tmp/install/ripit_4.0.0~rc20161009-1_all.deb \
  && rm /tmp/install/ripit_4.0.0~rc20161009-1_all.deb
  
-# Fix libmp3-tag-perl
+# Install & update perl modules
 RUN cpanm MP3::Tag \
  && cpanm WebService::MusicBrainz
  
