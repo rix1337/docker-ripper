@@ -27,7 +27,7 @@ do
 # delete MakeMKV temp files
 cwd=$(pwd)
 cd /tmp
-rm -r *.tmp
+rm -r *.tmp > /dev/null 2>&1
 cd $cwd
 
 # get disk info through makemkv and pass output to INFO
