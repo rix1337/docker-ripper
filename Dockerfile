@@ -24,7 +24,8 @@ RUN chmod +x /etc/my_init.d/*.sh
 
 # Install software
 RUN apt-get update \
- && apt-get -y --allow-unauthenticated install gddrescue wget eject lame curl default-jre cpanminus make cmake libglew-dev libglfw3-dev cmake gcc libcurl4-gnutls-dev tesseract-ocr tesseract-ocr-dev libleptonica-dev
+ && apt-get -y --allow-unauthenticated install --no-install-recommends gddrescue wget eject lame curl default-jre cpanminus make \
+ build-essential pkgconf cmake automake autoconf git software-properties-common libtesseract-dev libfreetype6 tesseract-ocr-eng libleptonica-dev libcurl4-gnutls-dev libglfw3-dev libglew-dev libwebp-dev libgif-dev libfreetype6 libutf8proc2 tesseract-ocr
 
 # Install ripit beta that uses gnudb instead of freedb (to detect disks)
 RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc20161009-1_all.deb -O /tmp/install/ripit_4.0.0~rc20161009-1_all.deb \
@@ -36,24 +37,21 @@ RUN cpanm MP3::Tag \
  && cpanm WebService::MusicBrainz
 
 
-# cextractor setup by github.com/jlesage
-RUN \
-    export CFLAGS="-Os -fomit-frame-pointer" && \
-    export CXXFLAGS="$CFLAGS" && \
-    export CPPFLAGS="$CFLAGS" && \
-    export LDFLAGS="-Wl,--as-needed" && \
-    mkdir /tmp/ccextractor && \
-    curl -# -L "https://github.com/CCExtractor/ccextractor/archive/v0.88.tar.gz" | tar xz --strip 1 -C /tmp/ccextractor && \
-    mkdir /tmp/ccextractor/build && \
-    cd /tmp/ccextractor/build && \
-    cmake ../src && \
+# Install ccextractor
+RUN git clone https://github.com/CCExtractor/ccextractor.git && \
+    cd ccextractor/linux && \
+    ./autogen.sh && \
+    ./configure --enable-ocr && \
     make && \
-    cd ../../ && \
-    # Install.
-    cp /tmp/ccextractor/build/ccextractor /usr/bin/ && \
-    strip /usr/bin/ccextractor && \
-    # Cleanup.
-    rm -rf /tmp/* /tmp/.[!.]*
+    make install
+
+# Clean up dependencies
+RUN apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf \
+    	/tmp/* \
+    	/var/lib/apt/lists/* \
+    	/var/tmp/*
 
  # Disable SSH
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
