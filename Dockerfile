@@ -45,14 +45,6 @@ RUN git clone https://github.com/CCExtractor/ccextractor.git && \
     make && \
     make install
 
-# Clean up dependencies
-RUN apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf \
-    	/tmp/* \
-    	/var/lib/apt/lists/* \
-    	/var/tmp/*
-
  # Disable SSH
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 
@@ -60,4 +52,13 @@ RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
  
 # MakeMKV/FFMPEG setup by github.com/tobbenb
-RUN chmod +x /tmp/install/install.sh && sleep 1 && /tmp/install/install.sh && rm -r /tmp/install
+RUN chmod +x /tmp/install/install.sh && sleep 1 && \
+    /tmp/install/install.sh
+
+# Clean up dependencies
+RUN apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf \
+    	/tmp/* \
+    	/var/lib/apt/lists/* \
+    	/var/tmp/*
