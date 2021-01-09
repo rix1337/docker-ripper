@@ -24,7 +24,7 @@ RUN chmod +x /etc/my_init.d/*.sh
 
 # Install software
 RUN apt-get update \
- && apt-get -y --allow-unauthenticated install gddrescue wget eject lame curl default-jre cpanminus make
+ && apt-get -y --allow-unauthenticated install gddrescue wget eject lame curl default-jre cpanminus make cmake libglew-dev libglfw3-dev cmake gcc libcurl4-gnutls-dev tesseract-ocr tesseract-ocr-dev libleptonica-dev
 
 # Install ripit beta that uses gnudb instead of freedb (to detect disks)
 RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc20161009-1_all.deb -O /tmp/install/ripit_4.0.0~rc20161009-1_all.deb \
@@ -34,7 +34,30 @@ RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc2016100
 # Install & update perl modules
 RUN cpanm MP3::Tag \
  && cpanm WebService::MusicBrainz
- 
+
+
+# cextractor setup by github.com/jlesage
+RUN \
+    # Set same default compilation flags as abuild.
+    export CFLAGS="-Os -fomit-frame-pointer" && \
+    export CXXFLAGS="$CFLAGS" && \
+    export CPPFLAGS="$CFLAGS" && \
+    export LDFLAGS="-Wl,--as-needed" && \
+    # Download and extract.
+    mkdir /tmp/ccextractor && \
+    curl -# -L "https://github.com/CCExtractor/ccextractor/archive/v0.88.tar.gz" | tar xz --strip 1 -C /tmp/ccextractor && \
+    # Compile.
+    mkdir ccextractor/build && \
+    cd ccextractor/build && \
+    cmake ../src && \
+    make && \
+    cd ../../ && \
+    # Install.
+    cp ccextractor/build/ccextractor /usr/bin/ && \
+    strip /usr/bin/ccextractor && \
+    # Cleanup.
+    rm -rf /tmp/* /tmp/.[!.]*
+
  # Disable SSH
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 
