@@ -25,7 +25,7 @@ RUN chmod +x /etc/my_init.d/*.sh
 # Install software
 RUN apt-get update \
  && apt-get -y --allow-unauthenticated install --no-install-recommends gddrescue wget eject lame curl default-jre cpanminus make \
- build-essential pkgconf cmake automake autoconf git software-properties-common libtesseract-dev libfreetype6 tesseract-ocr-eng libleptonica-dev libcurl4-gnutls-dev libglfw3-dev libglew-dev libwebp-dev libgif-dev libfreetype6 libutf8proc2 tesseract-ocr
+ build-essential pkgconf cmake automake autoconf git gcc tesseract-ocr libtesseract-dev libleptonica-dev libcurl4-gnutls-dev
 
 # Install ripit beta that uses gnudb instead of freedb (to detect disks)
 RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc20161009-1_all.deb -O /tmp/install/ripit_4.0.0~rc20161009-1_all.deb \
