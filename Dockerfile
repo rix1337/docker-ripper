@@ -38,22 +38,19 @@ RUN cpanm MP3::Tag \
 
 # cextractor setup by github.com/jlesage
 RUN \
-    # Set same default compilation flags as abuild.
     export CFLAGS="-Os -fomit-frame-pointer" && \
     export CXXFLAGS="$CFLAGS" && \
     export CPPFLAGS="$CFLAGS" && \
     export LDFLAGS="-Wl,--as-needed" && \
-    # Download and extract.
     mkdir /tmp/ccextractor && \
     curl -# -L "https://github.com/CCExtractor/ccextractor/archive/v0.88.tar.gz" | tar xz --strip 1 -C /tmp/ccextractor && \
-    # Compile.
-    mkdir ccextractor/build && \
-    cd ccextractor/build && \
+    mkdir /tmp/ccextractor/build && \
+    cd /tmp/ccextractor/build && \
     cmake ../src && \
     make && \
     cd ../../ && \
     # Install.
-    cp ccextractor/build/ccextractor /usr/bin/ && \
+    cp /tmp/ccextractor/build/ccextractor /usr/bin/ && \
     strip /usr/bin/ccextractor && \
     # Cleanup.
     rm -rf /tmp/* /tmp/.[!.]*
