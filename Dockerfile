@@ -55,10 +55,8 @@ ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 RUN chmod +x /tmp/install/install.sh && sleep 1 && \
     /tmp/install/install.sh
 
-# Clean up dependencies
-RUN apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf \
+# Clean up temp files
+RUN rm -rf \
     	/tmp/* \
     	/var/lib/apt/lists/* \
     	/var/tmp/*
