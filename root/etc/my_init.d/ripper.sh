@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Using this daily? Please sponsor me at https://github.com/sponsors/rix1337 - any amount counts!"
+
 # copy default script
 if [[ ! -f /config/ripper.sh ]]; then
  cp /ripper/ripper.sh /config/ripper.sh
