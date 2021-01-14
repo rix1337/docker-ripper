@@ -63,6 +63,12 @@ Check your device mount point before you run the container!
 
 # FAQ
 
+### There is an error regarding 'ccextractor'
+
+Add the following line to settings.conf
+```
+app_ccextractor = "/usr/local/bin/ccextractor" 
+```
 ### How do I set ripper to do something else?
 
 _Ripper will place a bash-file ([ripper.sh](https://github.com/rix1337/docker-ripper/blob/master/root/ripper/ripper.sh)) automatically at /config that is responsible for detecting and ripping disks. You are completely free to modify it on your local docker host. No modifications to this main image are required for minor edits to that file._
