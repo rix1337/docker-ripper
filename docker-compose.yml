@@ -3,8 +3,8 @@ services:
     docker-ripper:
         container_name: Ripper
         volumes:
-            - '/path/to/config/:/config:rw'
-            - '/path/to/rips/:/out:rw'
+            - '/tmp/ripper/:/config:rw'
+            - '/tmp/ripper/:/out:rw'
         devices:
             - '/dev/sr0:/dev/sr0'
             - '/dev/sg0:/dev/sg0'
