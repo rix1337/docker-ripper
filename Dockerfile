@@ -1,4 +1,4 @@
-FROM phusion/baseimage:0.9.22
+FROM phusion/baseimage:focal-1.0.0
 MAINTAINER rix1337
 
 # Set correct environment variables
@@ -20,22 +20,13 @@ CMD ["/sbin/my_init"]
 
 # Move Files
 COPY root/ /
+RUN chmod 1777 /tmp
 RUN chmod +x /etc/my_init.d/*.sh
 
 # Install software
 RUN apt-get update \
  && apt-get -y --allow-unauthenticated install --no-install-recommends gddrescue wget eject lame curl default-jre cpanminus make \
  build-essential pkgconf cmake automake autoconf git gcc tesseract-ocr libtesseract-dev libleptonica-dev libcurl4-gnutls-dev
-
-# Install ripit beta that uses gnudb instead of freedb (to detect disks)
-RUN wget http://ftp.br.debian.org/debian/pool/main/r/ripit/ripit_4.0.0~rc20161009-1_all.deb -O /tmp/install/ripit_4.0.0~rc20161009-1_all.deb \
- && apt install -y --allow-unauthenticated /tmp/install/ripit_4.0.0~rc20161009-1_all.deb \
- && rm /tmp/install/ripit_4.0.0~rc20161009-1_all.deb
- 
-# Install & update perl modules
-RUN cpanm MP3::Tag \
- && cpanm WebService::MusicBrainz
-
 
 # Install ccextractor
 RUN git clone https://github.com/CCExtractor/ccextractor.git && \
@@ -54,6 +45,10 @@ ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 # MakeMKV/FFMPEG setup by github.com/tobbenb
 RUN chmod +x /tmp/install/install.sh && sleep 1 && \
     /tmp/install/install.sh
+
+# Install & update perl modules
+RUN cpanm WebService::MusicBrainz \
+ && cpanm -u
 
 # Clean up temp files
 RUN rm -rf \
