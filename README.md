@@ -7,7 +7,7 @@ This container will detect optical disks by their type and rip them automaticall
 # Output
 Disc Type | Output | Tools used
 ---|---|---
-CD | MP3 and FLAC | Ripit (lame/faac and flac)
+CD | MP3 and FLAC | abcde (lame and flac)
 Data-Disk | Uncompressed .ISO | ddrescue
 DVD | MKV | MakeMKV
 BluRay | MKV | MakeMKV
@@ -88,12 +88,9 @@ _Note that these optional scripts must be of the specified name, have executable
 
 Simple: run multiple containers of this image, passing through each separate drive accordingly.
 
-### How do I output AAC audio for CDs rather than FLAC and MP3?
+### How do I customize the audio ripping output?
 
-In the ripper.sh file, search for the line that calls `ripit`. Replace `-c 0,2` with:
-```
--c 7 --ffmpegsuffix m4a --ffmpegopt "-c:a libfdk_aac -b:a 256k"
-```
+_You need to edit /configabcde.conf_
 
 ### I want another output format that requires another piece of software!
 
