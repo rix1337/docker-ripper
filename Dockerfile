@@ -27,18 +27,10 @@ RUN apt-get update && \
     apt-get -y --allow-unauthenticated install --no-install-recommends gddrescue wget eject git && \
     add-apt-repository ppa:heyarje/makemkv-beta && \
     apt-get update && \
-    apt-get -y install makemkv-bin makemkv-oss && \
+    apt-get -y install makemkv-bin makemkv-oss ccextractor && \
     apt-get -y install abcde eyed3 && \
     apt-get -y install flac lame mkcue speex vorbis-tools vorbisgain id3 id3v2 && \
     apt-get -y autoremove
-
-# Install ccextractor
-RUN git clone https://github.com/CCExtractor/ccextractor.git && \
-    cd ccextractor/linux && \
-    ./autogen.sh && \
-    ./configure --enable-ocr && \
-    make && \
-    make install
 
  # Disable SSH
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
