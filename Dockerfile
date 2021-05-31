@@ -24,7 +24,7 @@ RUN chmod +x /etc/my_init.d/*.sh
 
 # Install software
 RUN apt-get update && \
-    apt-get -y --allow-unauthenticated install --no-install-recommends gddrescue wget eject && \
+    apt-get -y --allow-unauthenticated install --no-install-recommends gddrescue wget eject git && \
     add-apt-repository ppa:heyarje/makemkv-beta && \
     apt-get update && \
     apt-get -y install makemkv-bin makemkv-oss && \
