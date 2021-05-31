@@ -90,7 +90,7 @@ Simple: run multiple containers of this image, passing through each separate dri
 
 ### How do I customize the audio ripping output?
 
-_You need to edit /configabcde.conf_
+_You need to edit /config/abcde.conf_
 
 ### I want another output format that requires another piece of software!
 
