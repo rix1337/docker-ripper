@@ -12,7 +12,7 @@ ENV LANGUAGE en_US.UTF-8
 CMD ["/sbin/my_init"]
 
 # Configure user nobody to match unRAID's settings
- RUN \
+RUN \
  usermod -u 99 nobody && \
  usermod -g 100 nobody && \
  usermod -d /home nobody && \
@@ -30,6 +30,12 @@ RUN apt-get update && \
     apt-get -y install makemkv-bin makemkv-oss ccextractor && \
     apt-get -y install abcde eyed3 && \
     apt-get -y install flac lame mkcue speex vorbis-tools vorbisgain id3 id3v2 && \
+    apt-get -y autoremove
+
+# Install python for web ui
+RUN apt-get update && \
+    apt-get -y --allow-unauthenticated install --no-install-recommends python3 python3-pip && \
+    pip3 install docopt flask waitress && \
     apt-get -y autoremove
 
  # Disable SSH

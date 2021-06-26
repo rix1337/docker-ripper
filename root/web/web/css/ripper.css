@@ -3,8 +3,8 @@ body {
     color: black;
 }
 
-#log, #myjd {
-    max-width: 80em;
+#log {
+    max-width: 100em;
 }
 
 .offcanvas-bottom {
@@ -14,7 +14,7 @@ body {
 }
 
 .log {
-    height: 260px;
+    height: 600px;
     overflow: auto;
     resize: none;
     color: black;
@@ -22,13 +22,7 @@ body {
     background-color: #f7f7f7;
 }
 
-thead {
-    position: sticky;
-    top: 0;
-    background-color: #f7f7f7;
-}
-
-.table thead th, .table td {
+.table td {
     border-top: 0;
     border-bottom: 0;
 }
@@ -66,11 +60,6 @@ td {
 
 .card-body {
     padding-bottom: 1.25em;
-}
-
-.tooltip-inner {
-    border-radius: .25rem;
-    max-width: 50em;
 }
 
 #head {
@@ -117,10 +106,6 @@ input, select, textarea, .accordion {
 
 p {
     margin-top: 16px;
-}
-
-.form-check {
-    display: inline-block;
 }
 
 .isDisabled {

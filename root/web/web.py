@@ -6,24 +6,32 @@
 
 Usage:
   web.py [--port=<PORT>]
-         [---prefix=<PREFIX>]
-         [---user=<USERNAME>]
+         [--prefix=<PREFIX>]
+         [--log=<LOGFILE>]
+         [--user=<USERNAME>]
          [--pass=<PASSWORD>]
 
 Options:
   --port=<PORT>          Set the webserver's port
   --prefix=<PREFIX>      Set the webserver's path prefix (useful with reverse proxy)
+  --log=<LOGFILE>        Set the location of the log file
   --user=<USERNAME>      Set the username for webserver (requires pass to be set)
   --pass=<PASSWORD>      Set the password for webserver (requires username to be set)
 """
 
+import base64
 import os
 import re
 from functools import wraps
 
-import docopt
+from docopt import docopt
 from flask import Flask, request, redirect, send_from_directory, render_template, jsonify, Response
 from waitress import serve
+
+
+def decode_base64(value):
+    value = value.replace("-", "/")
+    return base64.b64decode(value).decode()
 
 
 def app_container():
@@ -45,6 +53,11 @@ def app_container():
             prefix = '/' + prefix
     else:
         prefix = ""
+
+    if arguments['--log']:
+        log_file = arguments['--log']
+    else:
+        log_file = "/config/Ripper.log"
 
     def check_auth(username, password):
         return username == arguments['--user'] and password == arguments['--pass']
@@ -94,19 +107,12 @@ def app_container():
         if request.method == 'GET':
             try:
                 log = []
-                if os.path.isfile("/config/Ripper.log"):
-                    logfile = open("/config/Ripper.log")
+                if os.path.isfile(log_file):
+                    logfile = open(log_file)
                     i = 0
                     for line in reversed(logfile.readlines()):
                         if line and line != "\n":
-                            payload = [i]
-                            line = line.replace("]", "")
-                            line = line.replace("[", "")
-                            line = re.sub(r",\d{3}", "", line)
-                            line = line.split(" - ")
-                            for line_part in line:
-                                payload.append(line_part)
-                            log.append(payload)
+                            log.append(line)
                         i += 1
                 return jsonify(
                     {
@@ -117,7 +123,7 @@ def app_container():
                 return "Failed", 400
         elif request.method == 'DELETE':
             try:
-                open(internal.log_file, 'w').close()
+                open(log_file, 'w').close()
                 return "Success", 200
             except:
                 return "Failed", 400
@@ -131,14 +137,14 @@ def app_container():
             try:
                 entry = decode_base64(b64_entry)
                 log = []
-                if os.path.isfile(internal.log_file):
-                    logfile = open(internal.log_file)
+                if os.path.isfile(log_file):
+                    logfile = open(log_file)
                     for line in reversed(logfile.readlines()):
                         if line and line != "\n":
                             if entry not in line:
                                 log.append(line)
                     log = "".join(reversed(log))
-                    with open(internal.log_file, 'w') as file:
+                    with open(log_file, 'w') as file:
                         file.write(log)
                 return "Success", 200
             except:

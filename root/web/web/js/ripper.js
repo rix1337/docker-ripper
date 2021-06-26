@@ -1,37 +1,12 @@
-let app = angular.module('crwlApp', []);
+let app = angular.module('logApp', []);
 
-app.controller('crwlCtrl', function ($scope, $http, $timeout) {
+app.controller('logCtrl', function ($scope, $http, $timeout) {
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     });
 
-    $scope.results = [];
 
-    $scope.currentPage = 0;
-    $scope.pageSize = 10;
-    $scope.resLength = 0;
-    $scope.numberOfPages = function () {
-        if (typeof $scope.results.bl !== 'undefined') {
-            $scope.resLength = Object.values($scope.results.bl).length;
-            return Math.ceil($scope.resLength / $scope.pageSize);
-        }
-    };
-
-    $scope.currentPageLog = 0;
-    $scope.pageSizeLog = 5;
-    $scope.resLengthLog = 0;
-    $scope.numberOfPagesLog = function () {
-        if (typeof $scope.log !== 'undefined') {
-            $scope.resLengthLog = $scope.log.length;
-            let numPagesLog = Math.ceil($scope.resLengthLog / $scope.pageSizeLog);
-            if (($scope.currentPageLog > 0) && (($scope.currentPageLog + 1) > numPagesLog)) {
-                $scope.currentPageLog = numPagesLog - 1;
-            }
-            return numPagesLog;
-        }
-    };
-
-    $scope.loglength = 65;
+    $scope.loglength = 150;
     $scope.longlog = false;
 
     $scope.longerLog = function () {
@@ -40,7 +15,7 @@ app.controller('crwlCtrl', function ($scope, $http, $timeout) {
     };
 
     $scope.shorterLog = function () {
-        $scope.loglength = 65;
+        $scope.loglength = 150;
         $scope.longlog = false;
     };
 
@@ -58,10 +33,10 @@ app.controller('crwlCtrl', function ($scope, $http, $timeout) {
         $http.get('api/log/')
             .then(function (res) {
                 $scope.log = res.data.log;
-                console.log('Log abgerufen!');
+                console.log('Log loaded!');
             }, function () {
-                console.log('Konnte Log nicht abrufen!');
-                showDanger('Konnte Log nicht abrufen!');
+                console.log('Could not load log!');
+                showDanger('Could not load log!');
             });
     }
 
@@ -70,12 +45,12 @@ app.controller('crwlCtrl', function ($scope, $http, $timeout) {
         spinLog();
         $http.delete('api/log/')
             .then(function () {
-                console.log('Log geleert!');
-                showSuccess('Log geleert!');
+                console.log('Log cleared!');
+                showSuccess('Log cleared!');
                 getLog();
             }, function () {
-                console.log('Konnte Log nicht leeren!');
-                showDanger('Konnte Log nicht leeren!');
+                console.log('Could not clear log!');
+                showDanger('Could not clear log!');
             });
     }
 
@@ -83,12 +58,12 @@ app.controller('crwlCtrl', function ($scope, $http, $timeout) {
         title = btoa(title);
         $http.delete('api/log_entry/' + title)
             .then(function () {
-                console.log('Logeintrag gelöscht!');
-                showSuccess('Logeintrag gelöscht!');
+                console.log('Log entry deleted!');
+                showSuccess('Log entry deleted!');
                 getLog();
             }, function () {
-                console.log('Konnte Logeintrag nicht löschen!');
-                showDanger('Konnte Logeintrag nicht löschen!');
+                console.log('Could not delete log entry!');
+                showDanger('Could not delete log entry!');
             });
     }
 
