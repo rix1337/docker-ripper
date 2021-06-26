@@ -1,0 +1,145 @@
+body {
+    background-color: #303030;
+    color: black;
+}
+
+#log, #myjd {
+    max-width: 80em;
+}
+
+.offcanvas-bottom {
+    height: unset;
+    min-height: 60%;
+    max-height: 100%;
+}
+
+.log {
+    height: 260px;
+    overflow: auto;
+    resize: none;
+    color: black;
+    text-align: left;
+    background-color: #f7f7f7;
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    background-color: #f7f7f7;
+}
+
+.table thead th, .table td {
+    border-top: 0;
+    border-bottom: 0;
+}
+
+.container {
+    box-shadow: 0 0 5px 5px #202020;
+    border-radius: 0;
+    margin: 1em auto;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+.alert {
+    margin-bottom: 1em;
+    max-width: 20em;
+}
+
+td {
+    font-family: Courier New, Courier, Lucida Sans Typewriter, Lucida Typewriter, monospace;
+    white-space: nowrap;
+}
+
+.app {
+    background-color: white;
+    color: black;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+}
+
+.alert {
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    box-shadow: 0 0 5px 5px #606060;
+}
+
+.card-body {
+    padding-bottom: 1.25em;
+}
+
+.tooltip-inner {
+    border-radius: .25rem;
+    max-width: 50em;
+}
+
+#head {
+    max-width: 36em;
+}
+
+.border-top {
+    margin: 1em;
+}
+
+#head, #log {
+    margin-bottom: 2em;
+}
+
+#heart, .remove {
+    color: #d53343;
+}
+
+.btn {
+    margin-top: 0.5em;
+    white-space: inherit;
+    word-break: break-all;
+}
+
+
+.btn-group > .btn-outline-info:focus {
+    box-shadow: none;
+}
+
+h3 {
+    white-space: inherit;
+    word-break: normal;
+}
+
+select {
+    max-width: 260px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input, select, textarea, .accordion {
+    margin-bottom: 16px;
+}
+
+p {
+    margin-top: 16px;
+}
+
+.form-check {
+    display: inline-block;
+}
+
+.isDisabled {
+    color: currentColor;
+    cursor: not-allowed;
+    opacity: 0.5;
+    text-decoration: none;
+}
+
+.blinking {
+
+    animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

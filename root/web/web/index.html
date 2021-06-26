@@ -1,0 +1,103 @@
+{% raw %}<!DOCTYPE html>
+<html ng-app="crwlApp" ng-controller="crwlCtrl" lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="img/favicon.ico" rel="icon" type="image/x-icon">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/ripper.css">
+
+    <title>Ripper</title>
+</head>
+
+<body ng-cloak class="text-center">
+<div id="head" class="container app col">
+    <h1>
+        <i class="bi bi-reception-4"></i> Ripper</h1>
+    <p id="headtitle">Project by
+        <a href="https://github.com/rix1337/FeedCrawler/releases/latest" target="_blank">RiX</a>
+    </p>
+
+    <div class="border-top"></div>
+
+
+    <div>
+        <a href="https://github.com/users/rix1337/sponsorship" target="_blank"
+           title="Please support this project through a Github Sponsorship!"
+           class="btn btn-outline-danger" data-toggle="tooltip"><i id="heart" class="bi bi-emoji-frown"></i> Support Ripper!</a>
+    </div>
+</div>
+
+
+<div id="log" class="container app col">
+    <h3><i class="bi bi-clock-history"></i> Log</h3>
+    <div class="card log">
+        <table class="table" ng-show="log.length > 0">
+            <thead>
+            <tr>
+                <th scope="col" class="text-left d-none d-lg-block">Zeitstempel</th>
+                <th scope="col" class="text-left">Release</th>
+                <th scope="col" class="text-left">Kategorie</th>
+                <th scope="col" class="text-left d-none d-lg-block">Seite</th>
+            </tr>
+            </thead>
+            <tbody id="logbody">
+            <tr ng-repeat="x in log | startFrom:currentPageLog*pageSizeLog | limitTo:pageSizeLog">
+                <td class="text-left d-none d-lg-block">{{ x[1] }}</td>
+                <td class="text-left" title="{{ x[3] }}">
+                    {{ x[3] | limitTo: loglength }}
+                    <a href='' ng-if="!longlog && x[3].length > 65" ng-click="longerLog()"
+                       title="Titel vollständig anzeigen">...</a>
+                    <a href='' ng-if="longlog && x[3].length > 65" ng-click="shorterLog()" title="Titel kürzen"><i
+                            class="bi bi-x-circle"></i></a>
+                </td>
+                <td class="text-left">{{ x[2] }}</td>
+                <td class="text-left d-none d-lg-block">{{ x[4] }}</td>
+                <td class="text-right"><a href="" title="Logeintrag löschen" data-toggle="tooltip"
+                                          ng-click="deleteLogRow(x[3])"><i
+                        class="bi bi-trash remove"></i></a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-group" ng-show="resLengthLog>5">
+        <button class="btn btn-outline-info" ng-disabled="currentPageLog == 0"
+                ng-click="currentPageLog=currentPageLog-1">
+            <i class="bi bi-chevron-left"></i>
+        </button>
+        <button class="btn btn-outline-info" ng-disabled="true">
+            {{currentPageLog+1}} / {{numberOfPagesLog()}}
+        </button>
+        <button class="btn btn-outline-info" ng-disabled="currentPageLog >= resLengthLog/pageSizeLog - 1"
+                ng-click="currentPageLog=currentPageLog+1">
+            <i class="bi bi-chevron-right"></i>
+        </button>
+    </div>
+    <div>
+        <a href="" ng-click="deleteLog()" class="btn btn-dark">
+            <div id="spinner-log" style="display: none;"
+                 class="spinner-border spinner-border-sm" role="status"></div>
+            <i class="bi bi-trash"></i> Leeren</a>
+    </div>
+</div>
+
+
+<div ng-model="info" style="display: none; z-index: 1080;" class="alert alert-info container fixed-top"
+     role="alert"></div>
+<div ng-model="success" style="display: none; z-index: 1090;"
+     class="alert alert-success container fixed-top"></div>
+<div ng-model="error" style="display: none; z-index: 1100;"
+     class="alert alert-danger container fixed-top"></div>
+
+
+<script src="js/jquery.slim.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/angular-locale_de-de.js"></script>
+<script src="js/ripper.js"></script>
+</body>
+
+</html>{% endraw %}
