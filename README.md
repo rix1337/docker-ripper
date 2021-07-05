@@ -63,6 +63,11 @@ Add these optional parameters when running the container
 `USER` and `PASS` both need to be set to enable http basic auth for the web UI.
 `PREFIX` can be used to set a path prefix (e.g. `/ripper-ui`. This is useful when you are running multiple services at one domain.
 
+Some systems are not able to pass through optical drives without this flag
+`--privileged`
+
+### Please note
+
 **To properly detect optical disk types in a docker environment this script relies on makemkvcon output.**
 
 MakeMKV is free while in Beta, but requires a valid license key. Ripper tries to fetch the latest free beta key on
