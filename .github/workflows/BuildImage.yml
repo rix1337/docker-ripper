@@ -31,7 +31,6 @@ jobs:
             exit 1
           fi
 
-
       - name: Login to DockerHub
         if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) && env.DOCKERUSER && env.DOCKERPASS }}
         run: |
