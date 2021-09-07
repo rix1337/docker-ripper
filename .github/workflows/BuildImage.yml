@@ -28,7 +28,6 @@ jobs:
           echo "DOCKERPASS=${{ secrets.DOCKERPASS }}" >> $GITHUB_ENV
           if [[ "${{ secrets.DOCKERUSER }}" == "" && "${{ secrets.DOCKERPASS }}" == "" ]]; then
             echo "::error::Push credential secrets missing."
-            echo "::error::You must set either CR_USER & CR_PAT or DOCKERUSER & DOCKERPASS as secrets in your repo settings."
             exit 1
           fi
 
