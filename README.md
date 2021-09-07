@@ -95,6 +95,14 @@ Check your device mount point before you run the container!
 
 # FAQ
 
+### MakeMKV needs an update!
+
+_You will need to use a purchased license key - or have to wait until an updated image is available. Issues regarding this will be closed unanswered._
+
+### Do you offer support?
+
+_Yes, but only for my [sponsors](https://github.com/sponsors/rix1337). Not a sponsor - no support. Want to help yourself? Fork this repo and try fixing it yourself. I will happily review your pull request. For more information see [LICENSE.md](https://github.com/rix1337/docker-ripper/blob/master/LICENSE.md)_
+
 ### There is an error regarding 'ccextractor'
 
 Add the following line to settings.conf
@@ -136,22 +144,11 @@ the [Dockerfile](https://github.com/rix1337/docker-ripper/blob/master/Dockerfile
 for the used ripping software. If your solution works better than the current one, I will happily review your pull
 request._
 
-### MakeMKV needs an update!
-
-_Make sure you have pulled the latest image. The image should be updated automatically as soon as MakeMKV is updated.
-This has not worked reliably in the past. Just [open a new issue](https://github.com/rix1337/docker-ripper/issues/new)
-and I will trigger the build._
-
 ### Am I allowed to use this in a commercial setting?
 
 _Yes, see [LICENSE.md](https://github.com/rix1337/docker-ripper/blob/master/LICENSE.md)._
 **If this project is helpful to your organization please sponsor me
 on [Github Sponsors](https://github.com/sponsors/rix1337)!**
-
-### Do you offer support?
-
-_If plausible [open a new issue](https://github.com/rix1337/docker-ripper/issues/new). I am not responsible if anything
-breaks. For more information see [LICENSE.md](https://github.com/rix1337/docker-ripper/blob/master/LICENSE.md)_
 
 # Credits
 
