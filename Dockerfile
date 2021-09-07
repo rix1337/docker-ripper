@@ -41,6 +41,10 @@ RUN apt-get update && \
  # Disable SSH
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 
+# MakeMKV/FFMPEG setup by github.com/tobbenb
+RUN chmod +x /tmp/install/install.sh && sleep 1 && \
+    /tmp/install/install.sh
+
 # Clean up temp files
 RUN rm -rf \
     	/tmp/* \
