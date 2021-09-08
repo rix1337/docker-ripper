@@ -99,6 +99,8 @@ Check your device mount point before you run the container!
 
 _You will need to use a purchased license key - or have to wait until an updated image is available. Issues regarding this will be closed unanswered._
 
+You will find the slim image based on the PPA build under the `latest` tag on docker hub. A manual build of makemkv can be found unter versioned tags as well. It's recommended to use the `latest` image.
+
 ### Do you offer support?
 
 _Yes, but only for my [sponsors](https://github.com/sponsors/rix1337). Not a sponsor - no support. Want to help yourself? Fork this repo and try fixing it yourself. I will happily review your pull request. For more information see [LICENSE.md](https://github.com/rix1337/docker-ripper/blob/master/LICENSE.md)_
