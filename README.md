@@ -97,9 +97,9 @@ Check your device mount point before you run the container!
 
 ### MakeMKV needs an update!
 
-_You will need to use a purchased license key - or have to wait until an updated image is available. Issues regarding this will be closed unanswered._
+_You will need to use a purchased license key - or have to wait until an updated image is available. Issues regarding this will be closed unanswered.
 
-You will find the slim image based on the PPA build under the `latest` tag on docker hub. A manual build of makemkv can be found unter versioned tags as well. It's recommended to use the `latest` image.
+You will find the slim image based on the PPA build under the `latest` tag on docker hub. A manual build of makemkv can be found unter versioned tags as well. It's recommended to use the `latest` image, however versioned images are typically updated faster to newly released makemkv versions._
 
 ### Do you offer support?
 
