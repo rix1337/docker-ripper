@@ -4,7 +4,7 @@ on:
     - cron: "0 */6 * * *"
     
 env:
-  IMAGE_BASE: lsiobase/alpine.python3
+  IMAGE_BASE: phusion/baseimage:focal-1.0.0
   IMAGE: rix1337/docker-ripper
 
 jobs:
