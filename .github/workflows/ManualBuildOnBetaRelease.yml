@@ -17,5 +17,5 @@ jobs:
         id: version-check
       - name: Trigger Docker Image build
         run: |
-          curl -XPOST -u "${{ secrets.CR_USER }}:${{secrets.CR_PAT}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/rix1337/docker-ripper/actions/workflows/.github/workflows/BuildImage.yml/dispatches --data '{"ref": "manual_build"}'
+          curl -XPOST -u "${{ secrets.CR_USER }}:${{secrets.CR_PAT}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/rix1337/docker-ripper/actions/workflows/BuildImage.yml --data '{"ref": "manual_build"}'
         if: steps.version-check.outputs.needs-build == 'true'
