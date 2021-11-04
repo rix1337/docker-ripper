@@ -1,0 +1,77 @@
+{% raw %}<!DOCTYPE html>
+<html ng-app="logApp" ng-controller="logCtrl" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="img/favicon.ico" rel="icon" type="image/x-icon">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/ripper.css">
+
+    <title>Ripper</title>
+</head>
+
+<body ng-cloak class="text-center">
+<div id="head" class="container app col">
+    <h1>
+        <i class="bi bi-disc"></i> Ripper</h1>
+    <p id="headtitle">Project by
+        <a href="https://github.com/rix1337/FeedCrawler/releases/latest" target="_blank">RiX</a>
+    </p>
+
+    <div class="border-top"></div>
+
+
+    <div>
+        <a href="https://github.com/users/rix1337/sponsorship" target="_blank"
+           class="btn btn-outline-danger"><i id="heart" class="bi bi-heart"></i> Please support Ripper!</a>
+    </div>
+</div>
+
+
+<div id="log" class="container app col">
+    <h3><i class="bi bi-clock-history"></i> Log</h3>
+    <div class="card log">
+        <table class="table" ng-show="log.length > 0">
+            <tbody id="logbody">
+            <tr ng-repeat="x in log track by $index | limitTo:pageSizeLog">
+                <td class="text-left">
+                    {{ x | limitTo: loglength }}
+                    <a href='' ng-if="!longlog && x.length > 150" ng-click="longerLog()"
+                       title="Show entire entry">...</a>
+                    <a href='' ng-if="longlog && x.length > 150" ng-click="shorterLog()" title="Shorten entry"><i
+                            class="bi bi-x-circle"></i></a>
+                </td>
+                <td class="text-right"><a href="" title="Delete log entry" data-toggle="tooltip"
+                                          ng-click="deleteLogRow(x)"><i class="bi bi-trash remove"></i></a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <a href="" ng-click="deleteLog()" class="btn btn-dark">
+            <div id="spinner-log" style="display: none;"
+                 class="spinner-border spinner-border-sm" role="status"></div>
+            <i class="bi bi-trash"></i> Clear</a>
+    </div>
+</div>
+
+
+<div ng-model="info" style="display: none; z-index: 1080;" class="alert alert-info container fixed-top"
+     role="alert"></div>
+<div ng-model="success" style="display: none; z-index: 1090;"
+     class="alert alert-success container fixed-top"></div>
+<div ng-model="error" style="display: none; z-index: 1100;"
+     class="alert alert-danger container fixed-top"></div>
+
+
+<script src="js/jquery.slim.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/angular-locale_de-de.js"></script>
+<script src="js/ripper.js"></script>
+</body>
+
+</html>{% endraw %}

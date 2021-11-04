@@ -1,0 +1,30 @@
+name: Build Image Manually
+
+on: [push, workflow_dispatch]
+
+env:
+  ENDPOINT: "rix1337/docker-ripper"
+
+jobs:
+  version-check:
+    runs-on: ubuntu-latest
+    outputs:
+      output: ${{ steps.get-version.outputs.version }}
+    steps:
+      - id: get-version
+        run: | 
+          VERSION=$(curl --silent 'https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224' | grep MakeMKV.*.for.Linux.is | head -n 1 | sed -e 's/.*MakeMKV //g' -e 's/ .*//g')
+          echo $VERSION
+          echo "::set-output name=version::$VERSION"
+          
+  build:
+    runs-on: ubuntu-latest
+    needs: version-check
+    steps:
+      - uses: actions/checkout@v2.3.3
+      - uses: whoan/docker-build-with-cache-action@v5
+        with:
+          username: "${{ secrets.DOCKERUSER }}"
+          password: "${{ secrets.DOCKERPASS }}"
+          image_name: "${{ env.ENDPOINT }}"
+          image_tag: ${{needs.version-check.outputs.output}}
