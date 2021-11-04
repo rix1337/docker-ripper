@@ -28,4 +28,4 @@ jobs:
           password: "${{ secrets.DOCKERPASS }}"
           image_name: "${{ env.ENDPOINT }}"
           image_tag: ${{needs.version-check.outputs.output}}
-          working-directory: manual-build
+          context: "./manual-build"

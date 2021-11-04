@@ -20,4 +20,4 @@ jobs:
           password: "${{ secrets.DOCKERPASS }}"
           image_name: "${{ env.ENDPOINT }}"
           image_tag: latest
-          working-directory: latest
+          context: "./latest"
