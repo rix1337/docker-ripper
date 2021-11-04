@@ -19,5 +19,5 @@ jobs:
           image: ${{ env.IMAGE }}
       - name: Trigger Docker Image build
         run: |
-          curl -XPOST -u "${{ secrets.CR_USER }}:${{secrets.CR_PAT}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/${{ env.IMAGE }}/actions/workflows/BuildImage.yml/dispatches --data '{"ref": "master"}'
+          curl -XPOST -u "${{ secrets.CR_USER }}:${{secrets.CR_PAT}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/${{ env.IMAGE }}/actions/workflows/BuildImage.yml/dispatches
         if: steps.baseupdatecheck.outputs.needs-updating == 'true'
