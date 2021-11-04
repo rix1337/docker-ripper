@@ -21,4 +21,4 @@ jobs:
           image_name: "${{ env.ENDPOINT }}"
           image_tag: latest
           context: "./latest"
-          stages_image_name: "latest"
+          stages_image_name: "rix1337/cache-ripper-latest"

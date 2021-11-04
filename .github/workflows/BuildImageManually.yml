@@ -29,4 +29,4 @@ jobs:
           image_name: "${{ env.ENDPOINT }}"
           image_tag: ${{needs.version-check.outputs.output}}
           context: "./manual-build"
-          stages_image_name: "manual-build"
+          stages_image_name: "rix1337/cache-ripper-manual-build"
