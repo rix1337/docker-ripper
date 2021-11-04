@@ -21,3 +21,4 @@ jobs:
           image_name: "${{ env.ENDPOINT }}"
           image_tag: latest
           context: "./latest"
+          stages_image_name: "latest"

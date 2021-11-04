@@ -29,3 +29,4 @@ jobs:
           image_name: "${{ env.ENDPOINT }}"
           image_tag: ${{needs.version-check.outputs.output}}
           context: "./manual-build"
+          stages_image_name: "manual-build"
