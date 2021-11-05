@@ -35,7 +35,7 @@ RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 # invalidate build cache on forum post change
 ADD "https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224" latest_post
 
-# MakeMKV/FFMPEG setup by github.com/tobbenb
+# MakeMKV setup by https://github.com/tianon
 RUN chmod +x /tmp/install/install.sh && sleep 1 && \
     /tmp/install/install.sh
 
