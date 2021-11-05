@@ -1,7 +1,9 @@
 #!/bin/bash
 
-#	Auto-grab latest version
+# Auto-grab latest version
 MAKEMKV_VERSION=$(curl --silent 'https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224' | grep MakeMKV.*.for.Linux.is | head -n 1 | sed -e 's/.*MakeMKV //g' -e 's/ .*//g')
+
+# Setup taken from https://github.com/tianon/dockerfiles/blob/master/makemkv/Dockerfile
 
 # This disc requires Java runtime (JRE), but none was found. Certain functions will fail, please install Java. See http://www.makemkv.com/bdjava/ for details.
 set -eux; \
