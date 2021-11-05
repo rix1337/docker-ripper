@@ -1,6 +1,10 @@
-name: Build Image Manually
+name: Build Image with MakeMKV from manual build
 
-on: [push, workflow_dispatch]
+on:
+  push:
+    paths-ignore:
+      - 'latest/**'
+  workflow_dispatch:
 
 env:
   ENDPOINT: "rix1337/docker-ripper"

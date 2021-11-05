@@ -1,4 +1,4 @@
-name: Regular version check
+name: Regular check for Manual Build
 on:
   schedule:
     - cron: "0 */6 * * *"

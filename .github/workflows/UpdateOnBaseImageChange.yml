@@ -1,4 +1,4 @@
-name: Regular base image update check
+name: Regular check for latest Build (on baseimage update)
 on:
   schedule:
     - cron: "0 */6 * * *"
