@@ -23,9 +23,9 @@ COPY root/ /
 RUN chmod +x /etc/my_init.d/*.sh && \
   chmod -R 777 /tmp
 
-# Install python for web ui
+# Install python for web ui, eject for ejecting disks
 RUN apt-get update && \
-    apt-get -y --allow-unauthenticated install --no-install-recommends python3 python3-pip && \
+    apt-get -y --allow-unauthenticated install --no-install-recommends python3 python3-pip eject && \
     pip3 install docopt flask waitress && \
     apt-get -y autoremove
 
