@@ -13,6 +13,22 @@ Data-Disk | Uncompressed .ISO | ddrescue
 DVD | MKV | MakeMKV
 BluRay | MKV | MakeMKV
 
+## Docker run
+
+In the command below, the paths refer to the output from your lsscsi-g command, along with your config and rips
+directories. If you created /home/yourusername/config and /home/yourusername/rips then those are your paths.
+
+```
+docker run -d \
+  --name="Ripper" \
+  -v /path/to/config/:/config:rw \
+  -v /path/to/rips/:/out:rw \
+  --device=/dev/sr0:/dev/sr0 \
+  --device=/dev/sg0:/dev/sg0 \
+  rix1337/docker-ripper:manual
+  ```
+
+
 ### Prerequistites
 
 #### (1) Create the required directories, for example, in /home/yourusername. Do _not_ use sudo mkdir to achieve this.
@@ -30,21 +46,6 @@ lsscsi -g
 In this example, /dev/sr0 and /dev/sg0 are the two files that refer to a single optical drive. These names will be
 needed for the docker run command.  
 ![lsscsi -g](screenshots/lsscsi.png)
-
-## Docker run
-
-In the command below, the paths refer to the output from your lsscsi-g command, along with your config and rips
-directories. If you created /home/yourusername/config and /home/yourusername/rips then those are your paths.
-
-```
-docker run -d \
-  --name="Ripper" \
-  -v /path/to/config/:/config:rw \
-  -v /path/to/rips/:/out:rw \
-  --device=/dev/sr0:/dev/sr0 \
-  --device=/dev/sg0:/dev/sg0 \
-  rix1337/docker-ripper
-  ```
 
 Screenshot of Docker run command with the example provided  
 ![docker run](screenshots/dockerrun.png)
@@ -99,7 +100,7 @@ Check your device mount point before you run the container!
 
 _You will need to use a purchased license key - or have to wait until an updated image is available. Issues regarding this will be closed unanswered._
 
-_You will find the slim image based on the PPA build under the `latest` tag on docker hub. A manual build of makemkv can be found unter versioned tags as well. It's recommended to use the `latest` image, however versioned images are typically updated faster to newly released makemkv versions._
+_You will find a slim image based on the PPA build under the `latest`/`latest-ppa` tags on docker hub. A manual build of makemkv can be found unter the `manual` and versioned tags as well. Manual builds are much larger compared to the ones built from PPA. It's recommended to use the `manual` image, as it is updated much faster to newly released makemkv versions._
 
 ### Do you offer support?
 
