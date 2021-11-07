@@ -21,6 +21,6 @@ jobs:
           username: "${{ secrets.DOCKERUSER }}"
           password: "${{ secrets.DOCKERPASS }}"
           image_name: "${{ env.ENDPOINT }}"
-          image_tag: latest, ppa-latest
+          image_tag: latest,ppa-latest
           context: "./latest"
           stages_image_name: "rix1337/cache-ripper-latest"
