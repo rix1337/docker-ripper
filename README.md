@@ -25,7 +25,7 @@ docker run -d \
   -v /path/to/rips/:/out:rw \
   --device=/dev/sr0:/dev/sr0 \
   --device=/dev/sg0:/dev/sg0 \
-  rix1337/docker-ripper:manual
+  rix1337/docker-ripper:manual-latest
   ```
 
 
@@ -100,7 +100,7 @@ Check your device mount point before you run the container!
 
 _You will need to use a purchased license key - or have to wait until an updated image is available. Issues regarding this will be closed unanswered._
 
-_You will find a slim image based on the PPA build under the `latest`/`latest-ppa` tags on docker hub. A manual build of makemkv can be found unter the `manual` and versioned tags as well. Manual builds are much larger compared to the ones built from PPA. It's recommended to use the `manual` image, as it is updated much faster to newly released makemkv versions._
+_You will find a slim image based on the PPA build under the `latest`/`ppa-latest` tags on docker hub. A manual build of makemkv can be found unter the `manual-latest` and versioned tags as well. It's recommended to use the `manual-latest` image, as it is updated much faster to newly released makemkv versions._
 
 ### Do you offer support?
 
