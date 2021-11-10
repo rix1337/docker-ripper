@@ -45,10 +45,10 @@ lsscsi -g
 
 In this example, /dev/sr0 and /dev/sg0 are the two files that refer to a single optical drive. These names will be
 needed for the docker run command.  
-![lsscsi -g](screenshots/lsscsi.png)
+![lsscsi -g](https://raw.githubusercontent.com/rix1337/docker-ripper/master/screenshots/lsscsi.png)
 
 Screenshot of Docker run command with the example provided  
-![docker run](screenshots/dockerrun.png)
+![docker run](https://raw.githubusercontent.com/rix1337/docker-ripper/master/screenshots/dockerrun.png)
 
 
 #### Using the web UI for logs
@@ -61,8 +61,8 @@ Add these optional parameters when running the container
   -e PASS=OPTIONAL_WEB_UI_PASSWORD \
 ````
 
-`USER` and `PASS` both need to be set to enable http basic auth for the web UI.
-`PREFIX` can be used to set a path prefix (e.g. `/ripper-ui`. This is useful when you are running multiple services at one domain.
+`OPTIONAL_WEB_UI_USERNAME ` and `OPTIONAL_WEB_UI_PASSWORD ` both need to be set to enable http basic auth for the web UI.
+`OPTIONAL_WEB_UI_PATH_PREFIX ` can be used to set a path prefix (e.g. `/ripper-ui`). This is useful when you are running multiple services at one domain.
 
 Some systems are not able to pass through optical drives without this flag
 `--privileged`
@@ -80,13 +80,13 @@ launch. Without a purchased license key Ripper may stop running at any time.
    called `enter-your-key-then-rename-to.settings.conf`, and add your key between the
    quotes `app_Key = "`**[ENTER KEY HERE]**`"` then save and rename the file to settings.conf
 
-![makemkv license](screenshots/makemkvkey.png)
+![makemkv license](https://raw.githubusercontent.com/rix1337/docker-ripper/master/screenshots/makemkvkey.png)
 
 2) Remove the remaining file `enter-your-key-then-rename-to.settings.conf`
-   ![sudo rm enter your key](screenshots/sudormenteryourkey.png)
+   ![sudo rm enter your key](https://raw.githubusercontent.com/rix1337/docker-ripper/master/screenshots/sudormenteryourkey.png)
 
 3) At this point your config directory should look like this:  
-   ![config directory](screenshots/configdirectory.png)
+   ![config directory](https://raw.githubusercontent.com/rix1337/docker-ripper/master/screenshots/configdirectory.png)
 
 # Docker compose
 
