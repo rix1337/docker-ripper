@@ -56,9 +56,9 @@ Screenshot of Docker run command with the example provided
 Add these optional parameters when running the container
 ````
   -p port:9090 \
-  -e PREFIX=OPTIONAL_WEB_UI_PATH_PREFIX \ 
-  -e USER=OPTIONAL_WEB_UI_USERNAME \ 
-  -e PASS=OPTIONAL_WEB_UI_PASSWORD \
+  -e /ripper-ui=OPTIONAL_WEB_UI_PATH_PREFIX \ 
+  -e myusername=OPTIONAL_WEB_UI_USERNAME \ 
+  -e strongpassword=OPTIONAL_WEB_UI_PASSWORD \
 ````
 
 `OPTIONAL_WEB_UI_USERNAME ` and `OPTIONAL_WEB_UI_PASSWORD ` both need to be set to enable http basic auth for the web UI.
