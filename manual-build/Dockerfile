@@ -25,7 +25,7 @@ RUN chmod +x /etc/my_init.d/*.sh && \
 
 # Install python for web ui, eject/ffmpeg for ejecting disks
 RUN apt-get update && \
-    apt-get -y --allow-unauthenticated install --no-install-recommends python3 python3-pip eject abcde ddrescue ffmpeg && \
+    apt-get -y --allow-unauthenticated install --no-install-recommends python3 python3-pip eject abcde gddrescue ffmpeg && \
     pip3 install docopt flask waitress && \
     apt-get -y autoremove
 
