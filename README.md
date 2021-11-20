@@ -88,7 +88,7 @@ launch. Without a purchased license key Ripper may stop running at any time.
 
 # Docker compose
 
-Check your device mount point before you run the container!
+Check the device mount points and optional settings before you run the container!
 
 `docker-compose up -d`
 
@@ -141,7 +141,7 @@ _You need to edit /config/abcde.conf_
 ### I want another output format that requires another piece of software!
 
 _You need to fork this image and build it yourself on docker hub. A good starting point is
-the [Dockerfile](https://github.com/rix1337/docker-ripper/blob/master/Dockerfile#L30) that includes setup instructions
+the [Dockerfile](https://github.com/rix1337/docker-ripper/blob/master/latest/Dockerfile#L29) that includes setup instructions
 for the used ripping software. If your solution works better than the current one, I will happily review your pull
 request._
 
