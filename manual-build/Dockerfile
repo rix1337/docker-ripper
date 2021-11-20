@@ -20,9 +20,10 @@ RUN \
 
 # Move Files
 COPY root/ /
+COPY manual-build/install/ /install
 RUN chmod +x /etc/my_init.d/*.sh && \
-  chmod -R 1777 /tmp && \
-  chmod -R 1777 /var/tmp
+  chmod -R 777 /tmp && \
+  chmod -R 777 /install
 
 # Install python for web ui, eject/ffmpeg for ejecting disks
 RUN apt-get update && \
@@ -37,11 +38,12 @@ RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 ADD "https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224" latest_post
 
 # MakeMKV setup by https://github.com/tianon
-RUN chmod +x /tmp/install/manual-install.sh && sleep 1 && \
-    /tmp/install/manual-install.sh
+RUN chmod +x /install/manual-install.sh && sleep 1 && \
+    /install/manual-install.sh
 
 # Clean up temp files
 RUN rm -rf \
     	/tmp/* \
     	/var/lib/apt/lists/* \
-    	/var/tmp/*
+    	/var/tmp/* \
+        /install/* \
