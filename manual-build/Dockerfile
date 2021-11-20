@@ -27,7 +27,7 @@ RUN chmod +x /etc/my_init.d/*.sh && \
 
 # Install python for web ui, eject/ffmpeg for ejecting disks
 RUN apt-get update && \
-    apt-get -y --allow-unauthenticated install --no-install-recommends python3 python3-pip eject abcde gddrescue eyed3 ffmpeg lame && \
+    apt-get -y --allow-unauthenticated install --no-install-recommends python3 python3-pip eject gddrescue abcde eyed3 ffmpeg flac lame mkcue speex vorbis-tools vorbisgain id3 id3v2 && \
     pip3 install docopt flask waitress && \
     apt-get -y autoremove
 
