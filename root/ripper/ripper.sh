@@ -142,7 +142,7 @@ if [ "$CD1" = 'DRV:0,2,999,0,"' ]; then
   else
      # ISO
      echo "$(date "+%d.%m.%Y %T") : Data-Disk detected: Saving ISO"
-     ddrescue $DRIVE $ISOPATH >> $LOGFILE 2>&1
+     ddrescue $DRIVE "$ISOPATH" >> $LOGFILE 2>&1
   fi
   echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
   eject $DRIVE >> $LOGFILE 2>&1
