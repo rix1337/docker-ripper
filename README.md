@@ -13,22 +13,6 @@ Data-Disk | Uncompressed .ISO | ddrescue
 DVD | MKV | MakeMKV
 BluRay | MKV | MakeMKV
 
-## Docker run
-
-In the command below, the paths refer to the output from your lsscsi-g command, along with your config and rips
-directories. If you created /home/yourusername/config and /home/yourusername/rips then those are your paths.
-
-```
-docker run -d \
-  --name="Ripper" \
-  -v /path/to/config/:/config:rw \
-  -v /path/to/rips/:/out:rw \
-  --device=/dev/sr0:/dev/sr0 \
-  --device=/dev/sg0:/dev/sg0 \
-  rix1337/docker-ripper:manual-latest
-  ```
-
-
 ### Prerequistites
 
 #### (1) Create the required directories, for example, in /home/yourusername. Do _not_ use sudo mkdir to achieve this.
@@ -45,11 +29,25 @@ lsscsi -g
 
 In this example, /dev/sr0 and /dev/sg0 are the two files that refer to a single optical drive. These names will be
 needed for the docker run command.  
-![lsscsi -g](https://raw.githubusercontent.com/rix1337/docker-ripper/master/screenshots/lsscsi.png)
+![lsscsi -g](https://raw.githubusercontent.com/rix1337/docker-ripper/master/.github/screenshots/lsscsi.png)
 
 Screenshot of Docker run command with the example provided  
-![docker run](https://raw.githubusercontent.com/rix1337/docker-ripper/master/screenshots/dockerrun.png)
+![docker run](https://raw.githubusercontent.com/rix1337/docker-ripper/master/.github/screenshots/dockerrun.png)
 
+## Docker run
+
+In the command below, the paths refer to the output from your lsscsi-g command, along with your config and rips
+directories. If you created /home/yourusername/config and /home/yourusername/rips then those are your paths.
+
+```
+docker run -d \
+  --name="Ripper" \
+  -v /path/to/config/:/config:rw \
+  -v /path/to/rips/:/out:rw \
+  --device=/dev/sr0:/dev/sr0 \
+  --device=/dev/sg0:/dev/sg0 \
+  rix1337/docker-ripper:manual-latest
+  ```
 
 #### Using the web UI for logs
 
@@ -80,13 +78,13 @@ launch. Without a purchased license key Ripper may stop running at any time.
    called `enter-your-key-then-rename-to.settings.conf`, and add your key between the
    quotes `app_Key = "`**[ENTER KEY HERE]**`"` then save and rename the file to settings.conf
 
-![makemkv license](https://raw.githubusercontent.com/rix1337/docker-ripper/master/screenshots/makemkvkey.png)
+![makemkv license](https://raw.githubusercontent.com/rix1337/docker-ripper/master/.github/screenshots/makemkvkey.png)
 
 2) Remove the remaining file `enter-your-key-then-rename-to.settings.conf`
-   ![sudo rm enter your key](https://raw.githubusercontent.com/rix1337/docker-ripper/master/screenshots/sudormenteryourkey.png)
+   ![sudo rm enter your key](https://raw.githubusercontent.com/rix1337/docker-ripper/master/.github/screenshots/sudormenteryourkey.png)
 
 3) At this point your config directory should look like this:  
-   ![config directory](https://raw.githubusercontent.com/rix1337/docker-ripper/master/screenshots/configdirectory.png)
+   ![config directory](https://raw.githubusercontent.com/rix1337/docker-ripper/master/.github/screenshots/configdirectory.png)
 
 # Docker compose
 

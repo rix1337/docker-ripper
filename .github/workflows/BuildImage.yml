@@ -1,8 +1,8 @@
 name: Build Image with MakeMKV from PPA
 
-on: 
+on:
   schedule:
-  - cron:  "0 0 * * 0"
+    - cron: "0 0 * * 0"
   push:
     paths-ignore:
       - 'manual-build/**'
@@ -22,5 +22,6 @@ jobs:
           password: "${{ secrets.DOCKERPASS }}"
           image_name: "${{ env.ENDPOINT }}"
           image_tag: latest,ppa-latest
-          context: "./latest"
+          context: "./"
+          dockerfile: "./manual-build/Dockerfile"
           stages_image_name: "rix1337/cache-ripper-latest"
