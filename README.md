@@ -158,6 +158,6 @@ on [Github Sponsors](https://github.com/sponsors/rix1337)!**
   Kingeek uses proper tools (like udev) to detect disk types. This is impossible in docker right now. Hence, most of the
   work is done by MakeMKV (see above).
 
-- [MakeMKV Setup by tobbenb](https://github.com/tobbenb/docker-containers)
+- [MakeMKV Setup for manual-build by tianon](https://github.com/tianon/dockerfiles/blob/master/makemkv/Dockerfile)
 
 - [MakeMKV key/version fetcher by metalight](http://blog.metalight.dk/2016/03/makemkv-wrapper-with-auto-updater.html)
