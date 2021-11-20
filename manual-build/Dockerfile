@@ -38,8 +38,8 @@ RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 ADD "https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224" latest_post
 
 # MakeMKV setup by https://github.com/tianon
-RUN chmod +x /install/manual-install.sh && sleep 1 && \
-    /install/manual-install.sh
+RUN chmod +x /install/install.sh && sleep 1 && \
+    /install/install.sh
 
 # Clean up temp files
 RUN rm -rf \
