@@ -25,7 +25,7 @@ RUN chmod +x /etc/my_init.d/*.sh && \
   chmod -R 777 /tmp && \
   chmod -R 777 /install
 
-# Install python for web ui, eject/ffmpeg for ejecting disks
+# Install Required packages
 RUN apt-get update && \
     apt-get -y --allow-unauthenticated install --no-install-recommends python3 python3-pip eject gddrescue abcde eyed3 ffmpeg flac lame mkcue speex vorbis-tools vorbisgain id3 id3v2 && \
     pip3 install docopt flask waitress && \
