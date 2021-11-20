@@ -21,7 +21,8 @@ RUN \
 # Move Files
 COPY root/ /
 RUN chmod +x /etc/my_init.d/*.sh && \
-  chmod -R 777 /tmp
+  chmod -R 1777 /tmp && \
+  chmod -R 1777 /var/tmp
 
 # Install python for web ui, eject/ffmpeg for ejecting disks
 RUN apt-get update && \
