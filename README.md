@@ -98,7 +98,7 @@ Check the device mount points and optional settings before you run the container
 
 _You will need to use a purchased license key - or have to wait until an updated image is available. Issues regarding this will be closed unanswered._
 
-_You will find a slim image based on the PPA build under the `latest`/`ppa-latest` tags on docker hub. A manual build of makemkv can be found unter the `manual-latest` and versioned tags as well. It's recommended to use the `manual-latest` image, as it is updated much faster to newly released makemkv versions._
+_You will find the PPA-based build under the `latest`/`ppa-latest` tags on docker hub. These should be the most stable way to run ripper. A manual build of makemkv can be found unter the `manual-latest` and versioned tags. For users without a License key it is recommended to use the `manual-latest` image, as it is updated much faster to newly released makemkv versions - that are required when running with the free beta key._
 
 ### Do you offer support?
 
