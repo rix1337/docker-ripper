@@ -44,16 +44,19 @@ docker run -d \
   --name="Ripper" \
   -v /path/to/config/:/config:rw \
   -v /path/to/rips/:/out:rw \
+  -p port:9090 \
   --device=/dev/sr0:/dev/sr0 \
   --device=/dev/sg0:/dev/sg0 \
   rix1337/docker-ripper:manual-latest
   ```
 
-#### Using the web UI for logs
+Some systems are not able to pass through optical drives without this flag
+`--privileged`
+
+#### Configuring the web UI for logs
 
 Add these optional parameters when running the container
 ````
-  -p port:9090 \
   -e /ripper-ui=OPTIONAL_WEB_UI_PATH_PREFIX \ 
   -e myusername=OPTIONAL_WEB_UI_USERNAME \ 
   -e strongpassword=OPTIONAL_WEB_UI_PASSWORD \
@@ -61,9 +64,6 @@ Add these optional parameters when running the container
 
 `OPTIONAL_WEB_UI_USERNAME ` and `OPTIONAL_WEB_UI_PASSWORD ` both need to be set to enable http basic auth for the web UI.
 `OPTIONAL_WEB_UI_PATH_PREFIX ` can be used to set a path prefix (e.g. `/ripper-ui`). This is useful when you are running multiple services at one domain.
-
-Some systems are not able to pass through optical drives without this flag
-`--privileged`
 
 ### Please note
 
