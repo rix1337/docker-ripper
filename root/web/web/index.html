@@ -33,10 +33,13 @@
 
 <div id="log" class="container app col">
     <h3><i class="bi bi-clock-history"></i> Log</h3>
+    <div ng-if="logdata.large_file">
+        The log is too large for performant loading ({{ logdata.filesize }})! Please consider clearing it...
+    </div>
     <div class="card log">
-        <table class="table" ng-show="log.length > 0">
+        <table class="table" ng-show="logdata.log.length > 0">
             <tbody id="logbody">
-            <tr ng-repeat="x in log track by $index | limitTo:pageSizeLog">
+            <tr ng-repeat="x in logdata.log track by $index">
                 <td class="text-left">
                     {{ x | limitTo: loglength }}
                     <a href='' ng-if="!longlog && x.length > 150" ng-click="longerLog()"
@@ -44,11 +47,12 @@
                     <a href='' ng-if="longlog && x.length > 150" ng-click="shorterLog()" title="Shorten entry"><i
                             class="bi bi-x-circle"></i></a>
                 </td>
-                <td class="text-right"><a href="" title="Delete log entry" data-toggle="tooltip"
-                                          ng-click="deleteLogRow(x)"><i class="bi bi-trash remove"></i></a></td>
             </tr>
             </tbody>
         </table>
+    </div>
+    <div>
+        These are the last {{ logdata.log.length }} entries in the log in reverse order.
     </div>
     <div>
         <a href="" ng-click="deleteLog()" class="btn btn-dark">

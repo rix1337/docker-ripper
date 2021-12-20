@@ -25,14 +25,10 @@ app.controller('logCtrl', function ($scope, $http, $timeout) {
         deleteLog();
     };
 
-    $scope.deleteLogRow = function (row) {
-        deleteLogRow(row);
-    };
-
     function getLog() {
         $http.get('api/log/')
             .then(function (res) {
-                $scope.log = res.data.log;
+                $scope.logdata = res.data;
                 console.log('Log loaded!');
             }, function () {
                 console.log('Could not load log!');
@@ -51,19 +47,6 @@ app.controller('logCtrl', function ($scope, $http, $timeout) {
             }, function () {
                 console.log('Could not clear log!');
                 showDanger('Could not clear log!');
-            });
-    }
-
-    function deleteLogRow(title) {
-        title = btoa(title);
-        $http.delete('api/log_entry/' + title)
-            .then(function () {
-                console.log('Log entry deleted!');
-                showSuccess('Log entry deleted!');
-                getLog();
-            }, function () {
-                console.log('Could not delete log entry!');
-                showDanger('Could not delete log entry!');
             });
     }
 
@@ -88,7 +71,7 @@ app.controller('logCtrl', function ($scope, $http, $timeout) {
         $timeout(function () {
             getLog();
             $scope.updateLog();
-        }, 5000)
+        }, 10000)
     };
 
     $scope.updateLog();
