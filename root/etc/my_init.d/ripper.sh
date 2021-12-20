@@ -32,4 +32,4 @@ chmod -R g+rw /config
 
 chmod +x /config/ripper.sh
 
-/config/ripper.sh
+/config/ripper.sh &
