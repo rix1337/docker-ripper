@@ -14,7 +14,7 @@ if [[ ! -f /config/settings.conf ]] && [[  ! -f /config/enter-your-key-then-rena
 fi
 
 # fetching MakeMKV beta key
-KEY=$(curl --silent 'https://www.makemkv.com/forum/viewtopic.php?f=5&t=1053'| grep -oP 'T-[\w\d@]{66}')
+KEY=$(curl --silent 'https://forum.makemkv.com/forum/viewtopic.php?f=5&t=1053' | grep -oP 'T-[\w\d@]{66}')
 
 # move settings.conf, if found
 mkdir -p /root/.MakeMKV
