@@ -132,7 +132,9 @@ directory as `ripper.sh` to be executed._
 
 ### How do I rip from multiple drives simultaneously?
 
-Simple: run multiple containers of this image, passing through each separate drive accordingly.
+**This is unsupported!**
+
+Users have however been able to achieve this by running multiple containers of this image, passing through each drive to only one instance of the container.
 
 ### How do I customize the audio ripping output?
 
