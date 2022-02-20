@@ -9,8 +9,9 @@ jobs:
     name: is-sponsor-label
     runs-on: ubuntu-latest
     steps:
-      - uses: JasonEtco/is-sponsor-label-action@v1
+      - uses: rix1337/is-sponsor-label-action@v1
         with:
-          label: sponsor ❤️
+          sponsor_label: sponsor ❤️
+          not_sponsor_label: creator is no sponsor 😔
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CR_PAT }}
