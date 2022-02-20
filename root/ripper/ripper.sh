@@ -21,6 +21,8 @@ DRIVE="/dev/sr0"
 BAD_THRESHOLD=5
 let BAD_RESPONSE=0
 
+#This line can be removed once sdparm is installed when creating container
+apt update && apt install sdparm -y
 # True is always true, thus loop indefinitely
 while true
 do
@@ -50,12 +52,24 @@ if [ "x$EXPECTED" == 'x' ]; then
 else
  let BAD_RESPONSE=0
 fi
-if (( $BAD_RESPONSE >= $BAD_THRESHOLD )); then
- echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disk and aborting"
- # Run makemkvcon once more with full output, to potentially aid in debugging
- makemkvcon -r --cache=1 info disc:9999
- eject $DRIVE >> $LOGFILE 2>&1
- exit 1
+if (( $BAD_RESPONSE >= $BAD_THRESHOLD ))
+then
+  echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disk and aborting"
+  # Run makemkvcon once more with full output, to potentially aid in debugging
+  makemkvcon -r --cache=1 info disc:9999;
+  if eject -v $DRIVE | grep 'whole-disk' >> /dev/null
+  then
+    echo "First attempt at Ejecting Disk Succeeded"
+    exit 1
+  else
+    echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >> $LOGFILE 2>&1
+    echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
+    sleep 2
+    sdparm --command=unlock $DRIVE
+    sleep 1
+    sdparm --command=eject $DRIVE
+    exit 1 
+  fi
 fi
 
 # if [ $EMPTY = 'DRV:0,0,999,0,"' ]; then
@@ -87,7 +101,17 @@ if [ "$BD1" = 'DRV:0,2,999,12,"' ] || [ "$BD2" = 'DRV:0,2,999,28,"' ]; then
     mv -v "$BDPATH" "$BDFINISH"
  fi
  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
- eject $DRIVE >> $LOGFILE 2>&1
+ if eject -v $DRIVE | grep 'whole-disk' >> /dev/null
+ then
+    echo "First attempt at Ejecting Disk Succeeded"
+ else
+    echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >> $LOGFILE 2>&1
+    echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
+    sleep 2
+    sdparm --command=unlock $DRIVE
+    sleep 1
+    sdparm --command=eject $DRIVE 
+ fi
  # permissions
  chown -R nobody:users "$STORAGE_BD" && chmod -R g+rw "$STORAGE_BD"
 fi
@@ -111,7 +135,17 @@ if [ "$DVD" = 'DRV:0,2,999,1,"' ]; then
     mv -v "$DVDPATH" "$DVDFINISH" 
  fi
  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
- eject $DRIVE >> $LOGFILE 2>&1
+ if eject -v $DRIVE | grep 'whole-disk' >> /dev/null
+ then
+    echo "First attempt at Ejecting Disk Succeeded"
+ else
+    echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >> $LOGFILE 2>&1
+    echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
+    sleep 2
+    sdparm --command=unlock $DRIVE
+    sleep 1
+    sdparm --command=eject $DRIVE
+ fi
  # permissions
  chown -R nobody:users "$STORAGE_DVD" && chmod -R g+rw "$STORAGE_DVD"
 fi
@@ -128,7 +162,17 @@ if [ "$CD1" = 'DRV:0,2,999,0,"' ]; then
      /usr/bin/abcde -d "$DRIVE" -c /ripper/abcde.conf -N -x -l >> $LOGFILE 2>&1
   fi
   echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
-  eject $DRIVE >> $LOGFILE 2>&1
+  if eject -v $DRIVE | grep 'whole-disk' >> /dev/null
+  then
+     echo "First attempt at Ejecting Disk Succeeded"
+  else
+     echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >> $LOGFILE 2>&1
+     echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
+     sleep 2
+     sdparm --command=unlock $DRIVE
+     sleep 1
+     sdparm --command=eject $DRIVE 
+  fi
   # permissions
   chown -R nobody:users "$STORAGE_CD" && chmod -R g+rw "$STORAGE_CD"
  else
@@ -145,8 +189,18 @@ if [ "$CD1" = 'DRV:0,2,999,0,"' ]; then
      ddrescue $DRIVE "$ISOPATH" >> $LOGFILE 2>&1
   fi
   echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
-  eject $DRIVE >> $LOGFILE 2>&1
-  # permissions
+  if eject -v $DRIVE | grep 'whole-disk' >> /dev/null
+  then
+     echo "First attempt at Ejecting Disk Succeeded"
+  else
+     echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >> $LOGFILE 2>&1
+     echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
+     sleep 2
+     sdparm --command=unlock $DRIVE
+     sleep 1
+     sdparm --command=eject $DRIVE 
+  fi
+# permissions
   chown -R nobody:users "$STORAGE_DATA" && chmod -R g+rw "$STORAGE_DATA"
  fi
 fi
