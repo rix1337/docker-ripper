@@ -21,8 +21,6 @@ DRIVE="/dev/sr0"
 BAD_THRESHOLD=5
 let BAD_RESPONSE=0
 
-#This line can be removed once sdparm is installed when creating container
-apt update && apt install sdparm -y
 # True is always true, thus loop indefinitely
 while true
 do
