@@ -24,7 +24,7 @@ RUN chmod +x /etc/my_init.d/*.sh
 
 # Install software
 RUN apt-get update && \
-    apt-get -y --allow-unauthenticated install --no-install-recommends gddrescue wget eject git && \
+    apt-get -y --allow-unauthenticated install --no-install-recommends gddrescue wget eject sdparm git && \
     apt-get -y install abcde eyed3 && \
     apt-get -y install flac lame mkcue speex vorbis-tools vorbisgain id3 id3v2 && \
     apt-get -y autoremove
