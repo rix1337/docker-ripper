@@ -9,4 +9,4 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-close-message: "@${issue.user.login} you must confirm that you have read and understood this [part of the readme](https://github.com/rix1337/docker-ripper#do-you-offer-support) with '[X] YES'. Closing this issue automatically!"
-        issue-pattern: ".*[X] YES.*"
+        issue-pattern: ".*\\[X\\] YES.*"
