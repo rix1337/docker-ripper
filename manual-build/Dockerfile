@@ -27,7 +27,7 @@ RUN chmod +x /etc/my_init.d/*.sh && \
 
 # Install Required packages
 RUN apt-get update && \
-    apt-get -y --allow-unauthenticated install --no-install-recommends python3 python3-pip eject gddrescue abcde eyed3 ffmpeg flac lame mkcue speex vorbis-tools vorbisgain id3 id3v2 && \
+    apt-get -y --allow-unauthenticated install --no-install-recommends python3 python3-pip eject gddrescue abcde eyed3 ffmpeg flac lame mkcue speex vorbis-tools vorbisgain id3 id3v2 sdparm && \
     pip3 install docopt flask waitress && \
     apt-get -y autoremove
 
