@@ -134,7 +134,7 @@ directory as `ripper.sh` to be executed._
 
 **This is unsupported!**
 
-Users have however been able to achieve this by running multiple containers of this image, passing through each drive to only one instance of the container.
+Users have however been able to achieve this by running multiple containers of this image, passing through each drive to only one instance of the container, when disabling privileged mode.
 
 ### How do I customize the audio ripping output?
 
