@@ -26,6 +26,12 @@ elif ! [ "$KEY" = '' ]; then
  echo app_Key = "\"$KEY"\" > /root/.MakeMKV/settings.conf
 fi
 
+# move abcde.conf, if found
+if [[ -f  /config/abcde.conf ]]; then
+ echo "Found abcde.conf."
+ cp -f  /config/abcde.conf /ripper/abcde.conf
+fi
+
 # permissions
 chown -R nobody:users /config
 chmod -R g+rw /config
