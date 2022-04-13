@@ -153,6 +153,43 @@ _Yes, see [LICENSE.md](https://github.com/rix1337/docker-ripper/blob/master/LICE
 **If this project is helpful to your organization please sponsor me
 on [Github Sponsors](https://github.com/sponsors/rix1337)!**
 
+### The docker keeps locking up and/or crashing and/or stops reading from the drive
+
+_Have you checked the docker host's udev rule for persistent storage for a common flaw?_
+
+```
+sudo cp /usr/lib/udev/rules.d/60-persistent-storage.rules /etc/udev/rules.d/60-persistent-storage.rules
+sudo vim /etc/udev/rules.d/60-persistent-storage.rules
+```
+
+_In the file you should be looking for this line:_
+```
+# probe filesystem metadata of optical drives which have a media inserted
+KERNEL=="sr*", ENV{DISK_EJECT_REQUEST}!="?*", ENV{ID_CDROM_MEDIA_TRACK_COUNT_DATA}=="?*", ENV{ID_CDROM_MEDIA_SESSION_LAST_OFFSET}=="?*", \
+  IMPORT{builtin}="blkid --offset=$env{ID_CDROM_MEDIA_SESSION_LAST_OFFSET}"
+# single-session CDs do not have ID_CDROM_MEDIA_SESSION_LAST_OFFSET
+KERNEL=="sr*", ENV{DISK_EJECT_REQUEST}!="?*", ENV{ID_CDROM_MEDIA_TRACK_COUNT_DATA}=="?*", ENV{ID_CDROM_MEDIA_SESSION_LAST_OFFSET}=="", \
+  IMPORT{builtin}="blkid --noraid"
+```
+
+_Those IMPORT lines cause issues so we need to replace them with a line that tells udev to end additional rules for SR* devices:_
+```
+# probe filesystem metadata of optical drives which have a media inserted
+KERNEL=="sr*", ENV{DISK_EJECT_REQUEST}!="?*", ENV{ID_CDROM_MEDIA_TRACK_COUNT_DATA}=="?*", ENV{ID_CDROM_MEDIA_SESSION_LAST_OFFSET}=="?*", \
+  GOTO="persistent_storage_end"
+##  IMPORT{builtin}="blkid --offset=$env{ID_CDROM_MEDIA_SESSION_LAST_OFFSET}"
+# single-session CDs do not have ID_CDROM_MEDIA_SESSION_LAST_OFFSET
+KERNEL=="sr*", ENV{DISK_EJECT_REQUEST}!="?*", ENV{ID_CDROM_MEDIA_TRACK_COUNT_DATA}=="?*", ENV{ID_CDROM_MEDIA_SESSION_LAST_OFFSET}=="", \
+  GOTO="persistent_storage_end"
+##  IMPORT{builtin}="blkid --noraid"
+```
+
+_You can comment these lines out or delete them all together, then replace them with the GOTO lines. You may then either reboot OR reload the rules. If you're using Unraid, you'll need to edit the the original udev rule and reload._
+```
+root@linuxbox# udevadm control --reload-rules && udevadm trigger
+```
+
+
 # Credits
 
 - [Idea based on Discbox by kingeek](http://kinggeek.co.uk/projects/item/61-discbox-linux-bash-script-to-automatically-rip-cds-dvds-and-blue-ray-with-multiple-optical-drives-and-no-user-intervention)
