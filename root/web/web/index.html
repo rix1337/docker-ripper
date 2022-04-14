@@ -1,47 +1,4 @@
 {% raw %}<!DOCTYPE html>
-<script type="module">
-    import {createApp} from './js/petite-vue.es.js?module'
-
-    createApp({
-        logdata: {
-            log: [],
-            filesize: 0,
-        },
-        spin: false,
-
-        getLog() {
-            fetch('api/log/')
-                .then((res) => res.json())
-                .then((data) => {
-                    this.logdata = data
-                    console.log('Log loaded!')
-                })
-                .catch(() => {
-                    console.log('Could not load log!')
-                })
-        },
-
-        deleteLog() {
-            this.spin = true
-            fetch(`api/log/`, {method: 'DELETE'})
-                .then(() => {
-                    this.spin = false
-                    console.log('Log cleared!')
-                    this.getLog()
-                })
-                .catch(() => {
-                    this.spin = false
-                    console.log('Could not clear log!')
-                })
-        },
-
-        mounted() {
-            this.getLog()
-            setInterval(this.getLog, 10 * 1000)
-        },
-    }).mount()
-</script>
-
 <html lang="en">
 
 <head>
@@ -53,6 +10,121 @@
     <link rel="stylesheet" href="css/bootstrap-icons.css">
 
     <title>Ripper</title>
+    
+    <script type="module">
+        import {createApp} from './js/petite-vue.es.js?module'
+
+        createApp({
+            logdata: {
+                log: [],
+                filesize: 0,
+            },
+            spin: false,
+
+            getLog() {
+                fetch('api/log/')
+                    .then((res) => res.json())
+                    .then((data) => {
+                        this.logdata = data
+                        console.log('Log loaded!')
+                    })
+                    .catch(() => {
+                        console.log('Could not load log!')
+                    })
+            },
+
+            deleteLog() {
+                this.spin = true
+                fetch(`api/log/`, {method: 'DELETE'})
+                    .then(() => {
+                        this.spin = false
+                        console.log('Log cleared!')
+                        this.getLog()
+                    })
+                    .catch(() => {
+                        this.spin = false
+                        console.log('Could not clear log!')
+                    })
+            },
+
+            mounted() {
+                this.getLog()
+                setInterval(this.getLog, 10 * 1000)
+            },
+        }).mount()
+    </script>
+    
+    <style>
+        body {
+            background-color: #303030;
+            color: black;
+        }
+
+        #log {
+            max-width: 100em;
+        }
+
+        .log {
+            height: 600px;
+            overflow: auto;
+            resize: none;
+            color: black;
+            text-align: left;
+            background-color: #f7f7f7;
+        }
+
+        .table td {
+            border-top: 0;
+            border-bottom: 0;
+        }
+
+        .container {
+            box-shadow: 0 0 5px 5px #202020;
+            border-radius: 0;
+            margin: 1em auto;
+            padding-top: 0.5em;
+            padding-bottom: 0.5em;
+        }
+
+        td {
+            font-family: Courier New, Courier, Lucida Sans Typewriter, Lucida Typewriter, monospace;
+            white-space: nowrap;
+        }
+
+        .app {
+            background-color: white;
+            color: black;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+        }
+
+        #head {
+            max-width: 36em;
+        }
+
+        .border-top {
+            margin: 1em;
+        }
+
+        #head, #log {
+            margin-bottom: 2em;
+        }
+
+        .btn {
+            margin-top: 0.5em;
+            white-space: inherit;
+            word-break: break-all;
+        }
+
+        h3 {
+            white-space: inherit;
+            word-break: normal;
+        }
+
+        p {
+            margin-top: 16px;
+        }
+    </style>
 </head>
 
 <body class="text-center">
@@ -62,16 +134,12 @@
     <p id="headtitle">Project by
         <a href="https://github.com/rix1337/docker-ripper" target="_blank">RiX</a>
     </p>
-
     <div class="border-top"></div>
-
-
     <div>
         <a href="https://github.com/users/rix1337/sponsorship" target="_blank"
            class="btn btn-outline-danger"><i class="bi bi-heart"></i> Please support Ripper!</a>
     </div>
 </div>
-
 
 <div id="log" class="container app col" @vue:mounted="mounted()">
     <h3><i class="bi bi-clock-history"></i> Log</h3>
@@ -101,76 +169,4 @@
 </div>
 </body>
 
-</html>
-
-<style>
-    body {
-        background-color: #303030;
-        color: black;
-    }
-
-    #log {
-        max-width: 100em;
-    }
-
-    .log {
-        height: 600px;
-        overflow: auto;
-        resize: none;
-        color: black;
-        text-align: left;
-        background-color: #f7f7f7;
-    }
-
-    .table td {
-        border-top: 0;
-        border-bottom: 0;
-    }
-
-    .container {
-        box-shadow: 0 0 5px 5px #202020;
-        border-radius: 0;
-        margin: 1em auto;
-        padding-top: 0.5em;
-        padding-bottom: 0.5em;
-    }
-
-    td {
-        font-family: Courier New, Courier, Lucida Sans Typewriter, Lucida Typewriter, monospace;
-        white-space: nowrap;
-    }
-
-    .app {
-        background-color: white;
-        color: black;
-        border: 1px solid #ced4da;
-        border-radius: .25rem;
-    }
-
-    #head {
-        max-width: 36em;
-    }
-
-    .border-top {
-        margin: 1em;
-    }
-
-    #head, #log {
-        margin-bottom: 2em;
-    }
-
-    .btn {
-        margin-top: 0.5em;
-        white-space: inherit;
-        word-break: break-all;
-    }
-
-    h3 {
-        white-space: inherit;
-        word-break: normal;
-    }
-
-    p {
-        margin-top: 16px;
-    }
-</style>{% endraw %}
+</html>{% endraw %}
