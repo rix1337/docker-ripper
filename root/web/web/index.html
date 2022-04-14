@@ -56,49 +56,49 @@
 </head>
 
 <body class="text-center">
-    <div id="head" class="container app col">
-        <h1>
-            <i class="bi bi-disc"></i> Ripper</h1>
-        <p id="headtitle">Project by
-            <a href="https://github.com/rix1337/docker-ripper" target="_blank">RiX</a>
-        </p>
+<div id="head" class="container app col">
+    <h1>
+        <i class="bi bi-disc"></i> Ripper</h1>
+    <p id="headtitle">Project by
+        <a href="https://github.com/rix1337/docker-ripper" target="_blank">RiX</a>
+    </p>
 
-        <div class="border-top"></div>
+    <div class="border-top"></div>
 
 
-        <div>
-            <a href="https://github.com/users/rix1337/sponsorship" target="_blank"
-               class="btn btn-outline-danger"><i id="heart" class="bi bi-heart"></i> Please support Ripper!</a>
-        </div>
+    <div>
+        <a href="https://github.com/users/rix1337/sponsorship" target="_blank"
+           class="btn btn-outline-danger"><i class="bi bi-heart"></i> Please support Ripper!</a>
     </div>
+</div>
 
 
-    <div id="log" class="container app col" @vue:mounted="mounted()">
-        <h3><i class="bi bi-clock-history"></i> Log</h3>
-        <div v-if="logdata.large_file">
-            The log is too large for performant loading ({{ logdata.filesize }})! Please consider clearing it...
-        </div>
-        <div class="card log">
-            <table class="table" v-if="logdata.log.length > 0">
-                <tbody id="logbody">
-                <tr v-for="x in logdata.log">
-                    <td class="text-left">
-                        {{ x }}
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div>
-            These are the last {{ logdata.log.length }} entries in the log in reverse order.
-        </div>
-        <div>
-            <button @click="deleteLog()" class="btn btn-dark">
-                <span id="spinner-log" v-if="spin" class="spinner-border spinner-border-sm" role="status"></span>
-                <i class="bi bi-trash"></i> Clear
-            </button>
-        </div>
+<div id="log" class="container app col" @vue:mounted="mounted()">
+    <h3><i class="bi bi-clock-history"></i> Log</h3>
+    <div v-if="logdata.large_file">
+        The log is too large for performant loading ({{ logdata.filesize }})! Please consider clearing it...
     </div>
+    <div class="card log">
+        <table class="table" v-if="logdata.log.length > 0">
+            <tbody id="logbody">
+            <tr v-for="x in logdata.log">
+                <td class="text-left">
+                    {{ x }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        These are the last {{ logdata.log.length }} entries in the log in reverse order.
+    </div>
+    <div>
+        <button @click="deleteLog()" class="btn btn-dark">
+            <span id="spinner-log" v-if="spin" class="spinner-border spinner-border-sm" role="status"></span>
+            <i class="bi bi-trash"></i> Clear
+        </button>
+    </div>
+</div>
 </body>
 
 </html>
@@ -159,10 +159,6 @@
         margin-bottom: 2em;
     }
 
-    #heart {
-        color: #d53343;
-    }
-
     .btn {
         margin-top: 0.5em;
         white-space: inherit;
@@ -172,16 +168,6 @@
     h3 {
         white-space: inherit;
         word-break: normal;
-    }
-
-    select {
-        max-width: 260px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    input, select, textarea {
-        margin-bottom: 16px;
     }
 
     p {
