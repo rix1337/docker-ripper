@@ -184,7 +184,7 @@ KERNEL=="sr*", ENV{DISK_EJECT_REQUEST}!="?*", ENV{ID_CDROM_MEDIA_TRACK_COUNT_DAT
 ##  IMPORT{builtin}="blkid --noraid"
 ```
 
-_You can comment these lines out or delete them all together, then replace them with the GOTO lines. You may then either reboot OR reload the rules. If you're using Unraid, you'll need to edit the the original udev rule and reload._
+_You can comment these lines out or delete them all together, then replace them with the GOTO lines. You may then either reboot OR reload the rules. If you're using Unraid, you'll need to edit the original udev rule and reload._
 ```
 root@linuxbox# udevadm control --reload-rules && udevadm trigger
 ```
