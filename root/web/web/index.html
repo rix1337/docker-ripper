@@ -1,5 +1,48 @@
 {% raw %}<!DOCTYPE html>
-<html ng-app="logApp" ng-controller="logCtrl" lang="en">
+<script type="module">
+    import {createApp} from './js/petite-vue.es.js?module'
+
+    createApp({
+        logdata: {
+            log: [],
+            filesize: 0,
+        },
+        spin: false,
+
+        getLog() {
+            fetch('api/log/')
+                .then((res) => res.json())
+                .then((data) => {
+                    this.logdata = data
+                    console.log('Log loaded!')
+                })
+                .catch(() => {
+                    console.log('Could not load log!')
+                })
+        },
+
+        deleteLog() {
+            this.spin = true
+            fetch(`api/log/`, {method: 'DELETE'})
+                .then(() => {
+                    this.spin = false
+                    console.log('Log cleared!')
+                    this.getLog()
+                })
+                .catch(() => {
+                    this.spin = false
+                    console.log('Could not clear log!')
+                })
+        },
+
+        mounted() {
+            this.getLog()
+            setInterval(this.getLog, 10 * 1000)
+        },
+    }).mount()
+</script>
+
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -8,74 +51,140 @@
     <link href="img/favicon.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-icons.css">
-    <link rel="stylesheet" href="css/ripper.css">
 
     <title>Ripper</title>
 </head>
 
-<body ng-cloak class="text-center">
-<div id="head" class="container app col">
-    <h1>
-        <i class="bi bi-disc"></i> Ripper</h1>
-    <p id="headtitle">Project by
-        <a href="https://github.com/rix1337/docker-ripper" target="_blank">RiX</a>
-    </p>
+<div class="text-center">
+    <div id="head" class="container app col">
+        <h1>
+            <i class="bi bi-disc"></i> Ripper</h1>
+        <p id="headtitle">Project by
+            <a href="https://github.com/rix1337/docker-ripper" target="_blank">RiX</a>
+        </p>
 
-    <div class="border-top"></div>
+        <div class="border-top"></div>
 
 
-    <div>
-        <a href="https://github.com/users/rix1337/sponsorship" target="_blank"
-           class="btn btn-outline-danger"><i id="heart" class="bi bi-heart"></i> Please support Ripper!</a>
+        <div>
+            <a href="https://github.com/users/rix1337/sponsorship" target="_blank"
+               class="btn btn-outline-danger"><i id="heart" class="bi bi-heart"></i> Please support Ripper!</a>
+        </div>
+    </div>
+
+
+    <div id="log" class="container app col" @vue:mounted="mounted()">
+        <h3><i class="bi bi-clock-history"></i> Log</h3>
+        <div v-if="logdata.large_file">
+            The log is too large for performant loading ({{ logdata.filesize }})! Please consider clearing it...
+        </div>
+        <div class="card log">
+            <table class="table" v-if="logdata.log.length > 0">
+                <tbody id="logbody">
+                <tr v-for="x in logdata.log">
+                    <td class="text-left">
+                        {{ x }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            These are the last {{ logdata.log.length }} entries in the log in reverse order.
+        </div>
+        <div>
+            <button @click="deleteLog()" class="btn btn-dark">
+                <span id="spinner-log" v-if="spin" class="spinner-border spinner-border-sm" role="status"></span>
+                <i class="bi bi-trash"></i> Clear
+            </button>
+        </div>
     </div>
 </div>
 
+</html>
 
-<div id="log" class="container app col">
-    <h3><i class="bi bi-clock-history"></i> Log</h3>
-    <div ng-if="logdata.large_file">
-        The log is too large for performant loading ({{ logdata.filesize }})! Please consider clearing it...
-    </div>
-    <div class="card log">
-        <table class="table" ng-show="logdata.log.length > 0">
-            <tbody id="logbody">
-            <tr ng-repeat="x in logdata.log track by $index">
-                <td class="text-left">
-                    {{ x | limitTo: loglength }}
-                    <a href='' ng-if="!longlog && x.length > 150" ng-click="longerLog()"
-                       title="Show entire entry">...</a>
-                    <a href='' ng-if="longlog && x.length > 150" ng-click="shorterLog()" title="Shorten entry"><i
-                            class="bi bi-x-circle"></i></a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div>
-        These are the last {{ logdata.log.length }} entries in the log in reverse order.
-    </div>
-    <div>
-        <a href="" ng-click="deleteLog()" class="btn btn-dark">
-            <div id="spinner-log" style="display: none;"
-                 class="spinner-border spinner-border-sm" role="status"></div>
-            <i class="bi bi-trash"></i> Clear</a>
-    </div>
-</div>
+<style>
+    body {
+        background-color: #303030;
+        color: black;
+    }
 
+    #log {
+        max-width: 100em;
+    }
 
-<div ng-model="info" style="display: none; z-index: 1080;" class="alert alert-info container fixed-top"
-     role="alert"></div>
-<div ng-model="success" style="display: none; z-index: 1090;"
-     class="alert alert-success container fixed-top"></div>
-<div ng-model="error" style="display: none; z-index: 1100;"
-     class="alert alert-danger container fixed-top"></div>
+    .log {
+        height: 600px;
+        overflow: auto;
+        resize: none;
+        color: black;
+        text-align: left;
+        background-color: #f7f7f7;
+    }
 
+    .table td {
+        border-top: 0;
+        border-bottom: 0;
+    }
 
-<script src="js/jquery.slim.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/angular.min.js"></script>
-<script src="js/angular-locale_de-de.js"></script>
-<script src="js/ripper.js"></script>
-</body>
+    .container {
+        box-shadow: 0 0 5px 5px #202020;
+        border-radius: 0;
+        margin: 1em auto;
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+    }
 
-</html>{% endraw %}
+    td {
+        font-family: Courier New, Courier, Lucida Sans Typewriter, Lucida Typewriter, monospace;
+        white-space: nowrap;
+    }
+
+    .app {
+        background-color: white;
+        color: black;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+    }
+
+    #head {
+        max-width: 36em;
+    }
+
+    .border-top {
+        margin: 1em;
+    }
+
+    #head, #log {
+        margin-bottom: 2em;
+    }
+
+    #heart {
+        color: #d53343;
+    }
+
+    .btn {
+        margin-top: 0.5em;
+        white-space: inherit;
+        word-break: break-all;
+    }
+
+    h3 {
+        white-space: inherit;
+        word-break: normal;
+    }
+
+    select {
+        max-width: 260px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    input, select, textarea {
+        margin-bottom: 16px;
+    }
+
+    p {
+        margin-top: 16px;
+    }
+</style>{% endraw %}

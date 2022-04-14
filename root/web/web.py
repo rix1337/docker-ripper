@@ -162,7 +162,7 @@ def app_container():
                 open(log_file, 'w').close()
                 return "Success", 200
             except:
-                return "Failed", 400
+                return "Logfile not found", 400
         else:
             return "Failed", 405
 
