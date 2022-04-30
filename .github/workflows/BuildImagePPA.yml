@@ -23,5 +23,5 @@ jobs:
           image_name: "${{ env.ENDPOINT }}"
           image_tag: latest,ppa-latest
           context: "./"
-          dockerfile: "./manual-build/Dockerfile"
+          dockerfile: "./latest/Dockerfile"
           stages_image_name: "rix1337/cache-ripper-latest"
