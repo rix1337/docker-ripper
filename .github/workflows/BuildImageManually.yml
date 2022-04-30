@@ -33,5 +33,5 @@ jobs:
           image_name: "${{ env.ENDPOINT }}"
           image_tag: manual-latest,${{needs.version-check.outputs.output}}
           context: "./"
-          dockerfile: "./latest/Dockerfile"
+          dockerfile: "./manual-build/Dockerfile"
           stages_image_name: "rix1337/cache-ripper-manual-build"
