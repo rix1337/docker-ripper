@@ -19,7 +19,7 @@ jobs:
         run: | 
           VERSION=$(curl --silent 'https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224' | grep MakeMKV.*.for.Linux.is | head -n 1 | sed -e 's/.*MakeMKV //g' -e 's/ .*//g')
           echo $VERSION
-          echo "::set-output name=version::$VERSION"
+          echo "version=$VERSION" >>$GITHUB_OUTPUT
           
   build:
     runs-on: ubuntu-latest
