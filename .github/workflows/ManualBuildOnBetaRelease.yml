@@ -12,7 +12,7 @@ jobs:
           TAGS=$(curl https://index.docker.io/v1/repositories/rix1337/docker-ripper/tags)
           VERSION=$(curl --silent 'https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224' | grep MakeMKV.*.for.Linux.is | head -n 1 | sed -e 's/.*MakeMKV //g' -e 's/ .*//g')
           if [ ! -z "${TAGS##*$VERSION*}" ] ;then
-           echo "::set-output name=needs-build::true"
+           echo "needs-build=true" >>$GITHUB_OUTPUT
           fi
         id: version-check
       - name: Trigger Docker Image build
