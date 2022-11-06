@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Docker Image Update Checker
         id: baseupdatecheck
-        uses: lucacome/docker-image-update-checker@v1.1.0
+        uses: lucacome/docker-image-update-checker@v1
         with:
           base-image: ${{ env.IMAGE_BASE }}
           image: ${{ env.IMAGE }}
