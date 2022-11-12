@@ -29,10 +29,10 @@ lsscsi -g
 
 In this example, /dev/sr0 and /dev/sg0 are the two files that refer to a single optical drive. These names will be
 needed for the docker run command.  
-![lsscsi -g](https://raw.githubusercontent.com/rix1337/docker-ripper/master/.github/screenshots/lsscsi.png)
+![lsscsi -g](https://raw.githubusercontent.com/rix1337/docker-ripper/main/.github/screenshots/lsscsi.png)
 
 Screenshot of Docker run command with the example provided  
-![docker run](https://raw.githubusercontent.com/rix1337/docker-ripper/master/.github/screenshots/dockerrun.png)
+![docker run](https://raw.githubusercontent.com/rix1337/docker-ripper/main/.github/screenshots/dockerrun.png)
 
 ## Docker run
 
@@ -78,13 +78,13 @@ launch. Without a purchased license key Ripper may stop running at any time.
    called `enter-your-key-then-rename-to.settings.conf`, and add your key between the
    quotes `app_Key = "`**[ENTER KEY HERE]**`"` then save and rename the file to settings.conf
 
-![makemkv license](https://raw.githubusercontent.com/rix1337/docker-ripper/master/.github/screenshots/makemkvkey.png)
+![makemkv license](https://raw.githubusercontent.com/rix1337/docker-ripper/main/.github/screenshots/makemkvkey.png)
 
 2) Remove the remaining file `enter-your-key-then-rename-to.settings.conf`
-   ![sudo rm enter your key](https://raw.githubusercontent.com/rix1337/docker-ripper/master/.github/screenshots/sudormenteryourkey.png)
+   ![sudo rm enter your key](https://raw.githubusercontent.com/rix1337/docker-ripper/main/.github/screenshots/sudormenteryourkey.png)
 
 3) At this point your config directory should look like this:  
-   ![config directory](https://raw.githubusercontent.com/rix1337/docker-ripper/master/.github/screenshots/configdirectory.png)
+   ![config directory](https://raw.githubusercontent.com/rix1337/docker-ripper/main/.github/screenshots/configdirectory.png)
 
 # Docker compose
 
@@ -102,7 +102,7 @@ _You will find the PPA-based build under the `latest`/`ppa-latest` tags on docke
 
 ### Do you offer support?
 
-_Yes, but only for my [sponsors](https://github.com/sponsors/rix1337). Not a sponsor - no support. Want to help yourself? Fork this repo and try fixing it yourself. I will happily review your pull request. For more information see [LICENSE.md](https://github.com/rix1337/docker-ripper/blob/master/LICENSE.md)_
+_Yes, but only for my [sponsors](https://github.com/sponsors/rix1337). Not a sponsor - no support. Want to help yourself? Fork this repo and try fixing it yourself. I will happily review your pull request. For more information see [LICENSE.md](https://github.com/rix1337/docker-ripper/blob/main/LICENSE.md)_
 
 ### There is an error regarding 'ccextractor'
 
@@ -114,7 +114,7 @@ app_ccextractor = "/usr/local/bin/ccextractor"
 
 ### How do I set ripper to do something else?
 
-_Ripper will place a bash-file ([ripper.sh](https://github.com/rix1337/docker-ripper/blob/master/root/ripper/ripper.sh))
+_Ripper will place a bash-file ([ripper.sh](https://github.com/rix1337/docker-ripper/blob/main/root/ripper/ripper.sh))
 automatically at /config that is responsible for detecting and ripping disks. You are completely free to modify it on
 your local docker host. No modifications to this main image are required for minor edits to that file._
 
@@ -143,13 +143,13 @@ _You need to edit /config/abcde.conf_
 ### I want another output format that requires another piece of software!
 
 _You need to fork this image and build it yourself on docker hub. A good starting point is
-the [Dockerfile](https://github.com/rix1337/docker-ripper/blob/master/latest/Dockerfile#L29) that includes setup instructions
+the [Dockerfile](https://github.com/rix1337/docker-ripper/blob/main/latest/Dockerfile#L29) that includes setup instructions
 for the used ripping software. If your solution works better than the current one, I will happily review your pull
 request._
 
 ### Am I allowed to use this in a commercial setting?
 
-_Yes, see [LICENSE.md](https://github.com/rix1337/docker-ripper/blob/master/LICENSE.md)._
+_Yes, see [LICENSE.md](https://github.com/rix1337/docker-ripper/blob/main/LICENSE.md)._
 **If this project is helpful to your organization please sponsor me
 on [Github Sponsors](https://github.com/sponsors/rix1337)!**
 
