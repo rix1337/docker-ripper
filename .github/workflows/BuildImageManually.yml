@@ -26,7 +26,7 @@ jobs:
     needs: version-check
     steps:
       - uses: actions/checkout@v3
-      - uses: whoan/docker-build-with-cache-action@v5
+      - uses: whoan/docker-build-with-cache-action@v6
         with:
           username: "${{ secrets.DOCKERUSER }}"
           password: "${{ secrets.DOCKERPASS }}"
