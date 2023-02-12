@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Auto-grab latest version
-MAKEMKV_VERSION=$(curl --silent 'https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224' | grep MakeMKV.*.for.Linux.is | head -n 1 | sed -e 's/.*MakeMKV //g' -e 's/ .*//g')
-
 # Setup taken from https://github.com/tianon/dockerfiles/blob/master/makemkv/Dockerfile
 # The Expat/MIT License
 #
@@ -23,6 +20,25 @@ MAKEMKV_VERSION=$(curl --silent 'https://forum.makemkv.com/forum/viewtopic.php?f
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 # DEALINGS IN THE SOFTWARE.
+
+# Auto-grab latest version
+{
+	MAKEMKV_VERSION="$(
+		curl -fsSL 'https://makemkv.com/download/' \
+			| grep -oE 'makemkv-sha-[0-9.]+.txt' \
+			| sed -r 's!^makemkv-sha-|[.]txt$!!g'
+	)"
+	[ -n "$version" ]
+} || {
+	url="$(
+		curl -fsSL 'https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224' \
+			| grep -oE 'href="https?://[^"]+/makemkv-bin-[^"]+.tar.gz"' \
+			| cut -d'"' -f2
+	)"
+	[ -n "$url" ]
+	MAKEMKV_VERSION="$(basename "$url" | sed -r 's!^makemkv-bin-|[.]tar[.]gz$!!g')"
+	[ -n "$version" ]
+}
 
 # This disc requires Java runtime (JRE), but none was found. Certain functions will fail, please install Java. See http://www.makemkv.com/bdjava/ for details.
 set -eux
