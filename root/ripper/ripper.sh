@@ -157,7 +157,7 @@ do
             else
                 # MP3 & FLAC
                 echo "$(date "+%d.%m.%Y %T") : CD detected: Saving MP3 and FLAC"
-                ABCDE_CONF="${RIPPER_DIR}/abcde.conf.sh"
+                ABCDE_CONF="${RIPPER_DIR}/abcde.conf"
                 if [[ -f $ABCDE_CONF ]]; then
                     /usr/bin/abcde -d "$DRIVE" -c $ABCDE_CONF -N -x -l >> $LOGFILE 2>&1
                 else
