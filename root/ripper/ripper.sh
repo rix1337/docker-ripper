@@ -20,6 +20,7 @@ printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 6
 BAD_RESPONSE=0
 
 # Define the drive types and patterns to match against the output of makemkvcon
+# more information here: https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/MakeMKV-Codes
 DRIVE_TYPES=("empty" "open" "loading" "bd1" "bd2" "dvd" "cd1" "cd2")
 DRIVE_PATTERNS=(
     'DRV:0,0,999,0,"'
@@ -65,137 +66,85 @@ check_disc() {
     fi
 }
 
+# Handle disc type functions
+handle_bd_disc() {
+  local disc_info="$1"
+  local disc_label="$(echo "$disc_info" | grep -o -P '(?<=",").*(?=",")')"
+  local bd_path="$STORAGE_BD/$disc_label"
+  local disc_number="$(echo "$disc_info" | grep "$DRIVE" | cut -c5)"
+  mkdir -p "$bd_path"
+  local alt_rip="${RIPPER_DIR}/BLURAYrip.sh"
+  if [[ -f $alt_rip && -x $alt_rip ]]; then
+    echo "$(date "+%d.%m.%Y %T") : BluRay detected: Executing $alt_rip"
+    $alt_rip "$disc_number" "$bd_path" "$LOGFILE"
+  else
+    echo "$(date "+%d.%m.%Y %T") : BluRay detected: Saving MKV"
+    makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$disc_number" all "$bd_path" >>"$LOGFILE" 2>&1
+  fi
+  if [ "$SEPARATERAWFINISH" = 'true' ]; then
+    local bd_finish="$STORAGE_BD/finished/"
+    mv -v "$bd_path" "$bd_finish"
+  fi
+  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
+  eject_disc
+  chown -R nobody:users "$STORAGE_BD" && chmod -R g+rw "$STORAGE_BD"
+}
 
-while true; do
-   cleanup_tmp_files
-   check_disc
-   if (( BAD_RESPONSE >= BAD_THRESHOLD )); then
-      echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disc and aborting"
-      makemkvcon -r --cache=1 info disc:9999
-      ejectdisc
-   fi
-   # get disc info through makemkv and pass output to INFO
-   INFO=$"$(makemkvcon -r --cache=1 info disc:9999 | grep DRV:0)"
-   # check INFO for optical disc
-   EMPTY=$(echo $INFO | grep -o 'DRV:0,0,999,0,"')
-   OPEN=$(echo $INFO | grep -o 'DRV:0,1,999,0,"')
-   LOADING=$(echo $INFO | grep -o 'DRV:0,3,999,0,"')
-   BD1=$(echo $INFO | grep -o 'DRV:0,2,999,12,"')
-   BD2=$(echo $INFO | grep -o 'DRV:0,2,999,28,"')
-   DVD=$(echo $INFO | grep -o 'DRV:0,2,999,1,"')
-   CD1=$(echo $INFO | grep -o 'DRV:0,2,999,0,"')
-   CD2=$(echo $INFO | grep -o '","","'$DRIVE'"')
+handle_dvd_disc() {
+  local disc_info="$1"
+  local disc_label="$(echo "$disc_info" | grep -o -P '(?<=",").*(?=",")')"
+  local dvd_path="$STORAGE_DVD/$disc_label"
+  local disc_number="$(echo "$disc_info" | grep "$DRIVE" | cut -c5)"
+  mkdir -p "$dvd_path"
+  local alt_rip="${RIPPER_DIR}/DVDrip.sh"
+  if [[ -f $alt_rip && -x $alt_rip ]]; then
+    echo "$(date "+%d.%m.%Y %T") : DVD detected: Executing $alt_rip"
+    $alt_rip "$disc_number" "$dvd_path" "$LOGFILE"
+  else
+    echo "$(date "+%d.%m.%Y %T") : DVD detected: Saving MKV"
+    makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$disc_number" all "$dvd_path" >>"$LOGFILE" 2>&1
+  fi
+  if [ "$SEPARATERAWFINISH" = 'true' ]; then
+    local dvd_finish="$STORAGE_DVD/finished/"
+    mv -v "$dvd_path" "$dvd_finish"
+  fi
+  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
+  eject_disc
+  chown -R nobody:users "$STORAGE_DVD" && chmod -R g+rw "$STORAGE_DVD"
+}
 
-   # Check for trouble and respond if found
-   EXPECTED="${EMPTY}${OPEN}${LOADING}${BD1}${BD2}${DVD}${CD1}${CD2}"
-   if [ "x$EXPECTED" == 'x' ]; then
-      echo "$(date "+%d.%m.%Y %T") : Unexpected makemkvcon output: $INFO"
-      let BAD_RESPONSE++
-   else
-      let BAD_RESPONSE=0
-   fi
-   if (($BAD_RESPONSE >= $BAD_THRESHOLD)); then
-      echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disc and aborting"
-      # Run makemkvcon once more with full output, to potentially aid in debugging
-      makemkvcon -r --cache=1 info disc:9999
-      ejectdisc
-   fi
-   # if [ $EMPTY = 'DRV:0,0,999,0,"' ]; then
-   #  echo "$(date "+%d.%m.%Y %T") : No Disc"; &>/dev/null
-   # fi
-   if [ "$OPEN" = 'DRV:0,1,999,0,"' ]; then
-      echo "$(date "+%d.%m.%Y %T") : disc tray open"
-   fi
-   if [ "$LOADING" = 'DRV:0,3,999,0,"' ]; then
-      echo "$(date "+%d.%m.%Y %T") : Disc still loading"
-   fi
+handle_cd_disc() {
+  local disc_info="$1"
+  local alt_rip="${RIPPER_DIR}/CDrip.sh"
+  if [[ -f $alt_rip && -x $alt_rip ]]; then
+    echo "$(date "+%d.%m.%Y %T") : CD detected: Executing $alt_rip"
+    $alt_rip "$DRIVE" "$STORAGE_CD" "$LOGFILE"
+  else
+    echo "$(date "+%d.%m.%Y %T") : CD detected: Saving MP3 and FLAC"
+    /usr/bin/abcde -d "$DRIVE" -c /ripper/abcde.conf -N -x -l >>"$LOGFILE" 2>&1
+  fi
+  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
+  eject_disc
+  chown -R nobody:users "$STORAGE_CD" && chmod -R g+rw "$STORAGE_CD"
+}
 
-   if [ "$BD1" = 'DRV:0,2,999,12,"' ] || [ "$BD2" = 'DRV:0,2,999,28,"' ]; then
-      discLABEL=$(echo $INFO | grep -o -P '(?<=",").*(?=",")')
-      BDPATH="$STORAGE_BD"/"$discLABEL"
-      BLURAYNUM=$(echo $INFO | grep $DRIVE | cut -c5)
-      mkdir -p "$BDPATH"
-      ALT_RIP="${RIPPER_DIR}/BLURAYrip.sh"
-      if [[ -f $ALT_RIP && -x $ALT_RIP ]]; then
-         echo "$(date "+%d.%m.%Y %T") : BluRay detected: Executing $ALT_RIP"
-         $ALT_RIP "$BLURAYNUM" "$BDPATH" "$LOGFILE"
-      else
-         # BluRay/MKV
-         echo "$(date "+%d.%m.%Y %T") : BluRay detected: Saving MKV"
-         makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$BLURAYNUM" all "$BDPATH" >>$LOGFILE 2>&1
-      fi
-      if [ "$SEPARATERAWFINISH" = 'true' ]; then
-         BDFINISH="$STORAGE_BD"/finished/
-         mv -v "$BDPATH" "$BDFINISH"
-      fi
-      echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
-      ejectdisc
-      # permissions
-      chown -R nobody:users "$STORAGE_BD" && chmod -R g+rw "$STORAGE_BD"
-   fi
-
-   if [ "$DVD" = 'DRV:0,2,999,1,"' ]; then
-      discLABEL=$(echo $INFO | grep -o -P '(?<=",").*(?=",")')
-      DVDPATH="$STORAGE_DVD"/"$discLABEL"
-      DVDNUM=$(echo $INFO | grep $DRIVE | cut -c5)
-      mkdir -p "$DVDPATH"
-      ALT_RIP="${RIPPER_DIR}/DVDrip.sh"
-      if [[ -f $ALT_RIP && -x $ALT_RIP ]]; then
-         echo "$(date "+%d.%m.%Y %T") : DVD detected: Executing $ALT_RIP"
-         $ALT_RIP "$DVDNUM" "$DVDPATH" "$LOGFILE"
-      else
-         # DVD/MKV
-         echo "$(date "+%d.%m.%Y %T") : DVD detected: Saving MKV"
-         makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$DVDNUM" all "$DVDPATH" >>$LOGFILE 2>&1
-      fi
-      if [ "$SEPARATERAWFINISH" = 'true' ]; then
-         DVDFINISH="$STORAGE_DVD"/finished/
-         mv -v "$DVDPATH" "$DVDFINISH"
-      fi
-      echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
-      ejectdisc
-      # permissions
-      chown -R nobody:users "$STORAGE_DVD" && chmod -R g+rw "$STORAGE_DVD"
-   fi
-
-   if [ "$CD1" = 'DRV:0,2,999,0,"' ]; then
-      if [ "$CD2" = '","","'$DRIVE'"' ]; then
-         ALT_RIP="${RIPPER_DIR}/CDrip.sh"
-         if [[ -f $ALT_RIP && -x $ALT_RIP ]]; then
-            echo "$(date "+%d.%m.%Y %T") : CD detected: Executing $ALT_RIP"
-            $ALT_RIP "$DRIVE" "$STORAGE_CD" "$LOGFILE"
-         else
-            # MP3 & FLAC
-            echo "$(date "+%d.%m.%Y %T") : CD detected: Saving MP3 and FLAC"
-            /usr/bin/abcde -d "$DRIVE" -c /ripper/abcde.conf -N -x -l >>$LOGFILE 2>&1
-         fi
-         echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
-         ejectdisc
-         # permissions
-         chown -R nobody:users "$STORAGE_CD" && chmod -R g+rw "$STORAGE_CD"
-      else
-         discLABEL=$(echo $INFO | grep $DRIVE | grep -o -P '(?<=",").*(?=",")')
-         ISOPATH="$STORAGE_DATA"/"$discLABEL"/"$discLABEL".iso
-         mkdir -p "$STORAGE_DATA"/"$discLABEL"
-         ALT_RIP="${RIPPER_DIR}/DATArip.sh"
-         if [[ -f $ALT_RIP && -x $ALT_RIP ]]; then
-            echo "$(date "+%d.%m.%Y %T") : Data-disc detected: Executing $ALT_RIP"
-            $ALT_RIP "$DRIVE" "$ISOPATH" "$LOGFILE"
-         else
-            # ISO
-            echo "$(date "+%d.%m.%Y %T") : Data-disc detected: Saving ISO"
-            ddrescue $DRIVE "$ISOPATH" >>$LOGFILE 2>&1
-         fi
-         echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
-         ejectdisc
-         # permissions
-         chown -R nobody:users "$STORAGE_DATA" && chmod -R g+rw "$STORAGE_DATA"
-      fi
-   fi
-   # Wait a minute
-   sleep 1m
-done
-
+handle_data_disc() {
+  local disc_info="$1"
+  local disc_label="$(echo "$disc_info" | grep "$DRIVE" | grep -o -P '(?<=",").*(?=",")')"
+  local iso_path="$STORAGE_DATA/$disc_label/${disc_label}.iso"
+  mkdir -p "$STORAGE_DATA/$disc_label"
+  local alt_rip="${RIPPER_DIR}/DATArip.sh"
+  if [[ -f $alt_rip && -x $alt_rip ]]; then
+    echo "$(date "+%d.%m.%Y %T") : Data-disc detected: Executing $alt_rip"
+    $alt_rip "$DRIVE" "$iso_path" "$LOGFILE"
+  else
+    echo "$(date "+%d.%m.%Y %T") : Data-disc detected: Saving ISO"
+    ddrescue "$DRIVE" "$iso_path" >>"$LOGFILE" 2>&1
+  fi
+  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
+  eject_disc
+  chown -R nobody:users "$STORAGE_DATA" && chmod -R g+rw "$STORAGE_DATA"
+}
 
 # function to eject the disc - now with a lower-case function name
 ejectdisc() {
@@ -213,3 +162,40 @@ ejectdisc() {
       printf "Ejecting Disabled\n"
    fi
 }
+
+process_disc_type() {
+    if [[ -n $empty ]]; then
+        echo "$(date "+%d.%m.%Y %T") : No disc inserted."
+    elif [[ -n $open ]]; then
+        echo "$(date "+%d.%m.%Y %T") : Disc tray open."
+    elif [[ -n $loading ]]; then
+        echo "$(date "+%d.%m.%Y %T") : Disc loading."
+    elif [[ -n $bd1 ]] || [[ -n $bd2 ]]; then
+        handle_bd_disc "$bd1$bd2"
+    elif [[ -n $dvd ]]; then
+        handle_dvd_disc "$dvd"
+    elif [[ -n $cd1 ]] || [[ -n $cd2 ]]; then
+        handle_cd_disc "$cd1$cd2"
+    elif [[ -n $data ]]; then
+        handle_data_disc "$data"
+    else
+        echo "$(date "+%d.%m.%Y %T") : Disc type not recognized."
+    fi
+}
+
+launcher_function() {
+   while true; do
+      cleanup_tmp_files
+      check_disc
+      if [ "$BAD_RESPONSE" -lt "$BAD_THRESHOLD" ]; then
+          process_disc_type
+      else
+          echo "$(date "+%d.%m.%Y %T") : Too many bad responses, checking stopped."
+          exit 1
+      fi
+      sleep 1m
+   done
+}
+
+
+launcher_function

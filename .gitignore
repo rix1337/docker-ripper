@@ -18,3 +18,4 @@ venv
 # PyCharm
 .idea
 .eggs
+root/ripper/ripper-old.sh
