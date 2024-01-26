@@ -1,5 +1,5 @@
 FROM phusion/baseimage:focal-1.0.0
-MAINTAINER rix1337
+LABEL maintainer="rix1337"
 
 # Set correct environment variables
 ENV HOME /root
