@@ -16,11 +16,11 @@ printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 6
 : "${STORAGE_BD:=/out/Ripper/BluRay}"
 : "${DRIVE:=/dev/sr0}"
 : "${BAD_THRESHOLD:=5}"
+: "${DEBUG:=false}"
 
 BAD_RESPONSE=0
 
 # Define the drive types and patterns to match against the output of makemkvcon
-# more information here: https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki/MakeMKV-Codes
 DRIVE_TYPES=("empty" "open" "loading" "bd1" "bd2" "dvd" "cd1" "cd2")
 DRIVE_PATTERNS=(
     'DRV:0,0,999,0,"'
@@ -33,137 +33,160 @@ DRIVE_PATTERNS=(
     '","","'$DRIVE'"'
 )
 
+debug_log() {
+  if [[ "$DEBUG" == true ]]; then
+    echo "[DEBUG] $(date "+%d.%m.%Y %T"): $1" >> "$LOGFILE"
+  fi
+}
 
-# function to cleanup tmp files
 cleanup_tmp_files() {
+  debug_log "Cleaning up temporary files."
   local tmp_dir="/tmp"
   cd "$tmp_dir" || exit
   rm -rf ./*.tmp 2>/dev/null
   cd - || exit
+  debug_log "Temporary file cleanup completed."
 }
 
-
-# function to analyze the output of makemkvcon which detects the optical disc type
 check_disc() {
+    debug_log "Checking disc."
     INFO=$(makemkvcon -r --cache=1 info disc:9999 | grep DRV:0)
+    debug_log "INFO: $INFO"
     EXPECTED=""
 
     for (( i=0; i<${#DRIVE_TYPES[@]}; i++ )); do
         TYPE=${DRIVE_TYPES[$i]}
-        echo $TYPE
-        echo $DRIVE_TYPES
         PATTERN=${DRIVE_PATTERNS[$i]}
-        echo $PATTERN
-        echo $DRIVE_PATTERNS
         MATCH=$(echo $INFO | grep -o "$PATTERN")
-         echo $MATCH
-         echo $PATTERN
         if [[ -n "$MATCH" ]]; then
             declare "$TYPE=$MATCH"
-            # debug echo to see what is being declared
-            echo $TYPE
-            echo $MATCH
             EXPECTED+="$MATCH"
-            echo $EXPECTED
-            
+            debug_log "Detected disc type: $TYPE"
         fi
     done
 
     if [[ -z "$EXPECTED" ]]; then
         echo "$(date "+%d.%m.%Y %T") : Unexpected makemkvcon output: $INFO"
+        debug_log "Unexpected makemkvcon output."
         (( BAD_RESPONSE++ ))
     else
         BAD_RESPONSE=0
     fi
 }
 
-# Handle disc type functions
 handle_bd_disc() {
   local disc_info="$1"
+  debug_log "Handling BluRay disc."
   local disc_label="$(echo "$disc_info" | grep -o -P '(?<=",").*(?=",")')"
   local bd_path="$STORAGE_BD/$disc_label"
   local disc_number="$(echo "$disc_info" | grep "$DRIVE" | cut -c5)"
+  debug_log "Disc label: $disc_label, Disc number: $disc_number, BD path: $bd_path"
   mkdir -p "$bd_path"
   local alt_rip="${RIPPER_DIR}/BLURAYrip.sh"
   if [[ -f $alt_rip && -x $alt_rip ]]; then
     echo "$(date "+%d.%m.%Y %T") : BluRay detected: Executing $alt_rip"
+    debug_log "Executing alternative BluRay rip script."
     $alt_rip "$disc_number" "$bd_path" "$LOGFILE"
   else
     echo "$(date "+%d.%m.%Y %T") : BluRay detected: Saving MKV"
+    debug_log "Saving BluRay as MKV."
     makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$disc_number" all "$bd_path" >>"$LOGFILE" 2>&1
   fi
   if [ "$SEPARATERAWFINISH" = 'true' ]; then
     local bd_finish="$STORAGE_BD/finished/"
+    debug_log "Moving BluRay rip to finished directory: $bd_finish"
     mv -v "$bd_path" "$bd_finish"
   fi
   echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
-  eject_disc
+  ejectdisc
+  debug_log "Ejecting BluRay disc."
   chown -R nobody:users "$STORAGE_BD" && chmod -R g+rw "$STORAGE_BD"
+  debug_log "Changed owner and permissions for: $STORAGE_BD"
 }
 
 handle_dvd_disc() {
   local disc_info="$1"
+  debug_log "Handling DVD disc."
   local disc_label="$(echo "$disc_info" | grep -o -P '(?<=",").*(?=",")')"
   local dvd_path="$STORAGE_DVD/$disc_label"
   local disc_number="$(echo "$disc_info" | grep "$DRIVE" | cut -c5)"
+  debug_log "Disc label: $disc_label, Disc number: $disc_number, DVD path: $dvd_path"
   mkdir -p "$dvd_path"
   local alt_rip="${RIPPER_DIR}/DVDrip.sh"
   if [[ -f $alt_rip && -x $alt_rip ]]; then
     echo "$(date "+%d.%m.%Y %T") : DVD detected: Executing $alt_rip"
+    debug_log "Executing alternative DVD rip script."
     $alt_rip "$disc_number" "$dvd_path" "$LOGFILE"
   else
     echo "$(date "+%d.%m.%Y %T") : DVD detected: Saving MKV"
+    debug_log "Saving DVD as MKV."
     makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$disc_number" all "$dvd_path" >>"$LOGFILE" 2>&1
   fi
   if [ "$SEPARATERAWFINISH" = 'true' ]; then
     local dvd_finish="$STORAGE_DVD/finished/"
+    debug_log "Moving DVD rip to finished directory: $dvd_finish"
     mv -v "$dvd_path" "$dvd_finish"
   fi
   echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
-  eject_disc
+  ejectdisc
+  debug_log "Ejecting DVD disc."
   chown -R nobody:users "$STORAGE_DVD" && chmod -R g+rw "$STORAGE_DVD"
+  debug_log "Changed owner and permissions for: $STORAGE_DVD"
 }
 
 handle_cd_disc() {
   local disc_info="$1"
+  debug_log "Handling CD disc."
   local alt_rip="${RIPPER_DIR}/CDrip.sh"
   if [[ -f $alt_rip && -x $alt_rip ]]; then
     echo "$(date "+%d.%m.%Y %T") : CD detected: Executing $alt_rip"
+    debug_log "Executing alternative CD rip script."
     $alt_rip "$DRIVE" "$STORAGE_CD" "$LOGFILE"
   else
     echo "$(date "+%d.%m.%Y %T") : CD detected: Saving MP3 and FLAC"
+    debug_log "Saving CD as MP3 and FLAC."
     /usr/bin/abcde -d "$DRIVE" -c /ripper/abcde.conf -N -x -l >>"$LOGFILE" 2>&1
   fi
   echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
-  eject_disc
+  ejectdisc
+  debug_log "Ejecting CD disc."
   chown -R nobody:users "$STORAGE_CD" && chmod -R g+rw "$STORAGE_CD"
+  debug_log "Changed owner and permissions for: $STORAGE_CD"
 }
 
 handle_data_disc() {
   local disc_info="$1"
+  debug_log "Handling data disc."
   local disc_label="$(echo "$disc_info" | grep "$DRIVE" | grep -o -P '(?<=",").*(?=",")')"
   local iso_path="$STORAGE_DATA/$disc_label/${disc_label}.iso"
+  debug_log "Disc label: $disc_label, ISO path: $iso_path"
   mkdir -p "$STORAGE_DATA/$disc_label"
   local alt_rip="${RIPPER_DIR}/DATArip.sh"
   if [[ -f $alt_rip && -x $alt_rip ]]; then
     echo "$(date "+%d.%m.%Y %T") : Data-disc detected: Executing $alt_rip"
+    debug_log "Executing alternative DATA disc rip script."
     $alt_rip "$DRIVE" "$iso_path" "$LOGFILE"
   else
     echo "$(date "+%d.%m.%Y %T") : Data-disc detected: Saving ISO"
+    debug_log "Saving data-disc as ISO."
     ddrescue "$DRIVE" "$iso_path" >>"$LOGFILE" 2>&1
   fi
   echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
-  eject_disc
+  ejectdisc
+  debug_log "Ejecting data disc."
   chown -R nobody:users "$STORAGE_DATA" && chmod -R g+rw "$STORAGE_DATA"
+  debug_log "Changed owner and permissions for: $STORAGE_DATA"
 }
 
-# function to eject the disc - now with a lower-case function name
 ejectdisc() {
-   if [[ "$EJECTENABLED" == "true" ]]; then
+  debug_log "Ejecting disc from $DRIVE."
+  if [[ "$EJECTENABLED" == "true" ]]; then
       if eject -v "$DRIVE" &>/dev/null; then
          printf "Ejecting disc Succeeded\n"
+         debug_log "Ejecting disc succeeded."
       else
          printf "%s : Ejecting disc Failed. Attempting Alternative Method.\n" "$(date "+%d.%m.%Y %T")" >> "$LOGFILE"
+         debug_log "Ejecting disc failed. Attempting alternative method."
          sleep 2
          sdparm --command=unlock "$DRIVE"
          sleep 1
@@ -171,42 +194,48 @@ ejectdisc() {
       fi
    else
       printf "Ejecting Disabled\n"
+      debug_log "Ejecting is disabled."
    fi
 }
 
 process_disc_type() {
-    if [[ -n $empty ]]; then
-        echo "$(date "+%d.%m.%Y %T") : No disc inserted."
-    elif [[ -n $open ]]; then
-        echo "$(date "+%d.%m.%Y %T") : Disc tray open."
-    elif [[ -n $loading ]]; then
-        echo "$(date "+%d.%m.%Y %T") : Disc loading."
-    elif [[ -n $bd1 ]] || [[ -n $bd2 ]]; then
-        handle_bd_disc "$bd1$bd2"
-    elif [[ -n $dvd ]]; then
-        handle_dvd_disc "$dvd"
-    elif [[ -n $cd1 ]] || [[ -n $cd2 ]]; then
-        handle_cd_disc "$cd1$cd2"
-    elif [[ -n $data ]]; then
-        handle_data_disc "$data"
-    else
-        echo "$(date "+%d.%m.%Y %T") : Disc type not recognized."
-    fi
+  debug_log "Processing disc type."
+  if [[ -n $empty ]]; then
+    echo "$(date "+%d.%m.%Y %T") : No disc inserted."
+    debug_log "No disc inserted."
+  elif [[ -n $open ]]; then
+    echo "$(date "+%d.%m.%Y %T") : Disc tray open."
+    debug_log "Disc tray open."
+  elif [[ -n $loading ]]; then
+    echo "$(date "+%d.%m.%Y %T") : Disc loading."
+    debug_log "Disc loading."
+  elif [[ -n $bd1 ]] || [[ -n $bd2 ]]; then
+    handle_bd_disc "$bd1$bd2"
+  elif [[ -n $dvd ]]; then
+    handle_dvd_disc "$dvd"
+  elif [[ -n $cd1 ]] || [[ -n $cd2 ]]; then
+    handle_cd_disc "$cd1$cd2"
+  else
+    echo "$(date "+%d.%m.%Y %T") : Disc type not recognized."
+    debug_log "Disc type not recognized."
+  fi
 }
 
 launcher_function() {
-   while true; do
-      cleanup_tmp_files
-      check_disc
-      if [ "$BAD_RESPONSE" -lt "$BAD_THRESHOLD" ]; then
-          process_disc_type
-      else
-          echo "$(date "+%d.%m.%Y %T") : Too many bad responses, checking stopped."
-          exit 1
-      fi
-      sleep 1m
-   done
+  debug_log "Starting main function."
+  while true; do
+    cleanup_tmp_files
+    check_disc
+    if [ "$BAD_RESPONSE" -lt "$BAD_THRESHOLD" ]; then
+        process_disc_type
+    else
+        echo "$(date "+%d.%m.%Y %T") : Too many bad responses, checking stopped."
+        debug_log "Too many bad responses, checking stopped."
+        exit 1
+    fi
+    sleep 1m
+  done
 }
 
-
+debug_log "Script start."
 launcher_function
