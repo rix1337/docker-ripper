@@ -50,11 +50,22 @@ check_disc() {
 
     for (( i=0; i<${#DRIVE_TYPES[@]}; i++ )); do
         TYPE=${DRIVE_TYPES[$i]}
+        echo $TYPE
+        echo $DRIVE_TYPES
         PATTERN=${DRIVE_PATTERNS[$i]}
+        echo $PATTERN
+        echo $DRIVE_PATTERNS
         MATCH=$(echo $INFO | grep -o "$PATTERN")
+         echo $MATCH
+         echo $PATTERN
         if [[ -n "$MATCH" ]]; then
             declare "$TYPE=$MATCH"
+            # debug echo to see what is being declared
+            echo $TYPE
+            echo $MATCH
             EXPECTED+="$MATCH"
+            echo $EXPECTED
+            
         fi
     done
 
