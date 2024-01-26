@@ -276,25 +276,48 @@ launcher_function() {
    while true; do
       cleanup_tmp_files
       check_disc
-      if [ "$BAD_RESPONSE" -lt "$BAD_THRESHOLD" ]; then
-         if [[ "$JUSTMAKEISO" == "true" ]]; then
-            printf "%s : JustMakeISO is enabled. Saving ISO.\n" "$(date "+%d.%m.%Y %T")"
-            debug_log "JustMakeISO is enabled. Saving ISO."
-            handle_data_disc "$INFO"
-         else
-            process_disc_type
-            if [[ "$ALSOMAKEISO" == "true" ]]; then
-               printf "%s : AlsoMakeISO is enabled. Saving ISO.\n" "$(date "+%d.%m.%Y %T")"
-               debug_log "AlsoMakeISO is enabled. Saving ISO."
+      case "$DISC_TYPE" in
+      "empty")
+         printf "%s : No disc inserted, checking again in 1 minute.\n" "$(date "+%d.%m.%Y %T")"
+         debug_log "No disc inserted, checking again in 1 minute."
+         ;;
+      "open")
+         printf "%s : Disc tray open, checking again in 1 minute.\n" "$(date "+%d.%m.%Y %T")"
+         debug_log "Disc tray open, checking again in 1 minute."
+         ;;
+      "loading")
+         printf "%s : Disc loading, checking again in 1 minute.\n" "$(date "+%d.%m.%Y %T")"
+         debug_log "Disc loading, checking again in 1 minute."
+         ;;
+      *)
+         if [ "$BAD_RESPONSE" -lt "$BAD_THRESHOLD" ]; then
+            case "$JUSTMAKEISO" in
+            "true")
+               printf "%s : JustMakeISO is enabled. Saving ISO.\n" "$(date "+%d.%m.%Y %T")"
+               debug_log "JustMakeISO is enabled. Saving ISO."
                handle_data_disc "$INFO"
-            fi
+               ejectdisc
+               ;;
+            *)
+               process_disc_type
+               case "$ALSOMAKEISO" in
+               "true")
+                  printf "%s : AlsoMakeISO is enabled. Saving ISO.\n" "$(date "+%d.%m.%Y %T")"
+                  debug_log "AlsoMakeISO is enabled. Saving ISO."
+                  handle_data_disc "$INFO"
+                  ejectdisc
+                  ;;
+               esac
+               ;;
+            esac
+         else
+            printf "%s : Too many bad responses, checking stopped.\n" "$(date "+%d.%m.%Y %T")"
+            debug_log "Too many bad responses, checking stopped."
+            ejectdisc
+            exit 1
          fi
-      else
-         printf "%s : Too many bad responses, checking stopped.\n" "$(date "+%d.%m.%Y %T")"
-         debug_log "Too many bad responses, checking stopped."
-         exit 1
-      fi
-      ejectdisc
+         ;;
+      esac
       sleep 1m # Wait 1 minute before checking for a new disc
    done
 }
