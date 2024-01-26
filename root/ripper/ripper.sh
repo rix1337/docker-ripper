@@ -9,16 +9,15 @@ echo "$(date "+%d.%m.%Y %T") : Starting Ripper. Optical Discs will be detected a
 # Separate Raw Rip and Finished Rip Folders for DVDs and BluRays
 # Raw Rips go in the usual folder structure
 # Finished Rips are moved to a "finished" folder in it's respective STORAGE folder
-echo "testing env pass thru"
-echo $EJECTENABLED
-SEPARATERAWFINISH="true"
-EJECTENABLED="false"
-# Paths
-STORAGE_CD="/out/Ripper/CD"
-STORAGE_DATA="/out/Ripper/DATA"
-STORAGE_DVD="/out/Ripper/DVD"
-STORAGE_BD="/out/Ripper/BluRay"
-DRIVE="/dev/sr0"
+
+# If an environment variable is not set, then set it to the default value
+: "${SEPARATERAWFINISH:=true}"
+: "${EJECTENABLED:=true}"
+: "${STORAGE_CD:=/out/Ripper/CD}"
+: "${STORAGE_DATA:=/out/Ripper/DATA}"
+: "${STORAGE_DVD:=/out/Ripper/DVD}"
+: "${STORAGE_BD:=/out/Ripper/BluRay}"
+: "${DRIVE:=/dev/sr0}"
 
 BAD_THRESHOLD=5
 let BAD_RESPONSE=0
