@@ -49,25 +49,11 @@ while true; do
    else
       let BAD_RESPONSE=0
    fi
-   # don't eject if EJECTENABLED is false
-   if [ "$EJECTENABLED" = 'true' ]; then
-      if (($BAD_RESPONSE >= $BAD_THRESHOLD)); then
-         echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disk and aborting"
-         # Run makemkvcon once more with full output, to potentially aid in debugging
-         makemkvcon -r --cache=1 info disc:9999
-         if eject -v $DRIVE | grep 'whole-disk' >>/dev/null; then
-            echo "First attempt at Ejecting Disk Succeeded"
-            exit 1
-         else
-            echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >>$LOGFILE 2>&1
-            echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
-            sleep 2
-            sdparm --command=unlock $DRIVE
-            sleep 1
-            sdparm --command=eject $DRIVE
-            exit 1
-         fi
-      fi
+   if (($BAD_RESPONSE >= $BAD_THRESHOLD)); then
+      echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disk and aborting"
+      # Run makemkvcon once more with full output, to potentially aid in debugging
+      makemkvcon -r --cache=1 info disc:9999
+      ejectDisk
    fi
    # if [ $EMPTY = 'DRV:0,0,999,0,"' ]; then
    #  echo "$(date "+%d.%m.%Y %T") : No Disc"; &>/dev/null
@@ -98,16 +84,7 @@ while true; do
          mv -v "$BDPATH" "$BDFINISH"
       fi
       echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
-      if eject -v $DRIVE | grep 'whole-disk' >>/dev/null; then
-         echo "First attempt at Ejecting Disk Succeeded"
-      else
-         echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >>$LOGFILE 2>&1
-         echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
-         sleep 2
-         sdparm --command=unlock $DRIVE
-         sleep 1
-         sdparm --command=eject $DRIVE
-      fi
+      ejectDisk
       # permissions
       chown -R nobody:users "$STORAGE_BD" && chmod -R g+rw "$STORAGE_BD"
    fi
@@ -131,16 +108,7 @@ while true; do
          mv -v "$DVDPATH" "$DVDFINISH"
       fi
       echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
-      if eject -v $DRIVE | grep 'whole-disk' >>/dev/null; then
-         echo "First attempt at Ejecting Disk Succeeded"
-      else
-         echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >>$LOGFILE 2>&1
-         echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
-         sleep 2
-         sdparm --command=unlock $DRIVE
-         sleep 1
-         sdparm --command=eject $DRIVE
-      fi
+      ejectDisk
       # permissions
       chown -R nobody:users "$STORAGE_DVD" && chmod -R g+rw "$STORAGE_DVD"
    fi
@@ -157,16 +125,7 @@ while true; do
             /usr/bin/abcde -d "$DRIVE" -c /ripper/abcde.conf -N -x -l >>$LOGFILE 2>&1
          fi
          echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
-         if eject -v $DRIVE | grep 'whole-disk' >>/dev/null; then
-            echo "First attempt at Ejecting Disk Succeeded"
-         else
-            echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >>$LOGFILE 2>&1
-            echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
-            sleep 2
-            sdparm --command=unlock $DRIVE
-            sleep 1
-            sdparm --command=eject $DRIVE
-         fi
+         ejectDisk
          # permissions
          chown -R nobody:users "$STORAGE_CD" && chmod -R g+rw "$STORAGE_CD"
       else
@@ -183,16 +142,7 @@ while true; do
             ddrescue $DRIVE "$ISOPATH" >>$LOGFILE 2>&1
          fi
          echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
-         if eject -v $DRIVE | grep 'whole-disk' >>/dev/null; then
-            echo "First attempt at Ejecting Disk Succeeded"
-         else
-            echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >>$LOGFILE 2>&1
-            echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
-            sleep 2
-            sdparm --command=unlock $DRIVE
-            sleep 1
-            sdparm --command=eject $DRIVE
-         fi
+         ejectDisk
          # permissions
          chown -R nobody:users "$STORAGE_DATA" && chmod -R g+rw "$STORAGE_DATA"
       fi
@@ -200,3 +150,22 @@ while true; do
    # Wait a minute
    sleep 1m
 done
+
+
+# function to eject the disk
+ejectDisk() {
+   if EJECTENABLED="true"; then
+      if eject -v $DRIVE | grep 'whole-disk' >>/dev/null; then
+         echo "First attempt at Ejecting Disk Succeeded"
+      else
+         echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >>$LOGFILE 2>&1
+         echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
+         sleep 2
+         sdparm --command=unlock $DRIVE
+         sleep 1
+         sdparm --command=eject $DRIVE
+      fi
+   else
+      echo "Ejecting Disabled"
+   fi
+}
