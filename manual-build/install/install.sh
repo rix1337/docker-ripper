@@ -7,33 +7,33 @@
 # copy of this software and associated documentation files (the "Software"),
 # to deal in the Software without restriction, including without limitation
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the 
+# and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in 
-# all copies or substantial portions of the Software. 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL 
-# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
 # Auto-grab latest version
 {
 	MAKEMKV_VERSION="$(
-		curl -fsSL 'https://makemkv.com/download/' \
-			| grep -oE 'makemkv-sha-[0-9.]+.txt' \
-			| sed -r 's!^makemkv-sha-|[.]txt$!!g'
+		curl -fsSL 'https://makemkv.com/download/' |
+			grep -oE 'makemkv-sha-[0-9.]+.txt' |
+			sed -r 's!^makemkv-sha-|[.]txt$!!g'
 	)"
 	[ -n "$version" ]
 } || {
 	url="$(
-		curl -fsSL 'https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224' \
-			| grep -oE 'href="https?://[^"]+/makemkv-bin-[^"]+.tar.gz"' \
-			| cut -d'"' -f2
+		curl -fsSL 'https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224' |
+			grep -oE 'href="https?://[^"]+/makemkv-bin-[^"]+.tar.gz"' |
+			cut -d'"' -f2
 	)"
 	[ -n "$url" ]
 	MAKEMKV_VERSION="$(basename "$url" | sed -r 's!^makemkv-bin-|[.]tar[.]gz$!!g')"
@@ -84,14 +84,14 @@ for ball in makemkv-oss makemkv-bin; do
 done
 
 rm sha256sums.txt
-apt-mark auto '.*' > /dev/null
+apt-mark auto '.*' >/dev/null
 [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark
-find /usr/local -type f -executable -exec ldd '{}' ';' \
-	| awk '/=>/ { print $(NF-1) }' \
-	| sort -u \
-	| xargs -r dpkg-query --search \
-	| cut -d: -f1 \
-	| sort -u \
-	| xargs -r apt-mark manual \
+find /usr/local -type f -executable -exec ldd '{}' ';' |
+	awk '/=>/ { print $(NF-1) }' |
+	sort -u |
+	xargs -r dpkg-query --search |
+	cut -d: -f1 |
+	sort -u |
+	xargs -r apt-mark manual
 
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false

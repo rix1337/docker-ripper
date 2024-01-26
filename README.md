@@ -125,16 +125,18 @@ You can build and run docker-ripper using Docker Compose, which simplifies the p
   ```docker-compose build```
 This will use the latest/Dockerfile to build an image tagged as `rix1337/docker-ripper:latest`.
 
-To start the container:
+- To start the container:
 
 ```docker-compose up -d``` or ```docker-compose up```
 This command with the `-d` flag will start the container in detached mode, meaning it will run in the background. Without the `-d` flag, the container will run in the foreground and log to the console. You can stop the container with `docker-compose stop` or `docker-compose down`. The latter will also remove the container. 
+
+- Logs
 
 Logs can be viewed with `docker-compose logs` or `docker-compose logs -f` to follow the logs in real time.
 
 If you prefer to build the Docker image manually without Docker Compose, you can use the docker build command:
 
-To build the "latest" image using Docker:
+To build the "latest" image using docker build:
 
 ```docker build -f latest/Dockerfile -t rix1337/docker-ripper:latest .```
 
