@@ -12,12 +12,12 @@ services:
             - 9090:9090 
         environment:
             - SEPARATERAWFINISH=true # optional - true/false - separate the raw files from the finished files
-            - EJECTENABLED=false # required - true/false - eject the disc when finished
-            - STORAGE_CD=/out/Ripper/CD # required - path to the storage folder for CD rips - should be to a folder in the mounted /out volume
-            - STORAGE_DVD=/out/Ripper/DVD # required - path to the storage folder for DVD rips - should be to a folder in the mounted /out volume
-            - STORAGE_BD=/out/Ripper/BluRay # required - path to the storage folder for BD rips - should be to a folder in the mounted /out volume
-            - STORAGE_DATA=/out/Ripper/Data # required - path to the storage folder for Data rips - should be to a folder in the mounted /out volume
-            - DRIVE=/dev/sr0 # required - path to the optical drive - should be to the mounted /dev/sr0 device
+            - EJECTENABLED=true # optional - true/false - eject the disc when finished
+            - STORAGE_CD=/out/Ripper/CD # optional - path to the storage folder for CD rips - should be to a folder in the mounted /out volume
+            - STORAGE_DVD=/out/Ripper/DVD # optional - path to the storage folder for DVD rips - should be to a folder in the mounted /out volume
+            - STORAGE_BD=/out/Ripper/BluRay # optional - path to the storage folder for BD rips - should be to a folder in the mounted /out volume
+            - STORAGE_DATA=/out/Ripper/Data # optional - path to the storage folder for Data rips - should be to a folder in the mounted /out volume
+            - DRIVE=/dev/sr0 # optional - path to the optical drive - should be to the mounted /dev/sr0 device
             - JUSTMAKEISO=false # optional - true/false just making an ISO of any disc
             - ALSOMAKEISO=false # optional - true/false - will do the normal rip and also make an ISO of every disc
             - TIMESTAMPPREFIX=false # optional - true/false - prefix the output folder with a timestamp
