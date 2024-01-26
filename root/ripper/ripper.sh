@@ -7,7 +7,6 @@ LOGFILE="/config/Ripper.log"
 printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 60 seconds.\n" "$(date "+%d.%m.%Y %T")"
 
 # Set default values for configuration options if not already set
-: "${SEPARATERAWFINISH:=true}"
 : "${EJECTENABLED:=true}"
 : "${JUSTMAKEISO:=false}"
 : "${STORAGE_CD:=/out/Ripper/CD}"
@@ -17,6 +16,17 @@ printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 6
 : "${DRIVE:=/dev/sr0}"
 : "${BAD_THRESHOLD:=5}"
 : "${DEBUG:=false}"
+# Print the values of configuration options
+printf "SEPARATERAWFINISH: %s\n" "$SEPARATERAWFINISH"
+printf "EJECTENABLED: %s\n" "$EJECTENABLED"
+printf "JUSTMAKEISO: %s\n" "$JUSTMAKEISO"
+printf "STORAGE_CD: %s\n" "$STORAGE_CD"
+printf "STORAGE_DATA: %s\n" "$STORAGE_DATA"
+printf "STORAGE_DVD: %s\n" "$STORAGE_DVD"
+printf "STORAGE_BD: %s\n" "$STORAGE_BD"
+printf "DRIVE: %s\n" "$DRIVE"
+printf "BAD_THRESHOLD: %s\n" "$BAD_THRESHOLD"
+printf "DEBUG: %s\n" "$DEBUG"
 
 BAD_RESPONSE=0
 
