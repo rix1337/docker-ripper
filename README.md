@@ -94,20 +94,52 @@ Check the device mount points and optional settings before you run the container
 
 ### Environment Variables
 
-- `EJECTENABLED`: If set to `true`, the disc is ejected after ripping is completed. Default is `true`.
-- `JUSTMAKEISO`: If `true`, only an ISO of the disc is created. Default is `false`.
-- `STORAGE_CD`: The path for storing ripped CD content. Default is `/out/Ripper/CD`.
-- `STORAGE_DATA`: The path for storing data disc ISOs. Default is `/out/Ripper/DATA`.
-- `STORAGE_DVD`: The path for storing ripped DVD content. Default is `/out/Ripper/DVD`.
-- `STORAGE_BD`: The path for storing ripped BluRay content. Default is `/out/Ripper/BluRay`.
-- `DRIVE`: The device file for the optical drive (e.g., `/dev/sr0`). Default is `/dev/sr0`.
-- `BAD_THRESHOLD`: The number of allowed consecutive bad read attempts before failing. Default is `5`.
-- `DEBUG`: Enables verbose logging when set to `true`. Default is `false`.
-- `DEBUGTOWEB`: If `true`, debug logs are published to the web UI. Default is `false`.
-- `SEPARATERAWFINISH`: When `true`, separates raw and final rips into different directories. Default is `false`.
-- `ALSOMAKEISO`: If `true`, creates an additional ISO image alongside the normal rip. Default is `false`.
-- `TIMESTAMPPREFIX`: If `true`, prefixes output folders with a timestamp for organization. Default is `false`.
-- `MINIMUMLENGTH`: The minimum length of a title in seconds to be considered valid.(Applies to DVD and BluRAY) Default is `600`.
+- `EJECTENABLED`: Optional - If set to `true`, the disc is ejected after ripping is completed. Default is `true`.
+- `JUSTMAKEISO`: Optional - If `true`, only an ISO of the disc is created. Default is `false`.
+- `STORAGE_CD`: Optional - The path for storing ripped CD content. Default is `/out/Ripper/CD`.
+- `STORAGE_DATA`: Optional - The path for storing data disc ISOs. Default is `/out/Ripper/DATA`.
+- `STORAGE_DVD`: Optional - The path for storing ripped DVD content. Default is `/out/Ripper/DVD`.
+- `STORAGE_BD`: Optional - The path for storing ripped BluRay content. Default is `/out/Ripper/BluRay`.
+- `DRIVE`: Optional - The device file for the optical drive (e.g., `/dev/sr0`). Default is `/dev/sr0`.
+- `BAD_THRESHOLD`: Optional - The number of allowed consecutive bad read attempts before failing. Default is `5`.
+- `DEBUG`: Optional - Enables verbose logging when set to `true`. Default is `false`.
+- `DEBUGTOWEB`: Optional - If `true`, debug logs are published to the web UI. Default is `false`.
+- `SEPARATERAWFINISH`: Optional - When `true`, separates raw and final rips into different directories. Default is `false`.
+- `ALSOMAKEISO`: Optional - If `true`, creates an additional ISO image alongside the normal rip operation. Default is `false`.
+- `TIMESTAMPPREFIX`: Optional - If `true`, prefixes output folders with a timestamp for organization. Default is `false`.
+- `MINIMUMLENGTH`: Optional - The minimum length of a title in seconds to be considered valid.(Applies to DVD and BluRAY) Default is `600`.
+
+## Building and Running with Docker Compose
+
+First clone the repository:
+
+```git clone https://github.com/rix1337/docker-ripper.git```
+
+You can build and run docker-ripper using Docker Compose, which simplifies the process of deploying and managing containers
+
+- To build the image:
+  
+  ```docker-compose build```
+This will use the latest/Dockerfile to build an image tagged as `rix1337/docker-ripper:latest`.
+
+To start the container:
+
+```docker-compose up -d``` or ```docker-compose up``
+This command with the `-d` flag will start the container in detached mode, meaning it will run in the background. Without the `-d` flag, the container will run in the foreground and log to the console. You can stop the container with `docker-compose stop` or `docker-compose down`. The latter will also remove the container. 
+
+Logs can be viewed with `docker-compose logs` or `docker-compose logs -f` to follow the logs in real time.
+
+If you prefer to build the Docker image manually without Docker Compose, you can use the docker build command:
+
+To build the "latest" image using Docker:
+
+```docker build -f latest/Dockerfile -t rix1337/docker-ripper:latest .```
+
+This command performs the same operation as the docker-compose build but requires manual input of build context and parameters.
+
+Remember to periodically pull the latest changes from the git repository to keep your Dockerfile up to date and rebuild the image if any updates have been made.
+
+
 
 # FAQ
 
