@@ -13,6 +13,9 @@ RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 # Use baseimage-docker's init system
 CMD ["/sbin/my_init"]
 
+# Invalidate build cache on new releases of MakeMKV
+ADD "https://launchpad.net/~heyarje/+archive/ubuntu/makemkv-beta/+builds?build_text=makemkv-bin&build_state=built" /dev/null
+
 # Install software
 RUN add-apt-repository -y ppa:heyarje/makemkv-beta && \
     apt-get update && \
@@ -46,9 +49,6 @@ RUN pip3 install --no-cache-dir \
     docopt \
     flask \
     waitress
-
-# Invalidate build cache on new releases of MakeMKV
-ADD "https://launchpad.net/~heyarje/+archive/ubuntu/makemkv-beta/+builds?build_text=makemkv-bin&build_state=built" /dev/null
 
 # Move Files and set permissions
 COPY root/ /
