@@ -7,15 +7,15 @@ logfile="/config/Ripper.log"
 printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 60 seconds.\n" "$(date "+%d.%m.%Y %T")"
 
 # Set default values for configuration options if not already set
-: "${separaterawfinish:=true}"
-: "${ejectenabled:=true}"
-: "${justmakeiso:=false}"
-: "${storage_cd:=/out/Ripper/CD}"
-: "${storage_data:=/out/Ripper/DATA}"
-: "${storage_dvd:=/out/Ripper/DVD}"
-: "${storage_bd:=/out/Ripper/BluRay}"
-: "${drive:=/dev/sr0}"
-: "${bad_threshold:=5}"
+: "${SEPARATERAWFINISH:=true}"
+: "${EJECTENABLED:=true}"
+: "${JUSTMAKEISO:=false}"
+: "${STORAGE_CD:=/out/Ripper/CD}"
+: "${STORAGE_DATA:=/out/Ripper/DATA}"
+: "${STORAGE_DVD:=/out/Ripper/DVD}"
+: "${STORAGE_BD:=/out/Ripper/BluRay}"
+: "${DRIVE:=/dev/sr0}"
+: "${BAD_THRESHOLD:=5}"
 
 bad_response=0
 
@@ -149,20 +149,19 @@ cleanup_tmp_files() {
 done
 
 
-# function to eject the disk
-ejectDisk() {
-   if EJECTENABLED="true"; then
-      if eject -v $DRIVE | grep 'whole-disk' >>/dev/null; then
-         echo "First attempt at Ejecting Disk Succeeded"
+# function to eject the disk - now with a lower-case function name
+ejectdisk() {
+   if [[ "$EJECTENABLED" == "true" ]]; then
+      if eject -v "$DRIVE" &>/dev/null; then
+         printf "Ejecting Disk Succeeded\n"
       else
-         echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >>$LOGFILE 2>&1
-         echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
+         printf "%s : Ejecting Disk Failed. Attempting Alternative Method.\n" "$(date "+%d.%m.%Y %T")" >> "$LOGFILE"
          sleep 2
-         sdparm --command=unlock $DRIVE
+         sdparm --command=unlock "$DRIVE"
          sleep 1
-         sdparm --command=eject $DRIVE
+         sdparm --command=eject "$DRIVE"
       fi
    else
-      echo "Ejecting Disabled"
+      printf "Ejecting Disabled\n"
    fi
 }
