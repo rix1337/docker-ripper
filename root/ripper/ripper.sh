@@ -186,9 +186,12 @@ handle_data_disc() {
    local disc_info="$1"
    debug_log "Handling data disc."
    local disc_label="$(echo "$disc_info" | grep "$DRIVE" | grep -o -P '(?<=",").*(?=",")')"
-   local iso_path="$STORAGE_DATA/$disc_label/${disc_label}.iso"
+   local data_directory
+   data_directory=$(get_disc_directory "$STORAGE_DATA" "$disc_label" "$TIMESTAMPPREFIX")
+   local iso_filename="${disc_label}.iso"
+   local iso_path="${data_directory}/${iso_filename}"
    debug_log "Disc label: $disc_label, ISO path: $iso_path"
-   mkdir -p "$STORAGE_DATA/$disc_label"
+   mkdir -p "$data_directory"
    local alt_rip="${RIPPER_DIR}/DATArip.sh"
    if [[ -f $alt_rip && -x $alt_rip ]]; then
       printf "%s : Data-disc detected: Executing %s\n" "$(date "+%d.%m.%Y %T")" "$alt_rip"
@@ -205,6 +208,7 @@ handle_data_disc() {
    debug_log "Changed owner and permissions for: $STORAGE_DATA"
    JUST_MADE_ISO=true
 }
+
 
 move_to_finished() {
    local src_path="$1"
