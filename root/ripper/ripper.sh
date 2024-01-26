@@ -1,7 +1,7 @@
 #!/bin/bash
 
-ripper_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-logfile="/config/Ripper.log"
+RIPPER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOGFILE="/config/Ripper.log"
 
 # Startup Info
 printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 60 seconds.\n" "$(date "+%d.%m.%Y %T")"
