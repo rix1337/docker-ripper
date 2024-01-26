@@ -20,6 +20,7 @@ printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 6
 : "${SEPARATERAWFINISH:=false}"
 : "${ALSOMAKEISO:=false}"
 : "${TIMESTAMPPREFIX:=false}"
+: "${MINIMUMLENGTH:=600}"
 # Print the values of configuration options if DEBUG is enabled
 if [[ "$DEBUG" == true ]]; then
    printf "SEPARATERAWFINISH: %s\n" "$SEPARATERAWFINISH"
@@ -35,6 +36,7 @@ if [[ "$DEBUG" == true ]]; then
    printf "BAD_THRESHOLD: %s\n" "$BAD_THRESHOLD"
    printf "DEBUG: %s\n" "$DEBUG"
    printf "DEBUGTOWEB: %s\n" "$DEBUGTOWEB"
+   printf "MINIMUMLENGTH: %s\n" "$MINIMUMLENGTH"
 fi
 
 BAD_RESPONSE=0
@@ -130,7 +132,7 @@ handle_bd_disc() {
    else
       printf "%s : BluRay detected: Saving MKV\n" "$(date "+%d.%m.%Y %T")"
       debug_log "Saving BluRay as MKV."
-      makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$disc_number" all "$bd_path" >>"$LOGFILE" 2>&1
+      makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength="$MINIMUMLENGTH" mkv disc:"$disc_number" all "$bd_path" >>"$LOGFILE" 2>&1
    fi
 
    move_to_finished "$bd_path" "$STORAGE_BD"
@@ -154,7 +156,7 @@ handle_dvd_disc() {
    else
       printf "%s : DVD detected: Saving MKV\n" "$(date "+%d.%m.%Y %T")"
       debug_log "Saving DVD as MKV."
-      makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$disc_number" all "$dvd_path" >>"$LOGFILE" 2>&1
+      makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength="$MINIMUMLENGTH" mkv disc:"$disc_number" all "$dvd_path" >>"$LOGFILE" 2>&1
    fi
 
    move_to_finished "$dvd_path" "$STORAGE_DVD"

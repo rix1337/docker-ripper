@@ -8,10 +8,10 @@ This container will detect optical disks by their type and rip them automaticall
 
 Disc Type | Output | Tools used
 ---|---|---
-CD | MP3 and FLAC | abcde (lame and flac)
-Data-Disk | Uncompressed .ISO | ddrescue
-DVD | MKV | MakeMKV
-BluRay | MKV | MakeMKV
+CD | MP3 FLAC ISO | abcde (lame and flac), ddrescue
+Data-Disk | ISO | ddrescue
+DVD | MKV and ISO | MakeMKV, ddrescue
+BluRay | MKV and ISO | MakeMKV, ddrescue
 
 ### Prerequistites
 
@@ -91,6 +91,23 @@ launch. Without a purchased license key Ripper may stop running at any time.
 Check the device mount points and optional settings before you run the container!
 
 `docker-compose up -d`
+
+### Environment Variables
+
+- `EJECTENABLED`: If set to `true`, the disc is ejected after ripping is completed. Default is `true`.
+- `JUSTMAKEISO`: If `true`, only an ISO of the disc is created. Default is `false`.
+- `STORAGE_CD`: The path for storing ripped CD content. Default is `/out/Ripper/CD`.
+- `STORAGE_DATA`: The path for storing data disc ISOs. Default is `/out/Ripper/DATA`.
+- `STORAGE_DVD`: The path for storing ripped DVD content. Default is `/out/Ripper/DVD`.
+- `STORAGE_BD`: The path for storing ripped BluRay content. Default is `/out/Ripper/BluRay`.
+- `DRIVE`: The device file for the optical drive (e.g., `/dev/sr0`). Default is `/dev/sr0`.
+- `BAD_THRESHOLD`: The number of allowed consecutive bad read attempts before failing. Default is `5`.
+- `DEBUG`: Enables verbose logging when set to `true`. Default is `false`.
+- `DEBUGTOWEB`: If `true`, debug logs are published to the web UI. Default is `false`.
+- `SEPARATERAWFINISH`: When `true`, separates raw and final rips into different directories. Default is `false`.
+- `ALSOMAKEISO`: If `true`, creates an additional ISO image alongside the normal rip. Default is `false`.
+- `TIMESTAMPPREFIX`: If `true`, prefixes output folders with a timestamp for organization. Default is `false`.
+- `MINIMUMLENGTH`: The minimum length of a title in seconds to be considered valid.(Applies to DVD and BluRAY) Default is `600`.
 
 # FAQ
 
