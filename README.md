@@ -261,3 +261,5 @@ root@linuxbox# udevadm control --reload-rules && udevadm trigger
 - [MakeMKV Setup for manual-build by tianon](https://github.com/tianon/dockerfiles/blob/master/makemkv/Dockerfile)
 
 - [MakeMKV key/version fetcher by metalight](http://blog.metalight.dk/2016/03/makemkv-wrapper-with-auto-updater.html)
+
+- [General cleanup and exposing customization options to the user by jeeshofone](https://123cloud.st)
