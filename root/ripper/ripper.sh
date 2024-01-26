@@ -26,6 +26,8 @@ cleanup_tmp_files() {
   cd - || exit
 }
 
+while true; do
+    cleanup_tmp_files
    # get disk info through makemkv and pass output to INFO
    INFO=$"$(makemkvcon -r --cache=1 info disc:9999 | grep DRV:0)"
    # check INFO for optical disk
