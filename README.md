@@ -108,6 +108,9 @@ Check the device mount points and optional settings before you run the container
 - `ALSOMAKEISO`: Optional - If `true`, creates an additional ISO image alongside the normal rip operation. Default is `false`.
 - `TIMESTAMPPREFIX`: Optional - If `true`, prefixes output folders with a timestamp for organization. Default is `false`.
 - `MINIMUMLENGTH`: Optional - The minimum length of a title in seconds to be considered valid.(Applies to DVD and BluRAY) Default is `600`.
+- `PREFIX`: Optional - path prefix for the integrated web ui when commented out or set to /, the web ui will be at the root of the server
+- `USER`: Optional - user name for the integrated web ui (requires PASS to be set) - if not set, the web ui will not require authentication
+- `PASS`: Optional - password for the integrated web ui (requires USER to be set) - if not set, the web ui will not require authentication
 
 ### Building and Running with Docker Compose
 
