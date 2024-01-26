@@ -24,15 +24,11 @@ RUN chmod +x /etc/my_init.d/*.sh
 
 # Install software
 RUN apt-get update && \
-    apt-get -y --allow-unauthenticated install --no-install-recommends gddrescue wget eject sdparm git && \
-    apt-get -y install abcde eyed3 && \
-    apt-get -y install flac lame mkcue speex vorbis-tools vorbisgain id3 id3v2 && \
+    apt-get -y --allow-unauthenticated install --no-install-recommends gddrescue wget eject sdparm git python3 python3-pip abcde eyed3 flac lame mkcue speex vorbis-tools vorbisgain id3 id3v2 docopt flask waitress && \
     apt-get -y autoremove
 
 # Install python for web ui
-RUN apt-get update && \
-    apt-get -y --allow-unauthenticated install --no-install-recommends python3 python3-pip && \
-    pip3 install docopt flask waitress
+RUN pip3 install docopt flask waitress
 
  # Disable SSH
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
