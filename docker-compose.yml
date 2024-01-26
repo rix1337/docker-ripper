@@ -1,6 +1,10 @@
 version: '3.3'
 services:
     docker-ripper:
+        build:
+            context: ./latest
+            dockerfile: Dockerfile
+        image: rix1337/docker-ripper:latest
         container_name: Ripper
         volumes:
             #- ./ripper-config:/config:rw # optional - path to the config folder - if not provided, a default config will be used
@@ -27,5 +31,3 @@ services:
         #    - USER=OPTIONAL_WEB_UI_USERNAME # optional - user name for the integrated web ui (requires PASS to be set) - if not set, the web ui will not require authentication
         #    - PASS=OPTIONAL_WEB_UI_PASSWORD # optional - password for the integrated web ui (requires USER to be set) - if not set, the web ui will not require authentication
         privileged: true
-        build:
-            dockerfile: latest/Dockerfile
