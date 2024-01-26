@@ -111,7 +111,7 @@ handle_bd_disc() {
       makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$disc_number" all "$bd_path" >>"$LOGFILE" 2>&1
    fi
 
-   move_to_finished "$bd_path" "$STORAGE_BD" "$disc_label"
+   move_to_finished "$bd_path" "$STORAGE_BD"
 }
 
 handle_dvd_disc() {
@@ -134,7 +134,7 @@ handle_dvd_disc() {
       makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$disc_number" all "$dvd_path" >>"$LOGFILE" 2>&1
    fi
 
-   move_to_finished "$dvd_path" "$STORAGE_DVD" "$disc_label"
+   move_to_finished "$dvd_path" "$STORAGE_DVD"
 }
 
 handle_cd_disc() {
@@ -182,15 +182,17 @@ handle_data_disc() {
 move_to_finished() {
    local src_path="$1"
    local dst_root="$2"
-   local disc_label="$3"
    if [ "$SEPARATERAWFINISH" = 'true' ]; then
-      local finish_path="${dst_root}/finished/${disc_label}"
+      local finish_path="${dst_root}/finished/"
+      mkdir -p "$finish_path"
+      local base_name=$(basename "$src_path")
+      finish_path+="$base_name"
       debug_log "Moving ${src_path} to finished directory: ${finish_path}"
-      mkdir -p "${dst_root}/finished"
-      mv -v "${src_path}" "${finish_path}"
-      chown -R nobody:users "${dst_root}" && chmod -R g+rw "${dst_root}"
+      mv -v "$src_path" "$finish_path"
+      chown -R nobody:users "$dst_root" && chmod -R g+rw "$dst_root"
+      debug_log "Moved $src_path to $finish_path"
    else
-      debug_log "Skipping move to finished directory as SEPARATERAWFINISH is false"
+      debug_log "SEPARATERAWFINISH is disabled, not moving $src_path"
    fi
 }
 
