@@ -17,12 +17,14 @@ printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 6
 : "${BAD_THRESHOLD:=5}"
 : "${DEBUG:=false}"
 : "${DEBUGTOWEB:=false}"
-: "${SEPARATERAWFINISH:=true}"
+: "${SEPARATERAWFINISH:=false}"
 : "${ALSOMAKEISO:=false}"
+: "${TIMESTAMPPREFIX:=false}"
 # Print the values of configuration options if DEBUG is enabled
 if [[ "$DEBUG" == true ]]; then
    printf "SEPARATERAWFINISH: %s\n" "$SEPARATERAWFINISH"
    printf "EJECTENABLED: %s\n" "$EJECTENABLED"
+   printf "TIMESTAMPPREFIX: %s\n" "$TIMESTAMPPREFIX"
    printf "JUSTMAKEISO: %s\n" "$JUSTMAKEISO"
    printf "ALSOMAKEISO: %s\n" "$ALSOMAKEISO"
    printf "STORAGE_CD: %s\n" "$STORAGE_CD"
@@ -56,6 +58,25 @@ debug_log() {
    if [[ "$DEBUGTOWEB" == true ]]; then
       echo "$(date "+%d.%m.%Y %T"): $1" >>"$LOGFILE"
    fi
+}
+
+get_timestamp() {
+    echo "$(date "+%Y%m%d_%H%M%S")"
+}
+
+get_disc_directory() {
+    local storage_root="$1"
+    local disc_label="$2"
+    local timestamp_prefix="$3"
+    local disc_directory=""
+    
+    if [[ "$TIMESTAMPPREFIX" == "true" ]]; then
+        disc_directory="${storage_root}/$(get_timestamp)_${disc_label}"
+    else
+        disc_directory="${storage_root}/${disc_label}"
+    fi
+    
+    echo "$disc_directory"
 }
 
 cleanup_tmp_files() {
@@ -95,7 +116,8 @@ handle_bd_disc() {
    local disc_info="$1"
    debug_log "Handling BluRay disc."
    local disc_label="$(echo "$disc_info" | grep -o -P '(?<=",").*(?=",")')"
-   local bd_path="$STORAGE_BD/$disc_label"
+   local bd_path
+   bd_path=$(get_disc_directory "$STORAGE_BD" "$disc_label" "$TIMESTAMPPREFIX")
    local disc_number="$(echo "$disc_info" | grep "$DRIVE" | cut -c5)"
    debug_log "Disc label: $disc_label, Disc number: $disc_number, BD path: $bd_path"
    mkdir -p "$bd_path"
@@ -118,7 +140,8 @@ handle_dvd_disc() {
    local disc_info="$1"
    debug_log "Handling DVD disc."
    local disc_label="$(echo "$disc_info" | grep -o -P '(?<=",").*(?=",")')"
-   local dvd_path="$STORAGE_DVD/$disc_label"
+   local dvd_path
+   dvd_path=$(get_disc_directory "$STORAGE_DVD" "$disc_label" "$TIMESTAMPPREFIX")
    local disc_number="$(echo "$disc_info" | grep "$DRIVE" | cut -c5)"
    debug_log "Disc label: $disc_label, Disc number: $disc_number, DVD path: $dvd_path"
    mkdir -p "$dvd_path"
@@ -165,11 +188,11 @@ handle_data_disc() {
    mkdir -p "$STORAGE_DATA/$disc_label"
    local alt_rip="${RIPPER_DIR}/DATArip.sh"
    if [[ -f $alt_rip && -x $alt_rip ]]; then
-      echo "$(date "+%d.%m.%Y %T") : Data-disc detected: Executing $alt_rip"
+      printf "%s : Data-disc detected: Executing %s\n" "$(date "+%d.%m.%Y %T")" "$alt_rip"
       debug_log "Executing alternative DATA disc rip script."
       $alt_rip "$DRIVE" "$iso_path" "$LOGFILE"
    else
-      echo "$(date "+%d.%m.%Y %T") : Data-disc detected: Saving ISO"
+      printf "%s : Data-disc detected: Saving ISO\n" "$(date "+%d.%m.%Y %T")"
       debug_log "Saving data-disc as ISO."
       ddrescue "$DRIVE" "$iso_path" >>"$LOGFILE" 2>&1
    fi

@@ -20,6 +20,7 @@ services:
             - DRIVE=/dev/sr0 # required - path to the optical drive - should be to the mounted /dev/sr0 device
             - JUSTMAKEISO=false # optional - true/false just making an ISO of any disc
             - ALSOMAKEISO=false # optional - true/false - will do the normal rip and also make an ISO of every disc
+            - TIMESTAMPPREFIX=false # optional - true/false - prefix the output folder with a timestamp
             - DEBUG=false # optional - true/false - enable debug logging
             - DEBUGTOWEB=false # optional - true/false - enable debug logging to the web ui
         #    - PREFIX=OPTIONAL_WEB_UI_PATH_PREFIX # optional - path prefix for the integrated web ui when commented out or set to /, the web ui will be at the root of the server
