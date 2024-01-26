@@ -20,6 +20,7 @@ services:
             - DRIVE=/dev/sr0 # required - path to the optical drive - should be to the mounted /dev/sr0 device
             - JUSTMAKEISO=false # optional - true/false just making an ISO of any disk
             - DEBUG=true # optional - true/false - enable debug logging
+            - DEBUGTOWEB=false # optional - true/false - enable debug logging to the web ui
         #    - PREFIX=OPTIONAL_WEB_UI_PATH_PREFIX # optional - path prefix for the integrated web ui
         #    - USER=OPTIONAL_WEB_UI_USERNAME # optional - user name for the integrated web ui (requires PASS to be set)
         #    - PASS=OPTIONAL_WEB_UI_PASSWORD # optional - password for the integrated web ui (requires USER to be set)

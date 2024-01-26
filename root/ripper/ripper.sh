@@ -16,6 +16,7 @@ printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 6
 : "${DRIVE:=/dev/sr0}"
 : "${BAD_THRESHOLD:=5}"
 : "${DEBUG:=false}"
+: "${DEBUGTOWEB:=false}"
 # Print the values of configuration options
 printf "SEPARATERAWFINISH: %s\n" "$SEPARATERAWFINISH"
 printf "EJECTENABLED: %s\n" "$EJECTENABLED"
@@ -27,25 +28,28 @@ printf "STORAGE_BD: %s\n" "$STORAGE_BD"
 printf "DRIVE: %s\n" "$DRIVE"
 printf "BAD_THRESHOLD: %s\n" "$BAD_THRESHOLD"
 printf "DEBUG: %s\n" "$DEBUG"
+printf "DEBUGTOWEB: %s\n" "$DEBUGTOWEB"
 
 BAD_RESPONSE=0
-
+DISC_TYPE=""
 # Define the drive types and patterns to match against the output of makemkvcon
-DRIVE_TYPES=("empty" "open" "loading" "bd1" "bd2" "dvd" "cd1" "cd2")
-DRIVE_PATTERNS=(
-    'DRV:0,0,999,0,"'
-    'DRV:0,1,999,0,"'
-    'DRV:0,3,999,0,"'
-    'DRV:0,2,999,12,"'
-    'DRV:0,2,999,28,"'
-    'DRV:0,2,999,1,"'
-    'DRV:0,2,999,0,"'
-    '","","'$DRIVE'"'
+declare -A DRIVE_TYPE_PATTERNS=(
+    [empty]='DRV:0,0,999,0,"'
+    [open]='DRV:0,1,999,0,"'
+    [loading]='DRV:0,3,999,0,"'
+    [bd1]='DRV:0,2,999,12,"'
+    [bd2]='DRV:0,2,999,28,"'
+    [dvd]='DRV:0,2,999,1,"'
+    [cd1]='DRV:0,2,999,0,"'
+    [cd2]='","","'$DRIVE'"'
 )
 
 debug_log() {
   if [[ "$DEBUG" == true ]]; then
-    echo "[DEBUG] $(date "+%d.%m.%Y %T"): $1" >> "$LOGFILE"
+    echo "[DEBUG] $(date "+%d.%m.%Y %T"): $1"
+  fi
+  if [[ "$DEBUGTOWEB" == true ]]; then
+    echo "$(date "+%d.%m.%Y %T"): $1" >> "$LOGFILE"
   fi
 }
 
@@ -62,20 +66,18 @@ check_disc() {
     debug_log "Checking disc."
     INFO=$(makemkvcon -r --cache=1 info disc:9999 | grep DRV:0)
     debug_log "INFO: $INFO"
-    EXPECTED=""
+    DISC_TYPE=""  # Clear previous disc type value
 
-    for (( i=0; i<${#DRIVE_TYPES[@]}; i++ )); do
-        TYPE=${DRIVE_TYPES[$i]}
-        PATTERN=${DRIVE_PATTERNS[$i]}
-        MATCH=$(echo $INFO | grep -o "$PATTERN")
-        if [[ -n "$MATCH" ]]; then
-            declare "$TYPE=$MATCH"
-            EXPECTED+="$MATCH"
-            debug_log "Detected disc type: $TYPE"
+    for TYPE in "${!DRIVE_TYPE_PATTERNS[@]}"; do
+        PATTERN=${DRIVE_TYPE_PATTERNS[$TYPE]}
+        if echo "$INFO" | grep -q "$PATTERN"; then
+            DISC_TYPE=$TYPE
+            debug_log "Detected disc type: $DISC_TYPE"
+            break
         fi
     done
 
-    if [[ -z "$EXPECTED" ]]; then
+    if [[ -z "$DISC_TYPE" ]]; then
         echo "$(date "+%d.%m.%Y %T") : Unexpected makemkvcon output: $INFO"
         debug_log "Unexpected makemkvcon output."
         (( BAD_RESPONSE++ ))
@@ -210,32 +212,40 @@ ejectdisc() {
 
 process_disc_type() {
   debug_log "Processing disc type."
-  if [[ -n $empty ]]; then
-    echo "$(date "+%d.%m.%Y %T") : No disc inserted."
-    debug_log "No disc inserted."
-  elif [[ -n $open ]]; then
-    echo "$(date "+%d.%m.%Y %T") : Disc tray open."
-    debug_log "Disc tray open."
-  elif [[ -n $loading ]]; then
-    echo "$(date "+%d.%m.%Y %T") : Disc loading."
-    debug_log "Disc loading."
-  elif [[ -n $bd1 ]] || [[ -n $bd2 ]]; then
-    handle_bd_disc "$bd1$bd2"
-  elif [[ -n $dvd ]]; then
-    handle_dvd_disc "$dvd"
-  elif [[ -n $cd1 ]] || [[ -n $cd2 ]]; then
-    handle_cd_disc "$cd1$cd2"
-  else
-    echo "$(date "+%d.%m.%Y %T") : Disc type not recognized."
-    debug_log "Disc type not recognized."
-  fi
+  case "$DISC_TYPE" in
+    "empty")
+      echo "$(date "+%d.%m.%Y %T") : No disc inserted."
+      debug_log "No disc inserted."
+      ;;
+    "open")
+      echo "$(date "+%d.%m.%Y %T") : Disc tray open."
+      debug_log "Disc tray open."
+      ;;
+    "loading")
+      echo "$(date "+%d.%m.%Y %T") : Disc loading."
+      debug_log "Disc loading."
+      ;;
+    "bd1"|"bd2")
+      handle_bd_disc "$INFO"
+      ;;
+    "dvd")
+      handle_dvd_disc "$INFO"
+      ;;
+    "cd1"|"cd2")
+      handle_cd_disc "$INFO"
+      ;;
+    *)
+      echo "$(date "+%d.%m.%Y %T") : Disc type not recognized."
+      debug_log "Disc type not recognized."
+      ;;
+  esac
 }
 
 launcher_function() {
   debug_log "Starting main function."
   while true; do
     cleanup_tmp_files
-    check_disc
+    check_disc 
     if [ "$BAD_RESPONSE" -lt "$BAD_THRESHOLD" ]; then
         process_disc_type
     else
