@@ -19,6 +19,7 @@ services:
             - STORAGE_DATA=/out/Ripper/Data # required - path to the storage folder for Data rips - should be to a folder in the mounted /out volume
             - DRIVE=/dev/sr0 # required - path to the optical drive - should be to the mounted /dev/sr0 device
             - JUSTMAKEISO=false # optional - true/false just making an ISO of any disk
+            - DEBUG=true # optional - true/false - enable debug logging
         #    - PREFIX=OPTIONAL_WEB_UI_PATH_PREFIX # optional - path prefix for the integrated web ui
         #    - USER=OPTIONAL_WEB_UI_USERNAME # optional - user name for the integrated web ui (requires PASS to be set)
         #    - PASS=OPTIONAL_WEB_UI_PASSWORD # optional - password for the integrated web ui (requires USER to be set)
