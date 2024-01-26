@@ -10,7 +10,7 @@ echo "$(date "+%d.%m.%Y %T") : Starting Ripper. Optical Discs will be detected a
 # Raw Rips go in the usual folder structure
 # Finished Rips are moved to a "finished" folder in it's respective STORAGE folder
 SEPARATERAWFINISH="true"
-
+EJECTENABLED="false"
 # Paths
 STORAGE_CD="/out/Ripper/CD"
 STORAGE_DATA="/out/Ripper/DATA"
@@ -49,24 +49,26 @@ while true; do
    else
       let BAD_RESPONSE=0
    fi
-   if (($BAD_RESPONSE >= $BAD_THRESHOLD)); then
-      echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disk and aborting"
-      # Run makemkvcon once more with full output, to potentially aid in debugging
-      makemkvcon -r --cache=1 info disc:9999
-      if eject -v $DRIVE | grep 'whole-disk' >>/dev/null; then
-         echo "First attempt at Ejecting Disk Succeeded"
-         exit 1
-      else
-         echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >>$LOGFILE 2>&1
-         echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
-         sleep 2
-         sdparm --command=unlock $DRIVE
-         sleep 1
-         sdparm --command=eject $DRIVE
-         exit 1
+   # don't eject if EJECTENABLED is false
+   if [ "$EJECTENABLED" = 'true' ]; then
+      if (($BAD_RESPONSE >= $BAD_THRESHOLD)); then
+         echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disk and aborting"
+         # Run makemkvcon once more with full output, to potentially aid in debugging
+         makemkvcon -r --cache=1 info disc:9999
+         if eject -v $DRIVE | grep 'whole-disk' >>/dev/null; then
+            echo "First attempt at Ejecting Disk Succeeded"
+            exit 1
+         else
+            echo "First Attempt At Ejecting Disk Failed. Attempting Alternative Method." >>$LOGFILE 2>&1
+            echo "$(date "+%d.%m.%Y %T") : First Attempt At Ejecting Disk Failed. Trying Alternative Method."
+            sleep 2
+            sdparm --command=unlock $DRIVE
+            sleep 1
+            sdparm --command=eject $DRIVE
+            exit 1
+         fi
       fi
    fi
-
    # if [ $EMPTY = 'DRV:0,0,999,0,"' ]; then
    #  echo "$(date "+%d.%m.%Y %T") : No Disc"; &>/dev/null
    # fi
