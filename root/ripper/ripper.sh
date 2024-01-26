@@ -191,6 +191,20 @@ handle_data_disc() {
    debug_log "Changed owner and permissions for: $STORAGE_DATA"
 }
 
+move_to_finished() {
+    local src_path="$1"
+    local dst_root="$2"
+    local disc_label="$3"
+    if [ "$SEPARATERAWFINISH" = 'true' ]; then
+        local finish_path="${dst_root}/finished/${disc_label}"
+        debug_log "Moving ${src_path} to finished directory: ${finish_path}"
+        mkdir -p "${dst_root}/finished"
+        mv -v "${src_path}" "${finish_path}"
+        chown -R nobody:users "${dst_root}" && chmod -R g+rw "${dst_root}"
+    fi
+}
+
+
 ejectdisc() {
    if [[ "$EJECTENABLED" == "true" ]]; then
       if eject -v "$DRIVE" &>/dev/null; then
