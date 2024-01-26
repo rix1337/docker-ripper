@@ -39,6 +39,7 @@ if [[ "$DEBUG" == true ]]; then
    printf "MINIMUMLENGTH: %s\n" "$MINIMUMLENGTH"
 fi
 
+JUST_MADE_ISO=false
 BAD_RESPONSE=0
 DISC_TYPE=""
 # Define the drive types and patterns to match against the output of makemkvcon
@@ -202,6 +203,7 @@ handle_data_disc() {
    debug_log "Done saving ISO."
    chown -R nobody:users "$STORAGE_DATA" && chmod -R g+rw "$STORAGE_DATA"
    debug_log "Changed owner and permissions for: $STORAGE_DATA"
+   JUST_MADE_ISO=true
 }
 
 move_to_finished() {
@@ -267,6 +269,7 @@ process_disc_type() {
    *)
       printf "%s : Disc type not recognized.\n" "$(date "+%d.%m.%Y %T")"
       debug_log "Disc type not recognized."
+
       ;;
    esac
 }
@@ -274,6 +277,7 @@ process_disc_type() {
 launcher_function() {
    debug_log "Starting main function."
    while true; do
+      JUST_MADE_ISO=false
       cleanup_tmp_files
       check_disc
       case "$DISC_TYPE" in
@@ -302,9 +306,13 @@ launcher_function() {
                process_disc_type
                case "$ALSOMAKEISO" in
                "true")
+                  # we already handled the disc, so we just need to make the ISO unless we just made an ISO
+                  # we use JUST_MADE_ISO to prevent making an ISO twice it is reset at the beginning of the loop and set to true after making an ISO
                   printf "%s : AlsoMakeISO is enabled. Saving ISO.\n" "$(date "+%d.%m.%Y %T")"
                   debug_log "AlsoMakeISO is enabled. Saving ISO."
-                  handle_data_disc "$INFO"
+                  if [ "$JUST_MADE_ISO" = false ]; then
+                     handle_data_disc "$INFO"
+                  fi
                   ejectdisc
                   ;;
                esac
