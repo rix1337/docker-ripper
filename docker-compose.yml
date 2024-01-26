@@ -3,7 +3,7 @@ services:
     docker-ripper:
         container_name: Ripper
         volumes:
-            - ./ripper-config:/config:rw
+            #- ./ripper-config:/config:rw # optional - path to the config folder - if not provided, a default config will be used
             - ./ripper-output:/out:rw
         devices:
             - /dev/sr0:/dev/sr0
