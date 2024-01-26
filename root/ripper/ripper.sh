@@ -99,6 +99,7 @@ handle_bd_disc() {
    local disc_number="$(echo "$disc_info" | grep "$DRIVE" | cut -c5)"
    debug_log "Disc label: $disc_label, Disc number: $disc_number, BD path: $bd_path"
    mkdir -p "$bd_path"
+   
    local alt_rip="${RIPPER_DIR}/BLURAYrip.sh"
    if [[ -f $alt_rip && -x $alt_rip ]]; then
       printf "%s : BluRay detected: Executing %s\n" "$(date "+%d.%m.%Y %T")" "$alt_rip"
@@ -109,15 +110,8 @@ handle_bd_disc() {
       debug_log "Saving BluRay as MKV."
       makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$disc_number" all "$bd_path" >>"$LOGFILE" 2>&1
    fi
-   if [ "$SEPARATERAWFINISH" = 'true' ]; then
-      local bd_finish="$STORAGE_BD/finished/"
-      debug_log "Moving BluRay rip to finished directory: $bd_finish"
-      mv -v "$bd_path" "$bd_finish"
-   fi
-   printf "%s : Done! Ejecting disc\n" "$(date "+%d.%m.%Y %T")"
-   debug_log "Ejecting BluRay disc."
-   chown -R nobody:users "$STORAGE_BD" && chmod -R g+rw "$STORAGE_BD"
-   debug_log "Changed owner and permissions for: $STORAGE_BD"
+   
+   move_to_finished "$bd_path" "$STORAGE_BD" "$disc_label"
 }
 
 handle_dvd_disc() {
@@ -128,25 +122,19 @@ handle_dvd_disc() {
    local disc_number="$(echo "$disc_info" | grep "$DRIVE" | cut -c5)"
    debug_log "Disc label: $disc_label, Disc number: $disc_number, DVD path: $dvd_path"
    mkdir -p "$dvd_path"
+   
    local alt_rip="${RIPPER_DIR}/DVDrip.sh"
    if [[ -f $alt_rip && -x $alt_rip ]]; then
-      echo "$(date "+%d.%m.%Y %T") : DVD detected: Executing $alt_rip"
+      printf "%s : DVD detected: Executing %s\n" "$(date "+%d.%m.%Y %T")" "$alt_rip"
       debug_log "Executing alternative DVD rip script."
       $alt_rip "$disc_number" "$dvd_path" "$LOGFILE"
    else
-      echo "$(date "+%d.%m.%Y %T") : DVD detected: Saving MKV"
+      printf "%s : DVD detected: Saving MKV\n" "$(date "+%d.%m.%Y %T")"
       debug_log "Saving DVD as MKV."
       makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$disc_number" all "$dvd_path" >>"$LOGFILE" 2>&1
    fi
-   if [ "$SEPARATERAWFINISH" = 'true' ]; then
-      local dvd_finish="$STORAGE_DVD/finished/"
-      debug_log "Moving DVD rip to finished directory: $dvd_finish"
-      mv -v "$dvd_path" "$dvd_finish"
-   fi
-   printf "%s : Completed DVD rip.\n" "$(date "+%d.%m.%Y %T")"
-   debug_log "Completed DVD rip."
-   chown -R nobody:users "$STORAGE_DVD" && chmod -R g+rw "$STORAGE_DVD"
-   debug_log "Changed owner and permissions for: $STORAGE_DVD"
+   
+   move_to_finished "$dvd_path" "$STORAGE_DVD" "$disc_label"
 }
 
 handle_cd_disc() {
@@ -201,6 +189,8 @@ move_to_finished() {
         mkdir -p "${dst_root}/finished"
         mv -v "${src_path}" "${finish_path}"
         chown -R nobody:users "${dst_root}" && chmod -R g+rw "${dst_root}"
+    else
+      debug_log "Skipping move to finished directory as SEPARATERAWFINISH is false"
     fi
 }
 
