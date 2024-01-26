@@ -70,13 +70,13 @@ while true; do
    cleanup_tmp_files
    check_disc
    if (( BAD_RESPONSE >= BAD_THRESHOLD )); then
-      echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disk and aborting"
+      echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disc and aborting"
       makemkvcon -r --cache=1 info disc:9999
-      ejectDisk
+      ejectdisc
    fi
-   # get disk info through makemkv and pass output to INFO
+   # get disc info through makemkv and pass output to INFO
    INFO=$"$(makemkvcon -r --cache=1 info disc:9999 | grep DRV:0)"
-   # check INFO for optical disk
+   # check INFO for optical disc
    EMPTY=$(echo $INFO | grep -o 'DRV:0,0,999,0,"')
    OPEN=$(echo $INFO | grep -o 'DRV:0,1,999,0,"')
    LOADING=$(echo $INFO | grep -o 'DRV:0,3,999,0,"')
@@ -95,24 +95,24 @@ while true; do
       let BAD_RESPONSE=0
    fi
    if (($BAD_RESPONSE >= $BAD_THRESHOLD)); then
-      echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disk and aborting"
+      echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disc and aborting"
       # Run makemkvcon once more with full output, to potentially aid in debugging
       makemkvcon -r --cache=1 info disc:9999
-      ejectDisk
+      ejectdisc
    fi
    # if [ $EMPTY = 'DRV:0,0,999,0,"' ]; then
    #  echo "$(date "+%d.%m.%Y %T") : No Disc"; &>/dev/null
    # fi
    if [ "$OPEN" = 'DRV:0,1,999,0,"' ]; then
-      echo "$(date "+%d.%m.%Y %T") : Disk tray open"
+      echo "$(date "+%d.%m.%Y %T") : disc tray open"
    fi
    if [ "$LOADING" = 'DRV:0,3,999,0,"' ]; then
       echo "$(date "+%d.%m.%Y %T") : Disc still loading"
    fi
 
    if [ "$BD1" = 'DRV:0,2,999,12,"' ] || [ "$BD2" = 'DRV:0,2,999,28,"' ]; then
-      DISKLABEL=$(echo $INFO | grep -o -P '(?<=",").*(?=",")')
-      BDPATH="$STORAGE_BD"/"$DISKLABEL"
+      discLABEL=$(echo $INFO | grep -o -P '(?<=",").*(?=",")')
+      BDPATH="$STORAGE_BD"/"$discLABEL"
       BLURAYNUM=$(echo $INFO | grep $DRIVE | cut -c5)
       mkdir -p "$BDPATH"
       ALT_RIP="${RIPPER_DIR}/BLURAYrip.sh"
@@ -128,15 +128,15 @@ while true; do
          BDFINISH="$STORAGE_BD"/finished/
          mv -v "$BDPATH" "$BDFINISH"
       fi
-      echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
-      ejectDisk
+      echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
+      ejectdisc
       # permissions
       chown -R nobody:users "$STORAGE_BD" && chmod -R g+rw "$STORAGE_BD"
    fi
 
    if [ "$DVD" = 'DRV:0,2,999,1,"' ]; then
-      DISKLABEL=$(echo $INFO | grep -o -P '(?<=",").*(?=",")')
-      DVDPATH="$STORAGE_DVD"/"$DISKLABEL"
+      discLABEL=$(echo $INFO | grep -o -P '(?<=",").*(?=",")')
+      DVDPATH="$STORAGE_DVD"/"$discLABEL"
       DVDNUM=$(echo $INFO | grep $DRIVE | cut -c5)
       mkdir -p "$DVDPATH"
       ALT_RIP="${RIPPER_DIR}/DVDrip.sh"
@@ -152,8 +152,8 @@ while true; do
          DVDFINISH="$STORAGE_DVD"/finished/
          mv -v "$DVDPATH" "$DVDFINISH"
       fi
-      echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
-      ejectDisk
+      echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
+      ejectdisc
       # permissions
       chown -R nobody:users "$STORAGE_DVD" && chmod -R g+rw "$STORAGE_DVD"
    fi
@@ -169,25 +169,25 @@ while true; do
             echo "$(date "+%d.%m.%Y %T") : CD detected: Saving MP3 and FLAC"
             /usr/bin/abcde -d "$DRIVE" -c /ripper/abcde.conf -N -x -l >>$LOGFILE 2>&1
          fi
-         echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
-         ejectDisk
+         echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
+         ejectdisc
          # permissions
          chown -R nobody:users "$STORAGE_CD" && chmod -R g+rw "$STORAGE_CD"
       else
-         DISKLABEL=$(echo $INFO | grep $DRIVE | grep -o -P '(?<=",").*(?=",")')
-         ISOPATH="$STORAGE_DATA"/"$DISKLABEL"/"$DISKLABEL".iso
-         mkdir -p "$STORAGE_DATA"/"$DISKLABEL"
+         discLABEL=$(echo $INFO | grep $DRIVE | grep -o -P '(?<=",").*(?=",")')
+         ISOPATH="$STORAGE_DATA"/"$discLABEL"/"$discLABEL".iso
+         mkdir -p "$STORAGE_DATA"/"$discLABEL"
          ALT_RIP="${RIPPER_DIR}/DATArip.sh"
          if [[ -f $ALT_RIP && -x $ALT_RIP ]]; then
-            echo "$(date "+%d.%m.%Y %T") : Data-Disk detected: Executing $ALT_RIP"
+            echo "$(date "+%d.%m.%Y %T") : Data-disc detected: Executing $ALT_RIP"
             $ALT_RIP "$DRIVE" "$ISOPATH" "$LOGFILE"
          else
             # ISO
-            echo "$(date "+%d.%m.%Y %T") : Data-Disk detected: Saving ISO"
+            echo "$(date "+%d.%m.%Y %T") : Data-disc detected: Saving ISO"
             ddrescue $DRIVE "$ISOPATH" >>$LOGFILE 2>&1
          fi
-         echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
-         ejectDisk
+         echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
+         ejectdisc
          # permissions
          chown -R nobody:users "$STORAGE_DATA" && chmod -R g+rw "$STORAGE_DATA"
       fi
@@ -197,13 +197,13 @@ while true; do
 done
 
 
-# function to eject the disk - now with a lower-case function name
-ejectdisk() {
+# function to eject the disc - now with a lower-case function name
+ejectdisc() {
    if [[ "$EJECTENABLED" == "true" ]]; then
       if eject -v "$DRIVE" &>/dev/null; then
-         printf "Ejecting Disk Succeeded\n"
+         printf "Ejecting disc Succeeded\n"
       else
-         printf "%s : Ejecting Disk Failed. Attempting Alternative Method.\n" "$(date "+%d.%m.%Y %T")" >> "$LOGFILE"
+         printf "%s : Ejecting disc Failed. Attempting Alternative Method.\n" "$(date "+%d.%m.%Y %T")" >> "$LOGFILE"
          sleep 2
          sdparm --command=unlock "$DRIVE"
          sleep 1
