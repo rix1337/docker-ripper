@@ -1,34 +1,30 @@
 #!/bin/bash
 
-RIPPER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-LOGFILE="/config/Ripper.log"
+ripper_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+logfile="/config/Ripper.log"
 
 # Startup Info
-echo "$(date "+%d.%m.%Y %T") : Starting Ripper. Optical Discs will be detected and ripped within 60 seconds."
+printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 60 seconds.\n" "$(date "+%d.%m.%Y %T")"
 
-# Separate Raw Rip and Finished Rip Folders for DVDs and BluRays
-# Raw Rips go in the usual folder structure
-# Finished Rips are moved to a "finished" folder in it's respective STORAGE folder
+# Set default values for configuration options if not already set
+: "${separaterawfinish:=true}"
+: "${ejectenabled:=true}"
+: "${justmakeiso:=false}"
+: "${storage_cd:=/out/Ripper/CD}"
+: "${storage_data:=/out/Ripper/DATA}"
+: "${storage_dvd:=/out/Ripper/DVD}"
+: "${storage_bd:=/out/Ripper/BluRay}"
+: "${drive:=/dev/sr0}"
+: "${bad_threshold:=5}"
 
-# If an environment variable is not set, then set it to the default value
-: "${SEPARATERAWFINISH:=true}"
-: "${EJECTENABLED:=true}"
-: "${STORAGE_CD:=/out/Ripper/CD}"
-: "${STORAGE_DATA:=/out/Ripper/DATA}"
-: "${STORAGE_DVD:=/out/Ripper/DVD}"
-: "${STORAGE_BD:=/out/Ripper/BluRay}"
-: "${DRIVE:=/dev/sr0}"
+bad_response=0
 
-BAD_THRESHOLD=5
-let BAD_RESPONSE=0
-
-# True is always true, thus loop indefinitely
-while true; do
-   # delete MakeMKV temp files
-   cwd=$(pwd)
-   cd /tmp
-   rm -r *.tmp >/dev/null 2>&1
-   cd $cwd
+cleanup_tmp_files() {
+  local tmp_dir="/tmp"
+  cd "$tmp_dir" || exit
+  rm -rf ./*.tmp 2>/dev/null
+  cd - || exit
+}
 
    # get disk info through makemkv and pass output to INFO
    INFO=$"$(makemkvcon -r --cache=1 info disc:9999 | grep DRV:0)"
