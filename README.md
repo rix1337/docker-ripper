@@ -60,6 +60,7 @@ Add these optional parameters when running the container
   -e /ripper-ui=OPTIONAL_WEB_UI_PATH_PREFIX \ 
   -e myusername=OPTIONAL_WEB_UI_USERNAME \ 
   -e strongpassword=OPTIONAL_WEB_UI_PASSWORD \
+  -e DEBUGTOWEB=true \
 ````
 
 `OPTIONAL_WEB_UI_USERNAME ` and `OPTIONAL_WEB_UI_PASSWORD ` both need to be set to enable http basic auth for the web UI.
@@ -88,7 +89,7 @@ launch. Without a purchased license key Ripper may stop running at any time.
 
 ## Docker compose
 
-Check the device mount points and optional settings before you run the container!
+Check the device mount points and optional settings before you run the container.
 
 `docker-compose up -d`
 
@@ -120,10 +121,16 @@ First clone the repository:
 
 You can build and run docker-ripper using Docker Compose, which simplifies the process of deploying and managing containers
 
+You can build two different versions of the image "latest" and "manual-build"
+
+Manual-build is the recommended version, as it is updated much faster to newly released makemkv versions - that are required when running with the free beta key.
+"latest" is based on the latest makemkv version available in the Ubuntu PPA. This version is more stable, but might not work with the free beta key for a while after a new makemkv version is released. It will build faster, as it does not need to compile makemkv from source.
+
+Make sure to uncomment the version you want to build in the docker-compose.yml file build section and comment out the pre-built image tag `#image: rix1337/docker-ripper:latest`
+
 - To build the image:
   
-  ```docker-compose build```
-This will use the latest/Dockerfile to build an image tagged as `rix1337/docker-ripper:latest`.
+  ```docker-compose build``` or ```docker-compose build --no-cache```
 
 - To start the container:
 

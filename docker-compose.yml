@@ -2,9 +2,10 @@ version: '3.3'
 services:
     docker-ripper:
         container_name: Ripper
-        build:
-            dockerfile: latest/Dockerfile
-        image: rix1337/docker-ripper:latest
+        #build: # optional - use this if you want to build the image yourself
+        #   dockerfile: latest/Dockerfile # this uses the repo version of makemkvcon
+        #   dockerfile: manual-build/Dockerfile # this will build makeMKV from source - this takes a long time but will always be the latest version
+        image: rix1337/docker-ripper:latest 
         volumes:
             #- ./ripper-config:/config:rw # optional - path to the config folder - if not provided, a default config will be used
             - ./ripper-output:/out:rw
