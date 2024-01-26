@@ -14,7 +14,7 @@ RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 CMD ["/sbin/my_init"]
 
 # Invalidate build cache on new releases of MakeMKV
-# ADD "https://launchpad.net/~heyarje/+archive/ubuntu/makemkv-beta/+builds?build_text=makemkv-bin&build_state=built" /dev/null
+ADD "https://launchpad.net/~heyarje/+archive/ubuntu/makemkv-beta/+builds?build_text=makemkv-bin&build_state=built" /dev/null
 
 # Install software
 RUN add-apt-repository -y ppa:heyarje/makemkv-beta && \
