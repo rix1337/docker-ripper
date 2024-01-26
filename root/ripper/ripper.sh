@@ -9,6 +9,8 @@ echo "$(date "+%d.%m.%Y %T") : Starting Ripper. Optical Discs will be detected a
 # Separate Raw Rip and Finished Rip Folders for DVDs and BluRays
 # Raw Rips go in the usual folder structure
 # Finished Rips are moved to a "finished" folder in it's respective STORAGE folder
+echo "testing env pass thru"
+echo $EJECTENABLED
 SEPARATERAWFINISH="true"
 EJECTENABLED="false"
 # Paths

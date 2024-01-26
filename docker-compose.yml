@@ -11,6 +11,7 @@ services:
         ports:
             - 9090:9090 
         environment:
+             - EJECTENABLED=false # required - enable/disable ejecting of the disc after ripping
         #    - PREFIX=OPTIONAL_WEB_UI_PATH_PREFIX # optional - path prefix for the integrated web ui
         #    - USER=OPTIONAL_WEB_UI_USERNAME # optional - user name for the integrated web ui (requires PASS to be set)
         #    - PASS=OPTIONAL_WEB_UI_PASSWORD # optional - password for the integrated web ui (requires USER to be set)
