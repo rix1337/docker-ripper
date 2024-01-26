@@ -16,9 +16,6 @@ RUN usermod -u 99 nobody && \
     usermod -d /home nobody && \
     chown nobody:users /home -R
 
-# Invalidate build cache on forum post change
-ADD "https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224" /dev/null
-
 # Install Required packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -42,6 +39,9 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Invalidate build cache on forum post change
+ADD "https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224" /dev/null
 
 # Move Files, set permissions and install makemkv
 COPY root/ /
