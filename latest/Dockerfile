@@ -11,13 +11,6 @@ ENV LANGUAGE en_US.UTF-8
 # Use baseimage-docker's init system
 CMD ["/sbin/my_init"]
 
-# Configure user nobody to match unRAID's settings
-RUN \
- usermod -u 99 nobody && \
- usermod -g 100 nobody && \
- usermod -d /home nobody && \
- chown -R nobody:users /home
-
 # Move Files
 COPY root/ /
 RUN chmod +x /etc/my_init.d/*.sh
