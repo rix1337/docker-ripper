@@ -19,7 +19,7 @@ COPY root/ /
 RUN chmod +x /etc/my_init.d/*.sh
 
 # Install software
-RUN add-apt-repository ppa:heyarje/makemkv-beta \
+RUN add-apt-repository ppa:heyarje/makemkv-beta &&\
     apt-get update && \
     apt-get -y --allow-unauthenticated install --no-install-recommends gddrescue wget eject sdparm git python3 python3-pip abcde eyed3 flac lame mkcue speex vorbis-tools vorbisgain id3 id3v2 makemkv-bin makemkv-oss ccextractor && \
     apt-get -y autoremove
