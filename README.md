@@ -86,7 +86,7 @@ launch. Without a purchased license key Ripper may stop running at any time.
 3) At this point your config directory should look like this:  
    ![config directory](https://raw.githubusercontent.com/rix1337/docker-ripper/main/.github/screenshots/configdirectory.png)
 
-# Docker compose
+## Docker compose
 
 Check the device mount points and optional settings before you run the container!
 
@@ -109,7 +109,7 @@ Check the device mount points and optional settings before you run the container
 - `TIMESTAMPPREFIX`: Optional - If `true`, prefixes output folders with a timestamp for organization. Default is `false`.
 - `MINIMUMLENGTH`: Optional - The minimum length of a title in seconds to be considered valid.(Applies to DVD and BluRAY) Default is `600`.
 
-## Building and Running with Docker Compose
+### Building and Running with Docker Compose
 
 First clone the repository:
 
