@@ -49,6 +49,7 @@ COPY manual-build/install/ /install
 RUN chmod +x /etc/my_init.d/*.sh && \
     chmod -R 777 /tmp && \
     chmod 775 /install && \
+    chmod +x /install/install.sh && \
     /install/install.sh && \
     rm -rf /install
 
