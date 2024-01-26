@@ -12,18 +12,19 @@ services:
             - 9090:9090 
         environment:
             - SEPARATERAWFINISH=true # optional - true/false - separate the raw files from the finished files
-            - EJECTENABLED=false # required - true/false - eject the disk when finished
+            - EJECTENABLED=false # required - true/false - eject the disc when finished
             - STORAGE_CD=/out/Ripper/CD # required - path to the storage folder for CD rips - should be to a folder in the mounted /out volume
             - STORAGE_DVD=/out/Ripper/DVD # required - path to the storage folder for DVD rips - should be to a folder in the mounted /out volume
             - STORAGE_BD=/out/Ripper/BluRay # required - path to the storage folder for BD rips - should be to a folder in the mounted /out volume
             - STORAGE_DATA=/out/Ripper/Data # required - path to the storage folder for Data rips - should be to a folder in the mounted /out volume
             - DRIVE=/dev/sr0 # required - path to the optical drive - should be to the mounted /dev/sr0 device
-            - JUSTMAKEISO=false # optional - true/false just making an ISO of any disk
-            - DEBUG=true # optional - true/false - enable debug logging
+            - JUSTMAKEISO=false # optional - true/false just making an ISO of any disc
+            - ALSOMAKEISO=false # optional - true/false - will do the normal rip and also make an ISO of every disc
+            - DEBUG=false # optional - true/false - enable debug logging
             - DEBUGTOWEB=false # optional - true/false - enable debug logging to the web ui
-        #    - PREFIX=OPTIONAL_WEB_UI_PATH_PREFIX # optional - path prefix for the integrated web ui
-        #    - USER=OPTIONAL_WEB_UI_USERNAME # optional - user name for the integrated web ui (requires PASS to be set)
-        #    - PASS=OPTIONAL_WEB_UI_PASSWORD # optional - password for the integrated web ui (requires USER to be set)
+        #    - PREFIX=OPTIONAL_WEB_UI_PATH_PREFIX # optional - path prefix for the integrated web ui when commented out or set to /, the web ui will be at the root of the server
+        #    - USER=OPTIONAL_WEB_UI_USERNAME # optional - user name for the integrated web ui (requires PASS to be set) - if not set, the web ui will not require authentication
+        #    - PASS=OPTIONAL_WEB_UI_PASSWORD # optional - password for the integrated web ui (requires USER to be set) - if not set, the web ui will not require authentication
         privileged: true
         build:
             dockerfile: latest/Dockerfile

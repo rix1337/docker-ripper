@@ -17,6 +17,8 @@ printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 6
 : "${BAD_THRESHOLD:=5}"
 : "${DEBUG:=false}"
 : "${DEBUGTOWEB:=false}"
+: "${SEPARATERAWFINISH:=true}"
+: "${ALSOMAKEISO:=false}"
 # Print the values of configuration options if DEBUG is enabled
 if [[ "$DEBUG" == true ]]; then
    printf "SEPARATERAWFINISH: %s\n" "$SEPARATERAWFINISH"
@@ -30,6 +32,7 @@ if [[ "$DEBUG" == true ]]; then
    printf "BAD_THRESHOLD: %s\n" "$BAD_THRESHOLD"
    printf "DEBUG: %s\n" "$DEBUG"
    printf "DEBUGTOWEB: %s\n" "$DEBUGTOWEB"
+   printf "ALSOMAKEISO: %s\n" "$ALSOMAKEISO"
 fi
 
 BAD_RESPONSE=0
@@ -48,7 +51,7 @@ declare -A DRIVE_TYPE_PATTERNS=(
 
 debug_log() {
    if [[ "$DEBUG" == true ]]; then
-      echo "[DEBUG] $(date "+%d.%m.%Y %T"): $1"
+      printf "[DEBUG] %s: %s\n" "$(date "+%d.%m.%Y %T")" "$1"
    fi
    if [[ "$DEBUGTOWEB" == true ]]; then
       echo "$(date "+%d.%m.%Y %T"): $1" >>"$LOGFILE"
@@ -80,7 +83,7 @@ check_disc() {
    done
 
    if [[ -z "$DISC_TYPE" ]]; then
-      echo "$(date "+%d.%m.%Y %T") : Unexpected makemkvcon output: $INFO"
+      printf "%s : Unexpected makemkvcon output: %s\n" "$(date "+%d.%m.%Y %T")" "$INFO"
       debug_log "Unexpected makemkvcon output."
       ((BAD_RESPONSE++))
    else
@@ -98,11 +101,11 @@ handle_bd_disc() {
    mkdir -p "$bd_path"
    local alt_rip="${RIPPER_DIR}/BLURAYrip.sh"
    if [[ -f $alt_rip && -x $alt_rip ]]; then
-      echo "$(date "+%d.%m.%Y %T") : BluRay detected: Executing $alt_rip"
+      printf "%s : BluRay detected: Executing %s\n" "$(date "+%d.%m.%Y %T")" "$alt_rip"
       debug_log "Executing alternative BluRay rip script."
       $alt_rip "$disc_number" "$bd_path" "$LOGFILE"
    else
-      echo "$(date "+%d.%m.%Y %T") : BluRay detected: Saving MKV"
+      printf "%s : BluRay detected: Saving MKV\n" "$(date "+%d.%m.%Y %T")"
       debug_log "Saving BluRay as MKV."
       makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$disc_number" all "$bd_path" >>"$LOGFILE" 2>&1
    fi
@@ -111,8 +114,7 @@ handle_bd_disc() {
       debug_log "Moving BluRay rip to finished directory: $bd_finish"
       mv -v "$bd_path" "$bd_finish"
    fi
-   echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
-   ejectdisc
+   printf "%s : Done! Ejecting disc\n" "$(date "+%d.%m.%Y %T")"
    debug_log "Ejecting BluRay disc."
    chown -R nobody:users "$STORAGE_BD" && chmod -R g+rw "$STORAGE_BD"
    debug_log "Changed owner and permissions for: $STORAGE_BD"
@@ -141,9 +143,8 @@ handle_dvd_disc() {
       debug_log "Moving DVD rip to finished directory: $dvd_finish"
       mv -v "$dvd_path" "$dvd_finish"
    fi
-   echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
-   ejectdisc
-   debug_log "Ejecting DVD disc."
+   printf "%s : Completed DVD rip.\n" "$(date "+%d.%m.%Y %T")"
+   debug_log "Completed DVD rip."
    chown -R nobody:users "$STORAGE_DVD" && chmod -R g+rw "$STORAGE_DVD"
    debug_log "Changed owner and permissions for: $STORAGE_DVD"
 }
@@ -153,17 +154,16 @@ handle_cd_disc() {
    debug_log "Handling CD disc."
    local alt_rip="${RIPPER_DIR}/CDrip.sh"
    if [[ -f $alt_rip && -x $alt_rip ]]; then
-      echo "$(date "+%d.%m.%Y %T") : CD detected: Executing $alt_rip"
+      printf "%s : CD detected: Executing %s\n" "$(date "+%d.%m.%Y %T")" "$alt_rip"
       debug_log "Executing alternative CD rip script."
       $alt_rip "$DRIVE" "$STORAGE_CD" "$LOGFILE"
    else
-      echo "$(date "+%d.%m.%Y %T") : CD detected: Saving MP3 and FLAC"
+      printf "%s : CD detected: Saving MP3 and FLAC\n" "$(date "+%d.%m.%Y %T")"
       debug_log "Saving CD as MP3 and FLAC."
       /usr/bin/abcde -d "$DRIVE" -c /ripper/abcde.conf -N -x -l >>"$LOGFILE" 2>&1
    fi
-   echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
-   ejectdisc
-   debug_log "Ejecting CD disc."
+   printf "%s : Completed CD rip.\n" "$(date "+%d.%m.%Y %T")"
+   debug_log "Completed CD rip."
    chown -R nobody:users "$STORAGE_CD" && chmod -R g+rw "$STORAGE_CD"
    debug_log "Changed owner and permissions for: $STORAGE_CD"
 }
@@ -185,15 +185,13 @@ handle_data_disc() {
       debug_log "Saving data-disc as ISO."
       ddrescue "$DRIVE" "$iso_path" >>"$LOGFILE" 2>&1
    fi
-   echo "$(date "+%d.%m.%Y %T") : Done! Ejecting disc"
-   ejectdisc
-   debug_log "Ejecting data disc."
+   printf "%s : Done saving ISO.\n" "$(date "+%d.%m.%Y %T")"
+   debug_log "Done saving ISO."
    chown -R nobody:users "$STORAGE_DATA" && chmod -R g+rw "$STORAGE_DATA"
    debug_log "Changed owner and permissions for: $STORAGE_DATA"
 }
 
 ejectdisc() {
-   debug_log "Ejecting disc from $DRIVE."
    if [[ "$EJECTENABLED" == "true" ]]; then
       if eject -v "$DRIVE" &>/dev/null; then
          printf "Ejecting disc Succeeded\n"
@@ -216,15 +214,15 @@ process_disc_type() {
    debug_log "Processing disc type."
    case "$DISC_TYPE" in
    "empty")
-      echo "$(date "+%d.%m.%Y %T") : No disc inserted."
+      printf "%s : No disc inserted.\n" "$(date "+%d.%m.%Y %T")"
       debug_log "No disc inserted."
       ;;
    "open")
-      echo "$(date "+%d.%m.%Y %T") : Disc tray open."
+      printf "%s : Disc tray open.\n" "$(date "+%d.%m.%Y %T")"
       debug_log "Disc tray open."
       ;;
    "loading")
-      echo "$(date "+%d.%m.%Y %T") : Disc loading."
+      printf "%s : Disc loading.\n" "$(date "+%d.%m.%Y %T")"
       debug_log "Disc loading."
       ;;
    "bd1" | "bd2")
@@ -237,7 +235,7 @@ process_disc_type() {
       handle_cd_disc "$INFO"
       ;;
    *)
-      echo "$(date "+%d.%m.%Y %T") : Disc type not recognized."
+      printf "%s : Disc type not recognized.\n" "$(date "+%d.%m.%Y %T")"
       debug_log "Disc type not recognized."
       ;;
    esac
@@ -250,18 +248,24 @@ launcher_function() {
       check_disc
       if [ "$BAD_RESPONSE" -lt "$BAD_THRESHOLD" ]; then
          if [[ "$JUSTMAKEISO" == "true" ]]; then
-            echo "$(date "+%d.%m.%Y %T") : JustMakeISO is enabled. Saving ISO."
+            printf "%s : JustMakeISO is enabled. Saving ISO.\n" "$(date "+%d.%m.%Y %T")"
             debug_log "JustMakeISO is enabled. Saving ISO."
             handle_data_disc "$INFO"
          else
             process_disc_type
+            if [[ "$ALSOMAKEISO" == "true" ]]; then
+               printf "%s : AlsoMakeISO is enabled. Saving ISO.\n" "$(date "+%d.%m.%Y %T")"
+               debug_log "AlsoMakeISO is enabled. Saving ISO."
+               handle_data_disc "$INFO"
+            fi
          fi
       else
-         echo "$(date "+%d.%m.%Y %T") : Too many bad responses, checking stopped."
+         printf "%s : Too many bad responses, checking stopped.\n" "$(date "+%d.%m.%Y %T")"
          debug_log "Too many bad responses, checking stopped."
          exit 1
       fi
-      sleep 1m
+      ejectdisc
+      sleep 1m # Wait 1 minute before checking for a new disc
    done
 }
 
