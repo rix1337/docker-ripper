@@ -24,6 +24,7 @@ if [[ "$DEBUG" == true ]]; then
    printf "SEPARATERAWFINISH: %s\n" "$SEPARATERAWFINISH"
    printf "EJECTENABLED: %s\n" "$EJECTENABLED"
    printf "JUSTMAKEISO: %s\n" "$JUSTMAKEISO"
+   printf "ALSOMAKEISO: %s\n" "$ALSOMAKEISO"
    printf "STORAGE_CD: %s\n" "$STORAGE_CD"
    printf "STORAGE_DATA: %s\n" "$STORAGE_DATA"
    printf "STORAGE_DVD: %s\n" "$STORAGE_DVD"
@@ -32,7 +33,6 @@ if [[ "$DEBUG" == true ]]; then
    printf "BAD_THRESHOLD: %s\n" "$BAD_THRESHOLD"
    printf "DEBUG: %s\n" "$DEBUG"
    printf "DEBUGTOWEB: %s\n" "$DEBUGTOWEB"
-   printf "ALSOMAKEISO: %s\n" "$ALSOMAKEISO"
 fi
 
 BAD_RESPONSE=0
@@ -99,7 +99,7 @@ handle_bd_disc() {
    local disc_number="$(echo "$disc_info" | grep "$DRIVE" | cut -c5)"
    debug_log "Disc label: $disc_label, Disc number: $disc_number, BD path: $bd_path"
    mkdir -p "$bd_path"
-   
+
    local alt_rip="${RIPPER_DIR}/BLURAYrip.sh"
    if [[ -f $alt_rip && -x $alt_rip ]]; then
       printf "%s : BluRay detected: Executing %s\n" "$(date "+%d.%m.%Y %T")" "$alt_rip"
@@ -110,7 +110,7 @@ handle_bd_disc() {
       debug_log "Saving BluRay as MKV."
       makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$disc_number" all "$bd_path" >>"$LOGFILE" 2>&1
    fi
-   
+
    move_to_finished "$bd_path" "$STORAGE_BD" "$disc_label"
 }
 
@@ -122,7 +122,7 @@ handle_dvd_disc() {
    local disc_number="$(echo "$disc_info" | grep "$DRIVE" | cut -c5)"
    debug_log "Disc label: $disc_label, Disc number: $disc_number, DVD path: $dvd_path"
    mkdir -p "$dvd_path"
-   
+
    local alt_rip="${RIPPER_DIR}/DVDrip.sh"
    if [[ -f $alt_rip && -x $alt_rip ]]; then
       printf "%s : DVD detected: Executing %s\n" "$(date "+%d.%m.%Y %T")" "$alt_rip"
@@ -133,7 +133,7 @@ handle_dvd_disc() {
       debug_log "Saving DVD as MKV."
       makemkvcon --profile=/config/default.mmcp.xml -r --decrypt --minlength=600 mkv disc:"$disc_number" all "$dvd_path" >>"$LOGFILE" 2>&1
    fi
-   
+
    move_to_finished "$dvd_path" "$STORAGE_DVD" "$disc_label"
 }
 
@@ -180,20 +180,19 @@ handle_data_disc() {
 }
 
 move_to_finished() {
-    local src_path="$1"
-    local dst_root="$2"
-    local disc_label="$3"
-    if [ "$SEPARATERAWFINISH" = 'true' ]; then
-        local finish_path="${dst_root}/finished/${disc_label}"
-        debug_log "Moving ${src_path} to finished directory: ${finish_path}"
-        mkdir -p "${dst_root}/finished"
-        mv -v "${src_path}" "${finish_path}"
-        chown -R nobody:users "${dst_root}" && chmod -R g+rw "${dst_root}"
-    else
+   local src_path="$1"
+   local dst_root="$2"
+   local disc_label="$3"
+   if [ "$SEPARATERAWFINISH" = 'true' ]; then
+      local finish_path="${dst_root}/finished/${disc_label}"
+      debug_log "Moving ${src_path} to finished directory: ${finish_path}"
+      mkdir -p "${dst_root}/finished"
+      mv -v "${src_path}" "${finish_path}"
+      chown -R nobody:users "${dst_root}" && chmod -R g+rw "${dst_root}"
+   else
       debug_log "Skipping move to finished directory as SEPARATERAWFINISH is false"
-    fi
+   fi
 }
-
 
 ejectdisc() {
    if [[ "$EJECTENABLED" == "true" ]]; then
