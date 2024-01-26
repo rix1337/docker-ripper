@@ -61,22 +61,22 @@ debug_log() {
 }
 
 get_timestamp() {
-    echo "$(date "+%Y%m%d_%H%M%S")"
+   echo "$(date "+%Y%m%d_%H%M%S")"
 }
 
 get_disc_directory() {
-    local storage_root="$1"
-    local disc_label="$2"
-    local timestamp_prefix="$3"
-    local disc_directory=""
-    
-    if [[ "$TIMESTAMPPREFIX" == "true" ]]; then
-        disc_directory="${storage_root}/$(get_timestamp)_${disc_label}"
-    else
-        disc_directory="${storage_root}/${disc_label}"
-    fi
-    
-    echo "$disc_directory"
+   local storage_root="$1"
+   local disc_label="$2"
+   local timestamp_prefix="$3"
+   local disc_directory=""
+
+   if [[ "$TIMESTAMPPREFIX" == "true" ]]; then
+      disc_directory="${storage_root}/$(get_timestamp)_${disc_label}"
+   else
+      disc_directory="${storage_root}/${disc_label}"
+   fi
+
+   echo "$disc_directory"
 }
 
 cleanup_tmp_files() {
