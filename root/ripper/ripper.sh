@@ -17,8 +17,23 @@ printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 6
 : "${DRIVE:=/dev/sr0}"
 : "${BAD_THRESHOLD:=5}"
 
-bad_response=0
+BAD_RESPONSE=0
 
+# Define the drive types and patterns to match against the output of makemkvcon
+DRIVE_TYPES=("empty" "open" "loading" "bd1" "bd2" "dvd" "cd1" "cd2")
+DRIVE_PATTERNS=(
+    'DRV:0,0,999,0,"'
+    'DRV:0,1,999,0,"'
+    'DRV:0,3,999,0,"'
+    'DRV:0,2,999,12,"'
+    'DRV:0,2,999,28,"'
+    'DRV:0,2,999,1,"'
+    'DRV:0,2,999,0,"'
+    '","","'$DRIVE'"'
+)
+
+
+# function to cleanup tmp files
 cleanup_tmp_files() {
   local tmp_dir="/tmp"
   cd "$tmp_dir" || exit
@@ -26,8 +41,39 @@ cleanup_tmp_files() {
   cd - || exit
 }
 
+
+# function to analyze the output of makemkvcon which detects the optical disc type
+check_disc() {
+    INFO=$(makemkvcon -r --cache=1 info disc:9999 | grep DRV:0)
+    EXPECTED=""
+
+    for (( i=0; i<${#DRIVE_TYPES[@]}; i++ )); do
+        TYPE=${DRIVE_TYPES[$i]}
+        PATTERN=${DRIVE_PATTERNS[$i]}
+        MATCH=$(echo $INFO | grep -o "$PATTERN")
+        if [[ -n "$MATCH" ]]; then
+            declare "$TYPE=$MATCH"
+            EXPECTED+="$MATCH"
+        fi
+    done
+
+    if [[ -z "$EXPECTED" ]]; then
+        echo "$(date "+%d.%m.%Y %T") : Unexpected makemkvcon output: $INFO"
+        (( BAD_RESPONSE++ ))
+    else
+        BAD_RESPONSE=0
+    fi
+}
+
+
 while true; do
-    cleanup_tmp_files
+   cleanup_tmp_files
+   check_disc
+   if (( BAD_RESPONSE >= BAD_THRESHOLD )); then
+      echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disk and aborting"
+      makemkvcon -r --cache=1 info disc:9999
+      ejectDisk
+   fi
    # get disk info through makemkv and pass output to INFO
    INFO=$"$(makemkvcon -r --cache=1 info disc:9999 | grep DRV:0)"
    # check INFO for optical disk
