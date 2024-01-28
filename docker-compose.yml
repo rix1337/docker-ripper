@@ -2,17 +2,33 @@ version: '3.3'
 services:
     docker-ripper:
         container_name: Ripper
+        #build: # optional - use this if you want to build the image yourself
+        #   dockerfile: latest/Dockerfile # this uses the repo version of makemkvcon
+        #   dockerfile: manual-build/Dockerfile # this will build makeMKV from source - this takes a long time but will always be the latest version
+        image: rix1337/docker-ripper:latest 
         volumes:
-            - '/path/to/config/:/config:rw'
-            - '/path/to/rips/:/out:rw'
+            #- ./ripper-config:/config:rw # optional - path to the config folder - if not provided, a default config will be used
+            - ./ripper-output:/out:rw
         devices:
-            - '/dev/sr0:/dev/sr0'
-            - '/dev/sg0:/dev/sg0'
+            - /dev/sr0:/dev/sr0
+            - /dev/sg0:/dev/sg0
         ports:
-            - 'port:9090' # optional - port for the integrated web ui
+            - 9090:9090 
         environment:
-            - PREFIX=OPTIONAL_WEB_UI_PATH_PREFIX # optional - path prefix for the integrated web ui
-            - USER=OPTIONAL_WEB_UI_USERNAME # optional - user name for the integrated web ui (requires PASS to be set)
-            - PASS=OPTIONAL_WEB_UI_PASSWORD # optional - password for the integrated web ui (requires USER to be set)
-        privileged: true # optional - only use when your drive is not detected inside the container
-        image: rix1337/docker-ripper:manual-latest
+            - SEPARATERAWFINISH=true # optional - true/false - separate the raw files from the finished files
+            - EJECTENABLED=true # optional - true/false - eject the disc when finished
+            - STORAGE_CD=/out/Ripper/CD # optional - path to the storage folder for CD rips - should be to a folder in the mounted /out volume
+            - STORAGE_DVD=/out/Ripper/DVD # optional - path to the storage folder for DVD rips - should be to a folder in the mounted /out volume
+            - STORAGE_BD=/out/Ripper/BluRay # optional - path to the storage folder for BD rips - should be to a folder in the mounted /out volume
+            - STORAGE_DATA=/out/Ripper/Data # optional - path to the storage folder for Data rips - should be to a folder in the mounted /out volume
+            - DRIVE=/dev/sr0 # optional - path to the optical drive - should be to the mounted /dev/sr0 device
+            - JUSTMAKEISO=false # optional - true/false just making an ISO of any disc
+            - ALSOMAKEISO=false # optional - true/false - will do the normal rip and also make an ISO of every disc
+            - TIMESTAMPPREFIX=false # optional - true/false - prefix the output folder with a timestamp
+            - DEBUG=false # optional - true/false - enable debug logging
+            - DEBUGTOWEB=false # optional - true/false - enable debug logging to the web ui
+            - MINIMUMLENGTH=600 # optional - minimum length of the disc in seconds - if the disc or chapter is shorter than this, it will not be ripped
+        #    - PREFIX=OPTIONAL_WEB_UI_PATH_PREFIX # optional - path prefix for the integrated web ui when commented out or set to /, the web ui will be at the root of the server
+        #    - USER=OPTIONAL_WEB_UI_USERNAME # optional - user name for the integrated web ui (requires PASS to be set) - if not set, the web ui will not require authentication
+        #    - PASS=OPTIONAL_WEB_UI_PASSWORD # optional - password for the integrated web ui (requires USER to be set) - if not set, the web ui will not require authentication
+        privileged: true

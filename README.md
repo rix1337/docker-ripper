@@ -8,10 +8,10 @@ This container will detect optical disks by their type and rip them automaticall
 
 Disc Type | Output | Tools used
 ---|---|---
-CD | MP3 and FLAC | abcde (lame and flac)
-Data-Disk | Uncompressed .ISO | ddrescue
-DVD | MKV | MakeMKV
-BluRay | MKV | MakeMKV
+CD | MP3 FLAC ISO | abcde (lame and flac), ddrescue
+Data-Disk | ISO | ddrescue
+DVD | MKV and ISO | MakeMKV, ddrescue
+BluRay | MKV and ISO | MakeMKV, ddrescue
 
 ### Prerequistites
 
@@ -60,6 +60,7 @@ Add these optional parameters when running the container
   -e /ripper-ui=OPTIONAL_WEB_UI_PATH_PREFIX \ 
   -e myusername=OPTIONAL_WEB_UI_USERNAME \ 
   -e strongpassword=OPTIONAL_WEB_UI_PASSWORD \
+  -e DEBUGTOWEB=true \
 ````
 
 `OPTIONAL_WEB_UI_USERNAME ` and `OPTIONAL_WEB_UI_PASSWORD ` both need to be set to enable http basic auth for the web UI.
@@ -86,11 +87,71 @@ launch. Without a purchased license key Ripper may stop running at any time.
 3) At this point your config directory should look like this:  
    ![config directory](https://raw.githubusercontent.com/rix1337/docker-ripper/main/.github/screenshots/configdirectory.png)
 
-# Docker compose
+## Docker compose
 
-Check the device mount points and optional settings before you run the container!
+Check the device mount points and optional settings before you run the container.
 
 `docker-compose up -d`
+
+### Environment Variables
+
+- `EJECTENABLED`: Optional - If set to `true`, the disc is ejected after ripping is completed. Default is `true`.
+- `JUSTMAKEISO`: Optional - If `true`, only an ISO of the disc is created. Default is `false`.
+- `STORAGE_CD`: Optional - The path for storing ripped CD content. Default is `/out/Ripper/CD`.
+- `STORAGE_DATA`: Optional - The path for storing data disc ISOs. Default is `/out/Ripper/DATA`.
+- `STORAGE_DVD`: Optional - The path for storing ripped DVD content. Default is `/out/Ripper/DVD`.
+- `STORAGE_BD`: Optional - The path for storing ripped BluRay content. Default is `/out/Ripper/BluRay`.
+- `DRIVE`: Optional - The device file for the optical drive (e.g., `/dev/sr0`). Default is `/dev/sr0`.
+- `BAD_THRESHOLD`: Optional - The number of allowed consecutive bad read attempts before failing. Default is `5`.
+- `DEBUG`: Optional - Enables verbose logging when set to `true`. Default is `false`.
+- `DEBUGTOWEB`: Optional - If `true`, debug logs are published to the web UI. Default is `false`.
+- `SEPARATERAWFINISH`: Optional - When `true`, separates raw and final rips into different directories. Default is `false`.
+- `ALSOMAKEISO`: Optional - If `true`, creates an additional ISO image alongside the normal rip operation. Default is `false`.
+- `TIMESTAMPPREFIX`: Optional - If `true`, prefixes output folders with a timestamp for organization. Default is `false`.
+- `MINIMUMLENGTH`: Optional - The minimum length of a title in seconds to be considered valid.(Applies to DVD and BluRAY) Default is `600`.
+- `PREFIX`: Optional - path prefix for the integrated web ui when commented out or set to /, the web ui will be at the root of the server
+- `USER`: Optional - user name for the integrated web ui (requires PASS to be set) - if not set, the web ui will not require authentication
+- `PASS`: Optional - password for the integrated web ui (requires USER to be set) - if not set, the web ui will not require authentication
+
+### Building and Running with Docker Compose
+
+First clone the repository:
+
+```git clone https://github.com/rix1337/docker-ripper.git```
+
+You can build and run docker-ripper using Docker Compose, which simplifies the process of deploying and managing containers
+
+You can build two different versions of the image "latest" and "manual-build"
+
+Manual-build is the recommended version, as it is updated much faster to newly released makemkv versions - that are required when running with the free beta key.
+"latest" is based on the latest makemkv version available in the Ubuntu PPA. This version is more stable, but might not work with the free beta key for a while after a new makemkv version is released. It will build faster, as it does not need to compile makemkv from source.
+
+Make sure to uncomment the version you want to build in the docker-compose.yml file build section and comment out the pre-built image tag `#image: rix1337/docker-ripper:latest`
+
+- To build the image:
+  
+  ```docker-compose build``` or ```docker-compose build --no-cache```
+
+- To start the container:
+
+```docker-compose up -d``` or ```docker-compose up```
+This command with the `-d` flag will start the container in detached mode, meaning it will run in the background. Without the `-d` flag, the container will run in the foreground and log to the console. You can stop the container with `docker-compose stop` or `docker-compose down`. The latter will also remove the container. 
+
+- Logs
+
+Logs can be viewed with `docker-compose logs` or `docker-compose logs -f` to follow the logs in real time.
+
+If you prefer to build the Docker image manually without Docker Compose, you can use the docker build command:
+
+To build the "latest" image using docker build:
+
+```docker build -f latest/Dockerfile -t rix1337/docker-ripper:latest .```
+
+This command performs the same operation as the docker-compose build but requires manual input of build context and parameters.
+
+Remember to periodically pull the latest changes from the git repository to keep your Dockerfile up to date and rebuild the image if any updates have been made.
+
+
 
 # FAQ
 
@@ -200,3 +261,5 @@ root@linuxbox# udevadm control --reload-rules && udevadm trigger
 - [MakeMKV Setup for manual-build by tianon](https://github.com/tianon/dockerfiles/blob/master/makemkv/Dockerfile)
 
 - [MakeMKV key/version fetcher by metalight](http://blog.metalight.dk/2016/03/makemkv-wrapper-with-auto-updater.html)
+
+- [General cleanup and exposing customization options to the user by jeeshofone](https://123cloud.st)
