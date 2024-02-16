@@ -317,9 +317,9 @@ launcher_function() {
                   if [ "$JUST_MADE_ISO" = false ]; then
                      handle_data_disc "$INFO"
                   fi
-                  ejectdisc
                   ;;
                esac
+               ejectdisc
                ;;
             esac
          else
