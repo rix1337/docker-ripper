@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Autoclose issues that did not follow issue template
-      uses: roots/issue-closer@v1.1
+      uses: roots/issue-closer@v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-close-message: "@${issue.user.login} you must confirm that you have read and understood this [part of the readme](https://github.com/rix1337/docker-ripper#do-you-offer-support) with '[X] YES'. Closing this issue automatically!"
