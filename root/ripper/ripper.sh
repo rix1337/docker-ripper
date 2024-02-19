@@ -224,6 +224,8 @@ move_to_finished() {
       debug_log "Moved $src_path to $finish_path"
    else
       debug_log "SEPARATERAWFINISH is disabled, not moving $src_path"
+      chown -R nobody:users "$src_path" && chmod -R g+rw "$src_path"
+      debug_log "Changed owner and permissions for: $src_path"
    fi
 }
 
