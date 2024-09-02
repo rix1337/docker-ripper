@@ -28,6 +28,7 @@ RUN apt-get update && \
     eyed3 \
     ffmpeg \
     flac \
+    glyrc \
     lame \
     mkcue \
     speex \
