@@ -1,4 +1,4 @@
-FROM phusion/baseimage:focal-1.0.0
+FROM phusion/baseimage:noble-1.0.0
 LABEL maintainer="rix1337"
 
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -19,23 +19,24 @@ RUN usermod -u 99 nobody && \
 # Install Required packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    eject \
-    sdparm \
-    gddrescue \
     abcde \
+    eject \
     eyed3 \
     ffmpeg \
     flac \
+    gddrescue \
+    id3 \
+    id3v2 \
     lame \
     mkcue \
+    python3 \
+    python3-docopt \
+    python3-flask \
+    python3-waitress \
+    sdparm \
     speex \
     vorbis-tools \
-    vorbisgain \
-    id3 \
-    id3v2 && \
-    pip3 install --no-cache-dir docopt flask waitress && \
+    vorbisgain && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
