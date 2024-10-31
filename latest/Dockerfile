@@ -1,4 +1,4 @@
-FROM phusion/baseimage:focal-1.0.0
+FROM phusion/baseimage:noble-1.0.0
 LABEL maintainer="rix1337"
 
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -34,7 +34,9 @@ RUN add-apt-repository -y ppa:heyarje/makemkv-beta && \
       makemkv-oss \
       mkcue \
       python3 \
-      python3-pip \
+      python3-docopt \
+      python3-flask \
+      python3-waitress \
       sdparm \
       speex \
       vorbis-tools \
@@ -43,12 +45,6 @@ RUN add-apt-repository -y ppa:heyarje/makemkv-beta && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Install python packages for web ui
-RUN pip3 install --no-cache-dir \
-    docopt \
-    flask \
-    waitress
 
 # Move Files and set permissions
 COPY root/ /
