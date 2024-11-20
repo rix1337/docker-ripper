@@ -48,13 +48,13 @@ BAD_RESPONSE=0
 DISC_TYPE=""
 # Define the drive types and patterns to match against the output of makemkvcon
 declare -A DRIVE_TYPE_PATTERNS=(
-   [empty]='DRV:[0-9],0,999,0,"'
-   [open]='DRV:[0-9],1,999,0,"'
-   [loading]='DRV:[0-9],3,999,0,"'
-   [bd1]='DRV:[0-9],2,999,12,"'
-   [bd2]='DRV:[0-9],2,999,28,"'
-   [dvd]='DRV:[0-9],2,999,1,"'
-   [cd1]='DRV:[0-9],2,999,0,"'
+   [empty]='DRV:[0-9]+,0,999,0,"'
+   [open]='DRV:[0-9]+,1,999,0,"'
+   [loading]='DRV:[0-9]+,3,999,0,"'
+   [bd1]='DRV:[0-9]+,2,999,12,"'
+   [bd2]='DRV:[0-9]+,2,999,28,"'
+   [dvd]='DRV:[0-9]+,2,999,1,"'
+   [cd1]='DRV:[0-9]+,2,999,0,"'
    [cd2]='","","'$DRIVE'"'
 )
 
