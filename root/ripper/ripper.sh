@@ -103,7 +103,7 @@ check_disc() {
 
    for TYPE in "${!DRIVE_TYPE_PATTERNS[@]}"; do
       PATTERN=${DRIVE_TYPE_PATTERNS[$TYPE]}
-      if echo "$INFO" | grep -q "$PATTERN"; then
+      if echo "$INFO" | grep -E -q "$PATTERN"; then
          DISC_TYPE=$TYPE
          debug_log "Detected disc type: $DISC_TYPE"
          break
