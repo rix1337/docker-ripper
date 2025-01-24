@@ -70,14 +70,14 @@ Add these optional parameters when running the container
 
 ### Please note
 
-**To properly detect optical disk types in a docker environment this script relies on makemkvcon output.**
+To properly detect optical disk types in a docker environment **this script relies on makemkvcon output**.
 
 MakeMKV is free while in Beta, but requires a valid license key. Ripper tries to fetch the latest free beta key on
-launch. Without a purchased license key Ripper may stop running at any time.
+launch. Without a purchased license key **Ripper may stop running at any time**.
 
-#### If you have purchased a license key to MakeMKV/Ripper:
+### Using personal license key for MakeMKV with Ripper
 
-Add your purchased license key to the docker environment variables with the as `KEY`
+Add your purchased license key to the docker environment variables as `KEY`
 ```
   -e KEY=T-eX4mpl3FoQCIORraCfuH3X@qEyMjXXCduqtd8xNt4rjNRZf3Y2BRrIlJqxODbBo@KTW
 ```

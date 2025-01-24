@@ -10,7 +10,7 @@ if [[ ! -f /config/ripper.sh ]]; then
 fi
 
 # key setup logic
-mkdir -p /root/.MakeMKV
+mkdir -p "$HOME/.MakeMKV"
 if [ -n "$KEY" ]; then
     echo "Using MakeMKV key from ENVIRONMENT variable \$KEY: $KEY"
 else
@@ -18,7 +18,9 @@ else
     echo "Using MakeMKV beta key: $KEY"
 fi
 
-echo app_Key = "\"$KEY"\" >/root/.MakeMKV/settings.conf
+# this sets the license key
+echo app_Key = "\"$KEY"\" >"$HOME/.MakeMKV/settings.conf"
+# this might be optional:
 makemkvcon reg "$KEY"
 
 # move abcde.conf, if found
