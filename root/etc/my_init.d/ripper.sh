@@ -12,15 +12,19 @@ fi
 # settings dir
 mkdir -p "$HOME/.MakeMKV"
 
-# identify existing key
-CURRENT_KEY=$(grep -oP 'app_Key = "\K[^"]+' "$HOME/.MakeMKV/settings.conf" 2>/dev/null)
+if [[ -f "$HOME/.MakeMKV/settings.conf" ]]; then
+    CURRENT_KEY=$(grep -oP 'app_Key = "\K[^"]+' "$HOME/.MakeMKV/settings.conf" 2>/dev/null)
+else
+    CURRENT_KEY=""
+fi
 
 # Grab beta key
 BETA_KEY=$(curl --silent 'https://forum.makemkv.com/forum/viewtopic.php?f=5&t=1053' | grep -oP 'T-[\w\d@]{66}')
 
 
-if [ "$CURRENT_KEY" == "$KEY" ] || [ "$CURRENT_KEY" == "$BETA_KEY" ]; then
-    echo "Key in settings.conf matches the provided key. Skipping key setup."
+if [ -n "$KEY" ] && [ "$CURRENT_KEY" == "$KEY" ] || [ "$CURRENT_KEY" == "$BETA_KEY" ]; then
+    echo "Key in settings.conf matches the provided key: $CURRENT_KEY"
+    echo "Skipping key update..."
 else
     if [ -n "$KEY" ]; then
         echo "Using MakeMKV key from ENVIRONMENT variable \$KEY: $KEY"
