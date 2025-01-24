@@ -9,19 +9,30 @@ if [[ ! -f /config/ripper.sh ]]; then
     cp /ripper/ripper.sh /config/ripper.sh
 fi
 
-# key setup logic
+# settings dir
 mkdir -p "$HOME/.MakeMKV"
-if [ -n "$KEY" ]; then
-    echo "Using MakeMKV key from ENVIRONMENT variable \$KEY: $KEY"
-else
-    KEY=$(curl --silent 'https://forum.makemkv.com/forum/viewtopic.php?f=5&t=1053' | grep -oP 'T-[\w\d@]{66}')
-    echo "Using MakeMKV beta key: $KEY"
-fi
 
-# this sets the license key
-echo app_Key = "\"$KEY"\" >"$HOME/.MakeMKV/settings.conf"
-# this might be optional:
-makemkvcon reg "$KEY"
+# identify existing key
+CURRENT_KEY=$(grep -oP 'app_Key = "\K[^"]+' "$HOME/.MakeMKV/settings.conf" 2>/dev/null)
+
+# Grab beta key
+BETA_KEY=$(curl --silent 'https://forum.makemkv.com/forum/viewtopic.php?f=5&t=1053' | grep -oP 'T-[\w\d@]{66}')
+
+
+if [ "$CURRENT_KEY" == "$KEY" ] || [ "$CURRENT_KEY" == "$BETA_KEY" ]; then
+    echo "Key in settings.conf matches the provided key. Skipping key setup."
+else
+    if [ -n "$KEY" ]; then
+        echo "Using MakeMKV key from ENVIRONMENT variable \$KEY: $KEY"
+    else
+        KEY=$BETA_KEY
+        echo "Using MakeMKV beta key: $KEY"
+    fi
+    # this sets the license key
+    echo app_Key = "\"$KEY"\" >"$HOME/.MakeMKV/settings.conf"
+    # this might be optional:
+    makemkvcon reg "$KEY"
+fi
 
 # move abcde.conf, if found
 if [[ -f /config/abcde.conf ]]; then
