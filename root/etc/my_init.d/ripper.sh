@@ -19,7 +19,7 @@ else
 fi
 
 echo app_Key = "\"$KEY"\" >/root/.MakeMKV/settings.conf
-makemkvcon reg
+makemkvcon reg "$KEY"
 
 # move abcde.conf, if found
 if [[ -f /config/abcde.conf ]]; then
