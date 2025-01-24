@@ -51,17 +51,19 @@ docker run -d \
   ```
 
 Some systems are not able to pass through optical drives without this flag
-`--privileged`
+```
+--privileged
+```
 
 #### Configuring the web UI for logs
 
 Add these optional parameters when running the container
-````
-  -e /ripper-ui=OPTIONAL_WEB_UI_PATH_PREFIX \ 
-  -e myusername=OPTIONAL_WEB_UI_USERNAME \ 
-  -e strongpassword=OPTIONAL_WEB_UI_PASSWORD \
+```
+  -e OPTIONAL_WEB_UI_PATH_PREFIX=/ripper-ui \ 
+  -e OPTIONAL_WEB_UI_USERNAME=myusername \ 
+  -e OPTIONAL_WEB_UI_PASSWORD=strongpassword \
   -e DEBUGTOWEB=true \
-````
+```
 
 `OPTIONAL_WEB_UI_USERNAME ` and `OPTIONAL_WEB_UI_PASSWORD ` both need to be set to enable http basic auth for the web UI.
 `OPTIONAL_WEB_UI_PATH_PREFIX ` can be used to set a path prefix (e.g. `/ripper-ui`). This is useful when you are running multiple services at one domain.
@@ -75,18 +77,10 @@ launch. Without a purchased license key Ripper may stop running at any time.
 
 #### If you have purchased a license key to MakeMKV/Ripper:
 
-1) after starting the container, go into the config directory you created, edit the file
-   called `enter-your-key-then-rename-to.settings.conf`, and add your key between the
-   quotes `app_Key = "`**[ENTER KEY HERE]**`"` then save and rename the file to settings.conf
-
-![makemkv license](https://raw.githubusercontent.com/rix1337/docker-ripper/main/.github/screenshots/makemkvkey.png)
-
-2) Remove the remaining file `enter-your-key-then-rename-to.settings.conf`
-   ![sudo rm enter your key](https://raw.githubusercontent.com/rix1337/docker-ripper/main/.github/screenshots/sudormenteryourkey.png)
-
-3) At this point your config directory should look like this:  
-   ![config directory](https://raw.githubusercontent.com/rix1337/docker-ripper/main/.github/screenshots/configdirectory.png)
-
+Add your purchased license key to the docker environment variables with the as `KEY`
+```
+  -e KEY=T-eX4mpl3FoQCIORraCfuH3X@qEyMjXXCduqtd8xNt4rjNRZf3Y2BRrIlJqxODbBo@KTW
+```
 ## Docker compose
 
 Check the device mount points and optional settings before you run the container.

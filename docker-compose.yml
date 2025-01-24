@@ -30,6 +30,7 @@ services:
             - MINIMUMLENGTH=600 # optional - minimum length of the disc in seconds - if the disc or chapter is shorter than this, it will not be ripped
             - FILEUSER=nobody # optional - defines the user ownership of created files
             - FILEGROUP=users # optional - defines the group ownership of created files
+        #    - KEY=T-eX4mpl3FoQCIORraCfuH3X@qEyMjXXCduqtd8xNt4rjNRZf3Y2BRrIlJqxODbBo@KTW # optional - an officially purchased MakeMKV license key
         #    - PREFIX=OPTIONAL_WEB_UI_PATH_PREFIX # optional - path prefix for the integrated web ui when commented out or set to /, the web ui will be at the root of the server
         #    - USER=OPTIONAL_WEB_UI_USERNAME # optional - user name for the integrated web ui (requires PASS to be set) - if not set, the web ui will not require authentication
         #    - PASS=OPTIONAL_WEB_UI_PASSWORD # optional - password for the integrated web ui (requires USER to be set) - if not set, the web ui will not require authentication
