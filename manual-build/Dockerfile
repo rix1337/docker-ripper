@@ -45,6 +45,9 @@ RUN apt-get update && \
 # Invalidate build cache on forum post change
 ADD "https://forum.makemkv.com/forum/viewtopic.php?f=3&t=224" /dev/null
 
+# Ensure HOME is available for MakeMKV
+RUN echo /root > /etc/container_environment/HOME
+
 # Move Files, set permissions and install makemkv
 COPY root/ /
 COPY manual-build/install/ /install
