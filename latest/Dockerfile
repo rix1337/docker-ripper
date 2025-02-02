@@ -46,6 +46,9 @@ RUN add-apt-repository -y ppa:heyarje/makemkv-beta && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Ensure HOME is available for MakeMKV
+RUN echo /root > /etc/container_environment/HOME
+
 # Move Files and set permissions
 COPY root/ /
 RUN chmod +x /etc/my_init.d/*.sh
