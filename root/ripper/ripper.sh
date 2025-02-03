@@ -23,6 +23,7 @@ printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 6
 : "${MINIMUMLENGTH:=600}"
 : "${FILEUSER:=nobody}"
 : "${FILEGROUP:=users}"
+: "${FILEMODE:=g+rw}"
 # Print the values of configuration options if DEBUG is enabled
 if [[ "$DEBUG" == true ]]; then
    printf "SEPARATERAWFINISH: %s\n" "$SEPARATERAWFINISH"
@@ -41,6 +42,7 @@ if [[ "$DEBUG" == true ]]; then
    printf "MINIMUMLENGTH: %s\n" "$MINIMUMLENGTH"
    printf "FILEUSER: %s\n" "$FILEUSER"
    printf "FILEGROUP: %s\n" "$FILEGROUP"
+   printf "FILEMODE: %s\n" "$FILEMODE"
 fi
 
 JUST_MADE_ISO=false
@@ -182,7 +184,7 @@ handle_cd_disc() {
    fi
    printf "%s : Completed CD rip.\n" "$(date "+%d.%m.%Y %T")"
    debug_log "Completed CD rip."
-   chown -R "$FILEUSER":"$FILEGROUP" "$STORAGE_CD" && chmod -R g+rw "$STORAGE_CD"
+   chown -R "$FILEUSER":"$FILEGROUP" "$STORAGE_CD" && chmod -R "$FILEMODE" "$STORAGE_CD"
    debug_log "Changed owner and permissions for: $STORAGE_CD"
 }
 
@@ -208,7 +210,7 @@ handle_data_disc() {
    fi
    printf "%s : Done saving ISO.\n" "$(date "+%d.%m.%Y %T")"
    debug_log "Done saving ISO."
-   chown -R "$FILEUSER":"$FILEGROUP" "$STORAGE_DATA" && chmod -R g+rw "$STORAGE_DATA"
+   chown -R "$FILEUSER":"$FILEGROUP" "$STORAGE_DATA" && chmod -R "$FILEMODE" "$STORAGE_DATA"
    debug_log "Changed owner and permissions for: $STORAGE_DATA"
    JUST_MADE_ISO=true
 }
@@ -224,11 +226,11 @@ move_to_finished() {
       finish_path+="$base_name"
       debug_log "Moving ${src_path} to finished directory: ${finish_path}"
       mv -v "$src_path" "$finish_path"
-      chown -R "$FILEUSER":"$FILEGROUP" "$dst_root" && chmod -R g+rw "$dst_root"
+      chown -R "$FILEUSER":"$FILEGROUP" "$dst_root" && chmod -R "$FILEMODE" "$dst_root"
       debug_log "Moved $src_path to $finish_path"
    else
       debug_log "SEPARATERAWFINISH is disabled, not moving $src_path"
-      chown -R "$FILEUSER":"$FILEGROUP" "$src_path" && chmod -R g+rw "$src_path"
+      chown -R "$FILEUSER":"$FILEGROUP" "$src_path" && chmod -R "$FILEMODE" "$src_path"
       debug_log "Changed owner and permissions for: $src_path"
    fi
 }
