@@ -65,9 +65,57 @@ if [[ -f /config/abcde.conf ]]; then
     cp -f /config/abcde.conf /ripper/abcde.conf
 fi
 
+# Check if custom group is set and create it if it doesn't exist
+if [ -z ${FILEGROUP+x} ]; then
+    echo "Custom group not set, defaulting to users"
+    FILEGROUP="users"
+else
+    echo "Custom group set"
+    if [ $(getent group ${FILEGROUP}) ]; then
+        echo "Group already exists, skipping."
+    else
+        if [ -z ${FILEGROUPID+x} ]; then
+            FILEGROUPID="4321"
+            echo "FILEGROUPID not set, defaulting to ID ${FILEGROUPID}"
+        else
+            echo "Using custom FILEGROUPID ${FILEGROUPID}"
+        fi
+        echo "Making custom group ${FILEGROUP} with ID ${FILEGROUPID}"
+        groupadd -g ${FILEGROUPID} ${FILEGROUP}
+    fi
+fi
+
+# Check if custom user is set and create it if it doesn't exist
+if [ -z ${FILEUSER+x} ]; then
+    echo "Custom user not set, defaulting to nobody"
+    FILEUSER="nobody"
+else
+    echo "Custom user set"
+    if id "${FILEUSER}" >/dev/null 2>&1; then
+        echo "User already exists, skipping."
+    else
+        if [ -z ${FILEUSERID+x} ]; then
+            FILEUSERID="321"
+            echo "FILEUSERID not set, defaulting to ID ${FILEUSERID}"
+        else
+            echo "Using custom FILEUSERID ${FILEUSERID}"
+        fi
+        echo "Making custom group ${FILEUSER} with ID ${FILEUSERID}"
+        useradd -g ${FILEGROUP} -u ${FILEUSERID} ${FILEUSER}
+    fi
+fi
+
+# Check if custom permissions are set
+if [ -z ${FILEMODE+x} ]; then
+    echo "Custom file not permissions set, defaulting to g+rw"
+    FILEMODE="g+rw"
+else
+    echo "Custom file permissions set to ${FILEMODE}"
+fi
+
 # permissions
-chown -R nobody:users /config
-chmod -R g+rw /config
+chown -R ${FILEUSER}:${FILEGROUP} /config
+chmod -R ${FILEMODE} /config
 
 chmod +x /config/ripper.sh
 
