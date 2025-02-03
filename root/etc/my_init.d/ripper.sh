@@ -59,6 +59,14 @@ cat "$HOME/.MakeMKV/settings.conf"
 # Log current registration status
 makemkvcon info | grep -i "registration"
 
+# Update abcde OUTPUTDIR if specified in env variables
+if [ -z ${STORAGE_CD+x} ]; then
+    echo "STORAGE_CD not set, defaulting to /out/Ripper/CD"
+else
+    echo "Custom STORAGE_CD is set, updating abcde.conf with OUTPUTDIR=${STORAGE_CD}"
+    sed -i "/OUTPUTDIR=/c\\OUTPUTDIR=$STORAGE_CD" /ripper/abcde.conf
+fi
+
 # move abcde.conf, if found
 if [[ -f /config/abcde.conf ]]; then
     echo "Found abcde.conf."
