@@ -37,4 +37,6 @@ services:
         #    - PREFIX=OPTIONAL_WEB_UI_PATH_PREFIX # optional - path prefix for the integrated web ui when commented out or set to /, the web ui will be at the root of the server
         #    - USER=OPTIONAL_WEB_UI_USERNAME # optional - user name for the integrated web ui (requires PASS to be set) - if not set, the web ui will not require authentication
         #    - PASS=OPTIONAL_WEB_UI_PASSWORD # optional - password for the integrated web ui (requires USER to be set) - if not set, the web ui will not require authentication
+        #   - POVER_APP_TOKEN=OPTIONAL_APP_TOKEN # optional - supply along with POVER_USER_KEY to enable pushover notifications upon disc rip completion
+        #   - POVER_USER_KEY=OPTIONAL_USER_KEY # optional - supply along with POVER_APP_TOKEN to enable pushover notifications upon disc rip completion
         privileged: true
