@@ -260,6 +260,17 @@ ejectdisc() {
          sleep 5
       done
    fi
+
+   if [ -z ${POVER_APP_TOKEN+x} ] || [ -z ${POVER_USER_KEY+x} ]; then
+      debug_log "Pushover API keys not set, skipping"
+   else
+      debug_log "Sending pushover notification"
+      curl --fail -s \
+         --form-string "token=${POVER_APP_TOKEN}" \
+         --form-string "user=${POVER_USER_KEY}" \
+         --form-string "message=Ripper has finished ripping your disc!" \
+         https://api.pushover.net/1/messages.json
+   fi
 }
 
 process_disc_type() {
