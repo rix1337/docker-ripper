@@ -2,6 +2,7 @@
 
 RIPPER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOGFILE="/config/Ripper.log"
+PUSHOVER_CONFIGURED=false
 
 # Startup Info
 printf "%s : Starting Ripper. Optical Discs will be detected and ripped within 60 seconds.\n" "$(date "+%d.%m.%Y %T")"
@@ -43,6 +44,16 @@ if [[ "$DEBUG" == true ]]; then
    printf "FILEUSER: %s\n" "$FILEUSER"
    printf "FILEGROUP: %s\n" "$FILEGROUP"
    printf "FILEMODE: %s\n" "$FILEMODE"
+fi
+
+if [ -z ${POVER_APP_TOKEN+x} ] || [ -z ${POVER_USER_KEY+x} ]; then
+    debug_log "Pushover notifications are not configured - notifications will be skipped"
+else
+    PUSHOVER_CONFIGURED=true
+    debug_log "Pushover notifications are configured and enabled"
+    if [[ "$DEBUG" == true ]]; then
+        printf "PUSHOVER_CONFIGURED: %s\n" "$PUSHOVER_CONFIGURED"
+    fi
 fi
 
 JUST_MADE_ISO=false
@@ -121,10 +132,26 @@ check_disc() {
    fi
 }
 
+send_pushover_notification() {
+    local message="$1"
+    if [[ "$PUSHOVER_CONFIGURED" != true ]]; then
+        debug_log "Pushover not configured, skipping notification"
+        return
+    fi
+    
+    debug_log "Sending pushover notification: $message"
+    curl --fail -s \
+        --form-string "token=${POVER_APP_TOKEN}" \
+        --form-string "user=${POVER_USER_KEY}" \
+        --form-string "message=$message" \
+        https://api.pushover.net/1/messages.json
+}
+
 handle_bd_disc() {
    local disc_info="$1"
    debug_log "Handling BluRay disc."
    local disc_label="$(echo "$disc_info" | grep -o -P '(?<=",").*(?=",")')"
+   send_pushover_notification "Started ripping BluRay disc: $disc_label"
    local bd_path
    bd_path=$(get_disc_directory "$STORAGE_BD" "$disc_label" "$TIMESTAMPPREFIX")
    local disc_number="$(echo "$disc_info" | grep "$DRIVE" | cut -c5)"
@@ -149,6 +176,7 @@ handle_dvd_disc() {
    local disc_info="$1"
    debug_log "Handling DVD disc."
    local disc_label="$(echo "$disc_info" | grep -o -P '(?<=",").*(?=",")')"
+   send_pushover_notification "Started ripping DVD disc: $disc_label"
    local dvd_path
    dvd_path=$(get_disc_directory "$STORAGE_DVD" "$disc_label" "$TIMESTAMPPREFIX")
    local disc_number="$(echo "$disc_info" | grep "$DRIVE" | cut -c5)"
@@ -172,6 +200,7 @@ handle_dvd_disc() {
 handle_cd_disc() {
    local disc_info="$1"
    debug_log "Handling CD disc."
+   send_pushover_notification "Started ripping CD disc"
    local alt_rip="${RIPPER_DIR}/CDrip.sh"
    if [[ -f $alt_rip && -x $alt_rip ]]; then
       printf "%s : CD detected: Executing %s\n" "$(date "+%d.%m.%Y %T")" "$alt_rip"
@@ -192,6 +221,7 @@ handle_data_disc() {
    local disc_info="$1"
    debug_log "Handling data disc."
    local disc_label="$(echo "$disc_info" | grep "$DRIVE" | grep -o -P '(?<=",").*(?=",")')"
+   send_pushover_notification "Started ripping data disc: $disc_label"
    local data_directory
    data_directory=$(get_disc_directory "$STORAGE_DATA" "$disc_label" "$TIMESTAMPPREFIX")
    local iso_filename="${disc_label}.iso"
@@ -261,15 +291,8 @@ ejectdisc() {
       done
    fi
 
-   if [ -z ${POVER_APP_TOKEN+x} ] || [ -z ${POVER_USER_KEY+x} ]; then
-      debug_log "Pushover API keys not set, skipping"
-   else
-      debug_log "Sending pushover notification"
-      curl --fail -s \
-         --form-string "token=${POVER_APP_TOKEN}" \
-         --form-string "user=${POVER_USER_KEY}" \
-         --form-string "message=Ripper has finished ripping your disc!" \
-         https://api.pushover.net/1/messages.json
+   if [[ "$PUSHOVER_CONFIGURED" == true ]]; then
+        send_pushover_notification "Ripper has finished ripping your disc!"
    fi
 }
 
