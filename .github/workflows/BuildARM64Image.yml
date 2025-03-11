@@ -37,4 +37,5 @@ jobs:
           push: true
           tags: |
             ${{ env.ENDPOINT }}:latest-arm64
-            ${{ env.ENDPOINT }}:ppa-latest-arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
