@@ -26,6 +26,7 @@ RUN add-apt-repository -y ppa:heyarje/makemkv-beta && \
       eyed3 \
       flac \
       gddrescue \
+      glyrc \
       git \
       id3 \
       id3v2 \
